@@ -12,19 +12,13 @@ import java.util.stream.Stream;
 
 public class ModulParser {
 
-	public ModulParser() {
+	public ModulParser() throws IOException {
 		File file = new File("src/main/resources/Breunig_Wahl.txt");
-		if(!file.exists()){
+		if (!file.exists()) {
 			throw new RuntimeException("kein file");
 		}
-		
-		try {
-			Stream<String> lines = Files.lines(Paths.get("src/main/resources/Breunig_Wahl.txt"));
-			Stream<String> wahlModule = Files.lines(Paths.get("src/main/resources/WahlPflichtModule.txt"));
-			
-		//	lines.forEach(l -> );
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		Stream<String> lines = Files.lines(Paths.get("src/main/resources/Breunig_Wahl.txt"));
+
 	}
 }
