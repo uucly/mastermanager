@@ -1,10 +1,20 @@
 package com.germany;
 
+import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -14,61 +24,51 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
 
 public class StartPage extends WebPage{
 
 	private static final long serialVersionUID = 1L;
 	private static final List<String> SEARCH_ENGINES = Arrays.asList(new String[] {
-			"Google", "Bing", "Baidu" });
+			"Breunig", "Hinz", "Hennes", "Heck" });
  
-	//make Google selected by default
-	private String selected = "Google";
-	
-	public StartPage(final PageParameters parameters){
+	public StartPage(final PageParameters parameters) throws IOException{
 		super(parameters);
 		
-		/*add(new FeedbackPanel("feedback"));
-		 
-		final IModel<String> prop = new PropertyModel<String>(this, "selected");
-		DropDownChoice<String> listSites = new DropDownChoice<String>(
-			"sites", prop, SEARCH_ENGINES);
- 
-		Form form = new Form("form") {
-			@Override
-			protected void onSubmit() {
- 
-				info("Selected search engine : " + prop.getObject());
-				warn("Bla");
-			}
-		};
-		Label label = new Label("label", prop);
-		
-		IModel<String> m = new AbstractReadOnlyModel<String>() {
-
-			@Override
-			public String getObject() {
-				return "color:rgb(255,150,"+(int)(Math.random()*100)+")";
-			}
-		};
-		
-		Button button = new Button("testButton", m);
-		label.add(new AttributeAppender("style", m));
-		form.add(listSites);
-		form.add(label);
-		form.add(button);
-		
-		add(form);*/
-		WebMarkupContainer address = new WebMarkupContainer("address");
-		Form form = new Form("form");
-		
-		form.add(new Label("street", "Wiesenstraße"));
-		form.add(new Label("number", "14"));
-		form.add(new Label("zipcode", "35390"));
-		form.add(new Label("city", "Gießen"));
-		address.add(form);
+		WebMarkupContainer address = new WebMarkupContainer("pflicht");
+		address.add(createForm());
+		new ModulParser();
+		new WahlPflichtModule(new HashMap<String, Double>());
 		add(address);
-
 	}
+	
+	private static Form createForm(){
+		Form form = new Form("form");
+		IModel<String> selected = new Model<String>("");
+		ModulAutoCompleteTextField textField1 = new ModulAutoCompleteTextField("auto1", selected);
+		ModulAutoCompleteTextField textField2 = new ModulAutoCompleteTextField("auto2", selected);
+		ModulAutoCompleteTextField textField3 = new ModulAutoCompleteTextField("auto3", selected);
+		ModulAutoCompleteTextField textField4 = new ModulAutoCompleteTextField("auto4", selected);
+
+		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropDown",selected, SEARCH_ENGINES);
+		form.add(textField1);
+		form.add(textField2);
+		form.add(textField3);
+		form.add(textField4);
+		form.add(dropDown);
+		return form;
+	}
+	@Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+
+        Bootstrap.renderHead(response);
+        response.render(CssHeaderItem.forReference(FontAwesomeCssReference.instance()));
+    }
+	
 }

@@ -5,24 +5,17 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<!-- <h1>Wicket DropDownChoice example</h1>
-
-	<div wicket:id="feedback"></div>
-	<form wicket:id="form">
-		<p>
-			<label wicket:id="label">Select your search engine </label> <br /> 
-			<select wicket:id="sites"></select>
-		</p>
-		<button wicket:id="testButton" value="Display"></button>
-		<input type="submit" value="Display" />
-		
-	</form> -->
-	<div wicket:id="address" class="form-inline">
-		<form wicket:id="form">
-			<d wicket:id="street">Musterstraﬂe</d> <d wicket:id="number">5</d>
-			<d wicket:id="zipcode">12345</d> <d wicket:id="city">Musterstadt</d>
+	
+	<div wicket:id="pflicht" class="form-inline">
+		<form wicket:id="form" class="form-group">
+			<div><th>Vertiefungsrichtung</th> <select wicket:id="dropDown"></select></div>
+			 Wahlpflicht: 
+			 <pre><input type="text" wicket:id="auto1" size="50"/></pre>
+			 <pre><input type="text" wicket:id="auto2" size="50"/></pre>
+			 <pre><input type="text" wicket:id="auto3" size="50"/></pre>
+			 <pre><input type="text" wicket:id="auto4" size="50"/></pre>
+			 
 		</form>
 	</div>
-
 </body>
 </html>

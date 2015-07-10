@@ -1,0 +1,47 @@
+3D-Tools fuer geowissenschaftliche Anwendungen,3
+3D/4D GIS,4
+Aktive Sensorik fuer Computer Vision,3
+Allgemeine Meteorologie,7
+Analyse und Entwurf multisensorieller Systeme,3
+Antennen und Antennensysteme,4.5
+Augmented Reality,4
+Ausgewaehlte Kapitel zu GNSS,4
+Ausgewaehlte Themen zur Schaetztheorie,3
+Deformationsanalyse,4
+Einfuehrung in die Geophysik I,4
+Einfuehrung in die Geophysik II,4
+Einfuehrung in die Kontinuumsmechanik,3
+Fernerkundung atmosphaerischer Zustandsgroessen,4
+Flaechenerfassung,3
+GIS-Analysen,3
+Geodateninfrastruktur und Web-Dienste,4
+Geodetic Application of SAR Interferometry,4
+Geodetic Reference Frames and Systems,1
+Geodaetische Astronomie,4
+Geometrische Objektmodellierung in 2D/3D/4D,3
+Geophysikalische Gelaendeuebung,3
+Geophysikalische Laboruebungen,5
+Geosensornetworks/Sensor DB,3
+Globale Schwerefeldmodellierung,3
+Industrielle Bildverarbeitung und Machine Vision,3
+Ingenieurphotogrammetrie und 3D-Messverfahren,4
+Ingenieurvermessung 2,1
+Kreisel und INS,3
+Mobile GIS,3
+Monitoring und kinematische Vermessung,3
+OO-Modellierung in GIS,6
+Paralleles Rechnen,0
+Prinzipien der Sensorfusion in integrierten Navigationssystemen,3
+Projekt Computer Vision,4
+Projekt Fernerkundung und Luftbildphotogrammetrie,4
+Projektaquisition,3
+Projektbezogene Analyse von Ingenieurnetzen,4
+SAR und InSAR-Fernerkundung,3
+Scientific GNSS Data Processing,3
+Spaceborne SAR Remote Sensing,4.5
+Spezielle Funktionen und Anwendungen in der Potentialtheorie,4
+Steuerungstechnik fuer Roboter,3
+Strassenwesen fuer Geodaeten,1
+Struktur- und Objektextraktion in 2D und 3D,4
+Text- and Data Mining in der Geoinformatik,3
+Visualisierung von Geodaten in 2D/3D/4D,3
