@@ -34,9 +34,8 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String>{
          List<String> choices = new ArrayList<String>(moduls.size());
          for (final Modul m : moduls)
          {
-             if (!m.isInUse())
+             if (!m.isInUse() && m.getName().toUpperCase().startsWith(input.toUpperCase()))
              {
-            	 m.setInUse(true);
             	 choices.add(m.getName());
              }
          }

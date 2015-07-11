@@ -1,17 +1,19 @@
 package com.germany;
 
-public class Modul {
+import java.io.Serializable;
+
+public class Modul implements Serializable{
 	private final String name;
-	private final int points;
+	private final double points;
 	private boolean inUse;
 	
-	public Modul(String name, int points) {
+	public Modul(String name, double points) {
 		this.name = name;
 		this.points = points;
 		this.setInUse(false);
 	}
 
-	public int getPoints() {
+	public double getPoints() {
 		return points;
 	}
 

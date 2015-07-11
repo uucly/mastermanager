@@ -1,18 +1,17 @@
-3D-Tools fuer geowissenschaftliche Anwendungen
-Augmented Reality
-Ausgewählte Themen zur Schätztheorie
-Deformationsanalyse
-Flächenerfassung
-GIS-Analysen
-GIS-AnalysenGeodateninfrastruktur und Web-Dienste
-Geodateninfrastruktur und Web-Dienste
-Geodetic Reference Frames and Systems
-Geometrische Objektmodellierung in 2D/3D/4D
-Geosensornetworks/Sensor DB
-Mobile GIS
-Monitoring und kinematische Vermessung
-OO-Modellierung in GIS
-Projekt Computer Vision
-Projektbezogene Analyse von Ingenieurnetzen
-Text- and Data Mining in der Geoinformatik
-Visualisierung von Geodaten in 2D/3D/4D
+1
+7
+9
+10
+15
+16
+17
+19
+21
+24
+30
+31
+32
+35
+38
+46
+47

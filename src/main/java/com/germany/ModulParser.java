@@ -1,24 +1,24 @@
 package com.germany;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ModulParser {
 
-	public ModulParser() throws IOException {
-		File file = new File("src/main/resources/Breunig_Wahl.txt");
-		if (!file.exists()) {
-			throw new RuntimeException("kein file");
-		}
+	private final List<Modul> allModules;
 
-		Stream<String> lines = Files.lines(Paths.get("src/main/resources/Breunig_Wahl.txt"));
+	public ModulParser(List<Modul> allModules) throws IOException {
+		this.allModules = allModules;
 
+	}
+
+	public List<Modul> parse(String path) throws IOException {
+		System.out.println(allModules);
+		return Files.lines(Paths.get(path))
+				.map(l -> allModules.get(Integer.parseInt(l)-1))
+				.collect(Collectors.toList());
 	}
 }

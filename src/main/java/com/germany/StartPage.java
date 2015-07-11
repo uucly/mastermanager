@@ -34,6 +34,11 @@ import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCs
 public class StartPage extends WebPage{
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final String BREUNIG_PATH= "src/main/resources/Breunig_Wahl.txt";
+	private static final String ALL_PATH= "src/main/resources/WahlPflichtModule.txt";
+		
+	
 	private static final List<String> SEARCH_ENGINES = Arrays.asList(new String[] {
 			"Breunig", "Hinz", "Hennes", "Heck" });
  
@@ -42,18 +47,23 @@ public class StartPage extends WebPage{
 		
 		WebMarkupContainer address = new WebMarkupContainer("pflicht");
 		address.add(createForm());
-		new ModulParser();
-		new WahlPflichtModule(new HashMap<String, Double>());
+		WahlPflichtModule module = new WahlPflichtModule();
+		ModulParser modulParser = new ModulParser(module.parse(ALL_PATH));
+		List<Modul> breunigModule = modulParser.parse(BREUNIG_PATH);
 		add(address);
 	}
 	
-	private static Form createForm(){
+	private static Form createForm() throws IOException{
+		WahlPflichtModule module = new WahlPflichtModule();
+		ModulParser modulParser = new ModulParser(module.parse(ALL_PATH));
+		List<Modul> breunigModule = modulParser.parse(BREUNIG_PATH);
+		
 		Form form = new Form("form");
 		IModel<String> selected = new Model<String>("");
-		ModulAutoCompleteTextField textField1 = new ModulAutoCompleteTextField("auto1", selected);
-		ModulAutoCompleteTextField textField2 = new ModulAutoCompleteTextField("auto2", selected);
-		ModulAutoCompleteTextField textField3 = new ModulAutoCompleteTextField("auto3", selected);
-		ModulAutoCompleteTextField textField4 = new ModulAutoCompleteTextField("auto4", selected);
+		ModulAutoCompleteTextField textField1 = new ModulAutoCompleteTextField("auto1", selected, breunigModule);
+		ModulAutoCompleteTextField textField2 = new ModulAutoCompleteTextField("auto2", selected,breunigModule);
+		ModulAutoCompleteTextField textField3 = new ModulAutoCompleteTextField("auto3", selected,breunigModule);
+		ModulAutoCompleteTextField textField4 = new ModulAutoCompleteTextField("auto4", selected,breunigModule);
 
 		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropDown",selected, SEARCH_ENGINES);
 		form.add(textField1);
