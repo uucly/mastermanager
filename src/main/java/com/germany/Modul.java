@@ -24,6 +24,10 @@ public class Modul implements Serializable{
 	public boolean isInUse() {
 		return inUse;
 	}
+	
+	public boolean isNotInUse() {
+		return !inUse;
+	}
 
 	public void setInUse(boolean inUse) {
 		this.inUse = inUse;
