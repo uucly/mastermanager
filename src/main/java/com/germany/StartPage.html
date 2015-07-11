@@ -1,20 +1,51 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
+<style>
+div.wicket-aa {
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, Verdana;
+	font-size: 12px;
+	background-color: white;
+	border-width: 1px;
+	border-color: #cccccc;
+	border-style: solid;
+	padding: 2px;
+	margin: 1px 0 0 0;
+	text-align: left;
+}
+
+div.wicket-aa ul {
+	list-style: none;
+	padding: 2px;
+	margin: 0;
+}
+
+div.wicket-aa ul li.selected {
+	background-color: #FFFF00;
+	padding: 2px;
+	margin: 0;
+}
+</style>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
 <body>
-	
+
 	<div wicket:id="pflicht" class="form-inline">
 		<form wicket:id="form" class="form-group">
-			<div><th>Vertiefungsrichtung</th> <select wicket:id="dropDown"></select></div>
-			 Wahlpflicht: 
-			 <pre><input type="text" wicket:id="auto1" size="50"/></pre>
-			 <pre><input type="text" wicket:id="auto2" size="50"/></pre>
-			 <pre><input type="text" wicket:id="auto3" size="50"/></pre>
-			 <pre><input type="text" wicket:id="auto4" size="50"/></pre>
-			 
+			<div>
+				<th>Vertiefungsrichtung</th> <select wicket:id="dropDown"></select>
+			</div>
+				Wahlpflicht:
+				<pre>
+				<input type="text" wicket:id="auto1" size="50" />
+				
+				<input type="text" wicket:id="auto2" size="50" />
+				
+				<input type="text" wicket:id="auto3" size="50" />
+				
+				<input type="text" wicket:id="auto4" size="50" />
+				</pre>
 		</form>
 	</div>
 </body>
