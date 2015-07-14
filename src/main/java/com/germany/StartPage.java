@@ -43,8 +43,6 @@ public class StartPage extends WebPage{
 	private static final List<String> SEARCH_ENGINES = Arrays.asList(new String[] {
 			"Breunig", "Hinz", "Hennes", "Heck" });
  
-	@SpringBean
-	TestService service;
 	
 	public StartPage(final PageParameters parameters) throws IOException{
 		super(parameters);
@@ -55,7 +53,6 @@ public class StartPage extends WebPage{
 		ModulParser modulParser = new ModulParser(module.parse(ALL_PATH));
 		List<Modul> breunigModule = modulParser.parse(BREUNIG_PATH);
 		add(address);
-		System.out.println(service.say());
 	}
 	
 	private static Form createForm() throws IOException{
