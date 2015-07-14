@@ -27,6 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
@@ -42,6 +43,9 @@ public class StartPage extends WebPage{
 	private static final List<String> SEARCH_ENGINES = Arrays.asList(new String[] {
 			"Breunig", "Hinz", "Hennes", "Heck" });
  
+	@SpringBean
+	TestService service;
+	
 	public StartPage(final PageParameters parameters) throws IOException{
 		super(parameters);
 		
@@ -51,6 +55,7 @@ public class StartPage extends WebPage{
 		ModulParser modulParser = new ModulParser(module.parse(ALL_PATH));
 		List<Modul> breunigModule = modulParser.parse(BREUNIG_PATH);
 		add(address);
+		System.out.println(service.say());
 	}
 	
 	private static Form createForm() throws IOException{
