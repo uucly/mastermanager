@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -24,39 +26,61 @@ public class WahlPflichtPanel extends Panel{
 	private WahlPflichtModule module;
 	private ModulParser modulParser;
 	
-	private static final List<String> SEARCH_ENGINES = Arrays.asList(new String[] {
-			"Breunig", "Hinz", "Hennes", "Heck" });
+	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof.values());
 	
-	public WahlPflichtPanel(String id, IModel<String> selected) {
-		super(id, selected);
+	public WahlPflichtPanel(String id) {
+		super(id);
 		
-		IModel<Collection<Modul>> moduleOfProf = new Model();
 		try {
 			List<Modul> allModule = module.parse(ALL_PATH);
 			modulParser = new ModulParser(allModule);
-			List<Modul> breunigModule = modulParser.parse(Prof.BREUNIG.getPath());
-			moduleOfProf.setObject(breunigModule);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 		
 		
-		add(createForm(selected, moduleOfProf));
+		add(createForm(modulParser));
 	}
 	
-	private static Form createForm(IModel<String> selected, IModel<Collection<Modul>> moduleOfProf){
+	private static Form createForm(final ModulParser modulParser){
+		IModel<Collection<Modul>> moduleOfProf = new Model();
+		
 		Form form = new Form("form");
-		ModulAutoCompleteTextField textField1 = new ModulAutoCompleteTextField("auto1", selected, moduleOfProf);
-		ModulAutoCompleteTextField textField2 = new ModulAutoCompleteTextField("auto2", selected,moduleOfProf);
-		ModulAutoCompleteTextField textField3 = new ModulAutoCompleteTextField("auto3", selected,moduleOfProf);
-		ModulAutoCompleteTextField textField4 = new ModulAutoCompleteTextField("auto4", selected,moduleOfProf);
-
-		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropDown",selected, SEARCH_ENGINES);
-		form.add(textField1);
-		form.add(textField2);
-		form.add(textField3);
-		form.add(textField4);
-		form.add(dropDown);
+		form.add(new ModulAutoCompleteTextField("auto1", Model.of(""), moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto2", Model.of(""), moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto3", Model.of(""), moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto4", Model.of(""), moduleOfProf));
+		form.add(createDropDown(moduleOfProf, modulParser));
 		return form;
+	}
+	
+	private static DropDownChoice<Prof> createDropDown(final IModel<Collection<Modul>> moduleOfProf, ModulParser modulParser){
+		IModel<Prof> selected = Model.of(Prof.BREUNIG);
+		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selected, SEARCH_ENGINES){
+			@Override
+			protected void onConfigure() {
+				super.onConfigure();
+				setModulOfProf(moduleOfProf, modulParser, selected);
+			}
+		};
+		dropDown.add(new OnChangeAjaxBehavior() {
+			
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
+				setModulOfProf(moduleOfProf, modulParser, selected);
+			}
+		});
+		
+		return dropDown;
+	}
+	
+	
+	
+	private static void setModulOfProf( IModel<Collection<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> selected){
+		try{
+			moduleOfProf.setObject(modulParser.parse(selected.getObject().getPath()));
+		}catch(IOException ex){
+			throw new RuntimeException(ex);
+		}
 	}
 }

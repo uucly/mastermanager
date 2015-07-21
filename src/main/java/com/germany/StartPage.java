@@ -55,8 +55,9 @@ public class StartPage extends WebPage{
 	private static Form createForm() throws IOException{
 		
 		Form form = new Form("form");
-		IModel<String> selected = new Model<String>("");
-		form.add(new WahlPflichtPanel("wahlPanel", selected));
+		form.add(new WahlPflichtPanel("wahlPanel1"));
+		form.add(new WahlPflichtPanel("wahlPanel2"));
+		
 		return form;
 	}
 	

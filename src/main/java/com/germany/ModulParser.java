@@ -17,7 +17,6 @@ public class ModulParser implements Serializable{
 	}
 
 	public List<Modul> parse(String path) throws IOException {
-		System.out.println(allModules);
 		return Files.lines(Paths.get(path))
 				.map(l -> allModules.get(Integer.parseInt(l)-1))
 				.collect(Collectors.toList());
