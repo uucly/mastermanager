@@ -21,12 +21,13 @@ public class WahlPflichtPanel extends Panel{
 	private static final long serialVersionUID = 1L;
 
 	private static final String ALL_PATH= "src/main/resources/WahlPflichtModule.txt";
+	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof.values());
 	
 	@SpringBean
 	private WahlPflichtModule module;
 	private ModulParser modulParser;
 	
-	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof.values());
+	private final IModel<Modul> selectedModul1,selectedModul2,selectedModul3,selectedModul4;
 	
 	public WahlPflichtPanel(String id) {
 		super(id);
@@ -38,18 +39,21 @@ public class WahlPflichtPanel extends Panel{
 			throw new RuntimeException(e);
 		}
 		
+		selectedModul1 = Model.of();
+		selectedModul2 = Model.of();
+		selectedModul3 = Model.of();
+		selectedModul4 = Model.of();
 		
-		add(createForm(modulParser));
+		add(createForm(modulParser, selectedModul1, selectedModul2, selectedModul3, selectedModul4));
 	}
 	
-	private static Form createForm(final ModulParser modulParser){
+	private static Form createForm(final ModulParser modulParser, IModel<Modul> selectedModul1, IModel<Modul> selectedModul2, IModel<Modul> selectedModul3, IModel<Modul> selectedModul4){
 		IModel<Collection<Modul>> moduleOfProf = new Model();
-		
 		Form form = new Form("form");
-		form.add(new ModulAutoCompleteTextField("auto1", Model.of(""), moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto2", Model.of(""), moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto3", Model.of(""), moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto4", Model.of(""), moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto1", selectedModul1, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto2", selectedModul2, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto3", selectedModul3, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto4", selectedModul4, moduleOfProf));
 		form.add(createDropDown(moduleOfProf, modulParser));
 		return form;
 	}
@@ -82,5 +86,9 @@ public class WahlPflichtPanel extends Panel{
 		}catch(IOException ex){
 			throw new RuntimeException(ex);
 		}
+	}
+	
+	public List<IModel<Modul>> getAllSelectedModuls(){
+		return Arrays.asList(selectedModul1,selectedModul2, selectedModul3, selectedModul4);
 	}
 }
