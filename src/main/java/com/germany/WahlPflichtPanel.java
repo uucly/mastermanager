@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -27,8 +31,6 @@ public class WahlPflichtPanel extends Panel{
 	private WahlPflichtModule module;
 	private ModulParser modulParser;
 	
-	private final IModel<Modul> selectedModul1,selectedModul2,selectedModul3,selectedModul4;
-	
 	public WahlPflichtPanel(String id) {
 		super(id);
 		
@@ -39,16 +41,19 @@ public class WahlPflichtPanel extends Panel{
 			throw new RuntimeException(e);
 		}
 		
-		selectedModul1 = Model.of();
-		selectedModul2 = Model.of();
-		selectedModul3 = Model.of();
-		selectedModul4 = Model.of();
-		
-		add(createForm(modulParser, selectedModul1, selectedModul2, selectedModul3, selectedModul4));
+		add(createForm(modulParser));
 	}
 	
-	private static Form createForm(final ModulParser modulParser, IModel<Modul> selectedModul1, IModel<Modul> selectedModul2, IModel<Modul> selectedModul3, IModel<Modul> selectedModul4){
-		IModel<Collection<Modul>> moduleOfProf = new Model();
+	private static Form createForm(final ModulParser modulParser, SelectedModulReadOnlyModel selectedModuls){
+		IModel<String> selectedModul1 = Model.of();
+		IModel<String> selectedModul2 = Model.of();
+		IModel<String> selectedModul3 = Model.of();
+		IModel<String> selectedModul4 = Model.of();
+		IModel<Collection<Modul>> moduleOfProf = new Model(); 
+		
+		selectedModuls.setProfModuls(moduleOfProf);
+		selectedModuls.setSelectedModulNames(Model.of(Arrays.asList(selectedModul1, selectedModul2, selectedModul3, selectedModul4)));
+		
 		Form form = new Form("form");
 		form.add(new ModulAutoCompleteTextField("auto1", selectedModul1, moduleOfProf));
 		form.add(new ModulAutoCompleteTextField("auto2", selectedModul2, moduleOfProf));
@@ -79,7 +84,6 @@ public class WahlPflichtPanel extends Panel{
 	}
 	
 	
-	
 	private static void setModulOfProf( IModel<Collection<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> selected){
 		try{
 			moduleOfProf.setObject(modulParser.parse(selected.getObject().getPath()));
@@ -88,7 +92,4 @@ public class WahlPflichtPanel extends Panel{
 		}
 	}
 	
-	public List<IModel<Modul>> getAllSelectedModuls(){
-		return Arrays.asList(selectedModul1,selectedModul2, selectedModul3, selectedModul4);
-	}
 }

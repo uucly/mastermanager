@@ -38,14 +38,15 @@ public class StartPage extends WebPage{
 	
 	private static final String BREUNIG_PATH= "src/main/resources/Breunig_Wahl.txt";
 	private static final String ALL_PATH= "src/main/resources/WahlPflichtModule.txt";
-		
 	
-	private static final List<String> SEARCH_ENGINES = Arrays.asList(new String[] {
-			"Breunig", "Hinz", "Hennes", "Heck" });
- 
+	private final IModel<String> selectedModul1,selectedModul2,selectedModul3,selectedModul4;
 	
 	public StartPage(final PageParameters parameters) throws IOException{
 		super(parameters);
+		selectedModul1 = Model.of("");
+		selectedModul2 = Model.of("");
+		selectedModul3 = Model.of("");
+		selectedModul4 = Model.of("");
 		
 		WebMarkupContainer address = new WebMarkupContainer("pflicht");
 		address.add(createForm());
@@ -57,7 +58,7 @@ public class StartPage extends WebPage{
 		Form form = new Form("form");
 		form.add(new WahlPflichtPanel("wahlPanel1"));
 		form.add(new WahlPflichtPanel("wahlPanel2"));
-		
+		form.add(new InfoPanel("infoPanel"));
 		return form;
 	}
 	
