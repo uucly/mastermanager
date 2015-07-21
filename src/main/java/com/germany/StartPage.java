@@ -49,32 +49,17 @@ public class StartPage extends WebPage{
 		
 		WebMarkupContainer address = new WebMarkupContainer("pflicht");
 		address.add(createForm());
-		WahlPflichtModule module = new WahlPflichtModule();
-		ModulParser modulParser = new ModulParser(module.parse(ALL_PATH));
-		List<Modul> breunigModule = modulParser.parse(BREUNIG_PATH);
 		add(address);
 	}
 	
 	private static Form createForm() throws IOException{
-		WahlPflichtModule module = new WahlPflichtModule();
-		ModulParser modulParser = new ModulParser(module.parse(ALL_PATH));
-		List<Modul> breunigModule = modulParser.parse(BREUNIG_PATH);
 		
 		Form form = new Form("form");
 		IModel<String> selected = new Model<String>("");
-		ModulAutoCompleteTextField textField1 = new ModulAutoCompleteTextField("auto1", selected, breunigModule);
-		ModulAutoCompleteTextField textField2 = new ModulAutoCompleteTextField("auto2", selected,breunigModule);
-		ModulAutoCompleteTextField textField3 = new ModulAutoCompleteTextField("auto3", selected,breunigModule);
-		ModulAutoCompleteTextField textField4 = new ModulAutoCompleteTextField("auto4", selected,breunigModule);
-
-		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropDown",selected, SEARCH_ENGINES);
-		form.add(textField1);
-		form.add(textField2);
-		form.add(textField3);
-		form.add(textField4);
-		form.add(dropDown);
+		form.add(new WahlPflichtPanel("wahlPanel", selected));
 		return form;
 	}
+	
 	@Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);

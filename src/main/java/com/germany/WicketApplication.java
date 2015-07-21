@@ -1,7 +1,5 @@
 package com.germany;
 
-import org.apache.wicket.application.IComponentInitializationListener;
-import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;

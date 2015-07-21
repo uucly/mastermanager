@@ -6,8 +6,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class WahlPflichtModule {
 
 	public List<Modul> parse(String path) throws IOException {

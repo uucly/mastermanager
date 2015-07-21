@@ -1,14 +1,12 @@
 package com.germany;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.model.IModel;
 
@@ -20,10 +18,10 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final List<Modul> moduls;
+	private final IModel<Collection<Modul>> moduls;
 	private String selected;
 	
-	public ModulAutoCompleteTextField(String id, IModel<String> model, List<Modul> moduls) {
+	public ModulAutoCompleteTextField(String id, IModel<String> model, IModel<Collection<Modul>> moduls) {
 		super(id, model);
 		this.moduls = moduls;
 		selected = "";
@@ -32,9 +30,9 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				moduls.stream().filter(m -> m.getName().equals(selected)).forEach(m -> m.setInUse(false));
+				moduls.getObject().stream().filter(m -> m.getName().equals(selected)).forEach(m -> m.setInUse(false));
 				selected = getModelObject();
-				moduls.stream().filter(m -> m.getName().equals(getModelObject())).forEach(m -> m.setInUse(true));
+				moduls.getObject().stream().filter(m -> m.getName().equals(getModelObject())).forEach(m -> m.setInUse(true));
 			}
 			
 		});
@@ -46,7 +44,7 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 			return Collections.<String>emptyList().iterator();
 		}
 
-		return moduls.stream().filter(Modul::isNotInUse).filter(m -> m.getName().toUpperCase().startsWith(input.toUpperCase())).map(m -> m.getName()).collect(Collectors.toList()).iterator();
+		return moduls.getObject().stream().filter(Modul::isNotInUse).filter(m -> m.getName().toUpperCase().startsWith(input.toUpperCase())).map(m -> m.getName()).collect(Collectors.toList()).iterator();
 	}
 	
 }

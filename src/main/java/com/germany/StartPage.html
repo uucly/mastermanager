@@ -1,22 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
-<link rel="stylesheet" type="text/css" href="style.css"/>
+<link rel="stylesheet" type="text/css" href="style.css" />
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
 <body>
-
+	<h2>HALLO</h2>
 	<div wicket:id="pflicht" class="form-inline">
 		<form wicket:id="form" class="form-group">
-			<div>
-				<th>Vertiefungsrichtung</th> <select wicket:id="dropDown"></select>
-			</div>
-				Wahlpflicht:
-				<pre><input type="text" wicket:id="auto1" size="50" /></pre>
-				<pre><input type="text" wicket:id="auto2" size="50" /></pre>
-				<pre><input type="text" wicket:id="auto3" size="50" /></pre>
-				<pre><input type="text" wicket:id="auto4" size="50" /></pre>
+			<wicket:panel wicket:id="wahlPanel"></wicket:panel>
 		</form>
 	</div>
 </body>
