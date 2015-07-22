@@ -2,19 +2,15 @@ package com.germany;
 
 import java.util.Collection;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.extensions.ajax.markup.html.AjaxIndicatorAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.time.Duration;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
+import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.Stack;
 
 public class InfoPanel extends Panel{
 
@@ -28,9 +24,23 @@ public class InfoPanel extends Panel{
 		Label label = new Label("wahlLabel");
 		form.add(label);
 
-		this.progressBar = new ProgressBar("progress", Model.of(36), ProgressBar.Type.SUCCESS); 
-		//progressBar.add(new AttributeModifier("class", new Model<String>("progress-bar-success")));
-		form.add(this.progressBar);
+		this.progressBar = new ProgressBar("progress"); 
+		Stack labeledStack = new Stack(progressBar.getStackId(), Model.of(10)) {
+            @Override
+            protected IModel<String> createLabelModel() {
+                return new AbstractReadOnlyModel<String>() {
+                    @Override
+                    public String getObject() {
+                        return "The progress is: 45 Prozent";
+                    }
+                };
+            }
+        };
+        labeledStack.labeled(true).type(ProgressBar.Type.SUCCESS);
+        progressBar.addStacks(labeledStack);
+        form.add(this.progressBar);
+        
+		//form.add(labeledStack);
 		add(form);
 		
 	}
