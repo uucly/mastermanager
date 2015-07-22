@@ -4,13 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -31,7 +26,7 @@ public class WahlPflichtPanel extends Panel{
 	private WahlPflichtModule module;
 	private ModulParser modulParser;
 	
-	public WahlPflichtPanel(String id) {
+	public WahlPflichtPanel(String id, SelectedModulContainer selectedContainer) {
 		super(id);
 		
 		try {
@@ -41,10 +36,10 @@ public class WahlPflichtPanel extends Panel{
 			throw new RuntimeException(e);
 		}
 		
-		add(createForm(modulParser));
+		add(createForm(modulParser, selectedContainer));
 	}
 	
-	private static Form createForm(final ModulParser modulParser, SelectedModulReadOnlyModel selectedModuls){
+	private static Form<?> createForm(final ModulParser modulParser, SelectedModulContainer selectedModuls){
 		IModel<String> selectedModul1 = Model.of();
 		IModel<String> selectedModul2 = Model.of();
 		IModel<String> selectedModul3 = Model.of();
@@ -52,9 +47,9 @@ public class WahlPflichtPanel extends Panel{
 		IModel<Collection<Modul>> moduleOfProf = new Model(); 
 		
 		selectedModuls.setProfModuls(moduleOfProf);
-		selectedModuls.setSelectedModulNames(Model.of(Arrays.asList(selectedModul1, selectedModul2, selectedModul3, selectedModul4)));
+		selectedModuls.setSelectedModulNames(Arrays.asList(selectedModul1, selectedModul2, selectedModul3, selectedModul4));
 		
-		Form form = new Form("form");
+		Form<?> form = new Form<Object>("form");
 		form.add(new ModulAutoCompleteTextField("auto1", selectedModul1, moduleOfProf));
 		form.add(new ModulAutoCompleteTextField("auto2", selectedModul2, moduleOfProf));
 		form.add(new ModulAutoCompleteTextField("auto3", selectedModul3, moduleOfProf));
@@ -66,6 +61,8 @@ public class WahlPflichtPanel extends Panel{
 	private static DropDownChoice<Prof> createDropDown(final IModel<Collection<Modul>> moduleOfProf, ModulParser modulParser){
 		IModel<Prof> selected = Model.of(Prof.BREUNIG);
 		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selected, SEARCH_ENGINES){
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onConfigure() {
 				super.onConfigure();
@@ -74,6 +71,11 @@ public class WahlPflichtPanel extends Panel{
 		};
 		dropDown.add(new OnChangeAjaxBehavior() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				setModulOfProf(moduleOfProf, modulParser, selected);

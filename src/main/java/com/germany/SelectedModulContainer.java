@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 
 import org.apache.wicket.model.IModel;
 
-public class SelectedModulReadOnlyModel {
+public class SelectedModulContainer {
 
 	private IModel<Collection<Modul>> profModuls;
 	private Collection<IModel<String>> selectedModulNames;
 
-	public SelectedModulReadOnlyModel(){}
+	public SelectedModulContainer(){}
 	
-	public SelectedModulReadOnlyModel(IModel<Collection<Modul>> profModuls, Collection<IModel<String>> selectedModulNames){
+	public SelectedModulContainer(IModel<Collection<Modul>> profModuls, Collection<IModel<String>> selectedModulNames){
 		this.profModuls = profModuls;
 		this.selectedModulNames = selectedModulNames;
 	}
