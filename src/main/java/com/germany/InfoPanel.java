@@ -29,7 +29,7 @@ public class InfoPanel extends Panel{
 		Form<?> form = new Form<Object>("form");
 		Label label = new Label("wahlLabel");
 		
-		this.progressBar = createProgressBar(points);
+		this.progressBar = createProgressBar(points, allSelectedModuls);
         
         form.add(label);
 		form.add(this.progressBar);
@@ -47,13 +47,18 @@ public class InfoPanel extends Panel{
 		super.onEvent(event);
 		
 		if(event.getPayload() instanceof SelectedEvent){
-			points.setObject(calculatePoints(allSelectedModuls));
+			if(calculatePoints(allSelectedModuls)<23){
+				points.setObject(calculatePoints(allSelectedModuls)*(100/23));
+			} else {
+				points.setObject(100);
+			}
+			
 			SelectedEvent selectedEvent = (SelectedEvent) event.getPayload();
 			selectedEvent.getTarget().add(progressBar);
 		}
 	}
 
-	private static ProgressBar createProgressBar(IModel<Integer> points){
+	private static ProgressBar createProgressBar(IModel<Integer> points, Collection<SelectedModulContainer> allSelectedModuls){
 		ProgressBar progressBar = new ProgressBar("progress"); 
 		progressBar.setOutputMarkupId(true);
 		Stack labeledStack = new Stack(progressBar.getStackId(), points) {
@@ -62,7 +67,7 @@ public class InfoPanel extends Panel{
                 return new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
-                    	return "The progress is: "+getModelObject()+" %";
+                    	return calculatePoints(allSelectedModuls)+" von 23 Punkten";
                     }
                 };
             }

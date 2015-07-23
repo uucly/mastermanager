@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class SelectedModulContainer implements Serializable{
 	}
 
 	public List<Modul> getObject() {
-		Predicate<Modul> filterModuls = m -> selectedModulNames.stream().filter(name -> name.getObject().equals(m.getName())).findFirst().isPresent();
+		Predicate<Modul> filterModuls = m -> selectedModulNames.stream().filter(name -> m.getName().equals(name.getObject())).findFirst().isPresent();
 		return profModuls.getObject().stream().filter(filterModuls).collect(Collectors.toList());
 	}
 
