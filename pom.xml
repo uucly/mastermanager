@@ -69,6 +69,18 @@
 			<artifactId>wicket-bootstrap-less</artifactId>
 			<version>${wicket.bootsrap.version}</version>
 		</dependency>
+		<!-- WICKET STUFF OPENSTREETMAP -->
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicketstuff-openlayers3</artifactId>
+			<version>7.0.0-M6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicketstuff-openlayers</artifactId>
+			<version>7.0.0-M6</version>
+		</dependency>
+
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
 		<dependency>
