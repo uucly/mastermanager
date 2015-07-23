@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 public class ModulParser implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private final List<Modul> allModules;
 
 	public ModulParser(List<Modul> allModules) {

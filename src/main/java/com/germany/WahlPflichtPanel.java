@@ -2,8 +2,8 @@ package com.germany;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import professoren.Prof;
@@ -24,27 +25,15 @@ public class WahlPflichtPanel extends Panel{
 	
 	@SpringBean
 	private WahlPflichtModule module;
-	private ModulParser modulParser;
 	
 	public WahlPflichtPanel(String id, SelectedModulContainer selectedContainer) {
 		super(id);
-		
-		try {
-			List<Modul> allModule = module.parse(ALL_PATH);
-			modulParser = new ModulParser(allModule);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		
-		add(createForm(modulParser, selectedContainer));
+		add(createForm(createModulParser(module), selectedContainer));
 	}
 	
 	private static Form<?> createForm(final ModulParser modulParser, SelectedModulContainer selectedModuls){
-		IModel<String> selectedModul1 = Model.of();
-		IModel<String> selectedModul2 = Model.of();
-		IModel<String> selectedModul3 = Model.of();
-		IModel<String> selectedModul4 = Model.of();
-		IModel<Collection<Modul>> moduleOfProf = new Model(); 
+		IModel<String> selectedModul1 = Model.of(""), selectedModul2 = Model.of(""), selectedModul3 = Model.of(""), selectedModul4 = Model.of("");
+		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
 		
 		selectedModuls.setProfModuls(moduleOfProf);
 		selectedModuls.setSelectedModulNames(Arrays.asList(selectedModul1, selectedModul2, selectedModul3, selectedModul4));
@@ -58,22 +47,12 @@ public class WahlPflichtPanel extends Panel{
 		return form;
 	}
 	
-	private static DropDownChoice<Prof> createDropDown(final IModel<Collection<Modul>> moduleOfProf, ModulParser modulParser){
+	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, ModulParser modulParser){
 		IModel<Prof> selected = Model.of(Prof.BREUNIG);
-		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selected, SEARCH_ENGINES){
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onConfigure() {
-				super.onConfigure();
-				setModulOfProf(moduleOfProf, modulParser, selected);
-			}
-		};
+		setModulOfProf(moduleOfProf, modulParser, selected);
+		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selected, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
 			
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -86,11 +65,20 @@ public class WahlPflichtPanel extends Panel{
 	}
 	
 	
-	private static void setModulOfProf( IModel<Collection<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> selected){
+	private static void setModulOfProf( IModel<List<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> selected){
 		try{
 			moduleOfProf.setObject(modulParser.parse(selected.getObject().getPath()));
 		}catch(IOException ex){
 			throw new RuntimeException(ex);
+		}
+	}
+	
+	private static ModulParser createModulParser(WahlPflichtModule module){
+		try {
+			List<Modul> allModule = module.parse(ALL_PATH);
+			return new ModulParser(allModule);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	
