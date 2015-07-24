@@ -3,6 +3,7 @@ package com.menueBar;
 public enum MenuItemEnum {
     
     Start("Start"),
+    DRAG_DROP("Drag and Drop"),
     MAP("Map"),
     ABOUT_US("About us"),
     CONTACT("Contact"),

@@ -14,6 +14,7 @@ import de.agilecoders.wicket.core.settings.ThemeProvider;
 import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
+import dragAndDrop.DragAndDropPage;
 
 /**
  * Application object for your web application. If you want to run this
@@ -41,7 +42,10 @@ public class WicketApplication extends WebApplication {
 		
 		//mountPage("com/germany", StartPage.class);
 		mountPage("com/menueBar", StartPage.class);
-		mountPage("com/germany", OpenStreetMapPage.class);
+		mountPage("com/dragAndDrop", DragAndDropPage.class);
+		//mountPage("com/menueBar", StartPage.class);
+		
+		//mountPage("com/germany", OpenStreetMapPage.class);
 /*		mountPage("product-two", ProductTwoPage.class);
 		mountPage("product-three", ProductThreePage.class);
 		mountPage("team", TeamPage.class);

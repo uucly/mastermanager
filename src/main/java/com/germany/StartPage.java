@@ -23,12 +23,11 @@ public class StartPage extends BasePage{
 
 	private static final long serialVersionUID = 1L;
 	
-	public StartPage(final PageParameters parameters) throws IOException{
+	public StartPage() throws IOException{
 		
 		WebMarkupContainer address = new WebMarkupContainer("pflicht");
 		address.add(createForm());
-		add(address); 
-		
+		add(address);
 		//	add(HeaderContributor.forJavaScript("http://www.google.com/jsapi?key=ABCDEFG"));
 	}
 	
