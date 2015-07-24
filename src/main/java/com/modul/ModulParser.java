@@ -1,4 +1,4 @@
-package com.germany;
+package com.modul;
 
 import java.io.IOException;
 import java.io.Serializable;

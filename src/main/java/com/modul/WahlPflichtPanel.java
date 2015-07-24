@@ -1,4 +1,4 @@
-package com.germany;
+package com.modul;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import professoren.Prof;
+import com.professoren.Prof;
 
 public class WahlPflichtPanel extends Panel{
 

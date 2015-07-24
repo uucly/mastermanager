@@ -1,4 +1,4 @@
-package com.germany;
+package com.modul;
 
 import java.io.Serializable;
 import java.util.Collection;

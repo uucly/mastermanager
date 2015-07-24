@@ -70,14 +70,26 @@
 			<version>${wicket.bootsrap.version}</version>
 		</dependency>
 		<!-- WICKET STUFF OPENSTREETMAP -->
+		<!-- <dependency> <groupId>org.wicketstuff</groupId> <artifactId>wicketstuff-openlayers3</artifactId> 
+			<version>7.0.0-M6</version> </dependency> -->
 		<dependency>
 			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-openlayers3</artifactId>
+			<artifactId>wicketstuff-jwicket-core</artifactId>
 			<version>7.0.0-M6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.wicketstuff</groupId>
 			<artifactId>wicketstuff-openlayers</artifactId>
+			<version>7.0.0-M6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>jwicket-core</artifactId>
+			<version>1.4.21</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicketstuff-gmap3</artifactId>
 			<version>7.0.0-M6</version>
 		</dependency>
 

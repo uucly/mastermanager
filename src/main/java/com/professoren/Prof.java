@@ -1,4 +1,4 @@
-package professoren;
+package com.professoren;
 
 public enum Prof {
 

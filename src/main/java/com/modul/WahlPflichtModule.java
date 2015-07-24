@@ -1,4 +1,4 @@
-package com.germany;
+package com.modul;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+
+import com.modul.Modul;
 
 @Service
 public class WahlPflichtModule {

@@ -1,4 +1,4 @@
-package com.germany;
+package com.modul;
 
 import java.util.Collections;
 import java.util.Iterator;

@@ -3,15 +3,18 @@ package com.germany;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import com.menueBar.BasePage;
 import com.menueBar.MenuItemEnum;
+import com.modul.InfoPanel;
+import com.modul.SelectedModulContainer;
+import com.modul.WahlPflichtPanel;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.extensions.markup.html.bootstrap.icon.FontAwesomeCssReference;
@@ -21,11 +24,12 @@ public class StartPage extends BasePage{
 	private static final long serialVersionUID = 1L;
 	
 	public StartPage(final PageParameters parameters) throws IOException{
-		//super(parameters);
 		
 		WebMarkupContainer address = new WebMarkupContainer("pflicht");
 		address.add(createForm());
-		add(address);
+		add(address); 
+		
+		//	add(HeaderContributor.forJavaScript("http://www.google.com/jsapi?key=ABCDEFG"));
 	}
 	
 	private static Form<?> createForm() throws IOException{

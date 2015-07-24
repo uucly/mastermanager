@@ -1,11 +1,11 @@
 package com.germany;
 
+import map.OpenStreetMapPage;
+
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-
-import com.menueBar.ModulPage;
-import com.menueBar.MapPage;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
@@ -27,7 +27,7 @@ public class WicketApplication extends WebApplication {
 	 */
 	@Override
 	public Class<? extends WebPage> getHomePage() {
-		return OpenStreetMapPage.class;
+		return HomePage.class;
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class WicketApplication extends WebApplication {
 		getComponentInstantiationListeners().add( new SpringComponentInjector(this));
 		
 		//mountPage("com/germany", StartPage.class);
-		//mountPage("com/menueBar", StartPage.class);
-		//mountPage("com/germany", OpenStreetMapPage.class);
+		mountPage("com/menueBar", StartPage.class);
+		mountPage("com/germany", OpenStreetMapPage.class);
 /*		mountPage("product-two", ProductTwoPage.class);
 		mountPage("product-three", ProductThreePage.class);
 		mountPage("team", TeamPage.class);
