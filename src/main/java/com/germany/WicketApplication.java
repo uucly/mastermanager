@@ -43,7 +43,7 @@ public class WicketApplication extends WebApplication {
 		//mountPage("com/germany", StartPage.class);
 		mountPage("com/menueBar", StartPage.class);
 		mountPage("com/dragAndDrop", DragAndDropPage.class);
-		//mountPage("com/menueBar", StartPage.class);
+		mountPage("com/menueBar", StartPage.class);
 		
 		//mountPage("com/germany", OpenStreetMapPage.class);
 /*		mountPage("product-two", ProductTwoPage.class);

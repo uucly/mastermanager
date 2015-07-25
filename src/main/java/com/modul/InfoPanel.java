@@ -12,11 +12,13 @@ import org.apache.wicket.model.Model;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.Stack;
+import dragAndDrop.ProfChangedEvent;
 
 public class InfoPanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
-
+	private static final double MAX_POINTS = 23;
+	
 	private final ProgressBar progressBar;
 	private final Collection<SelectedModulContainer> allSelectedModuls;
 	private final Model<Integer> points = Model.of(0);
@@ -47,15 +49,24 @@ public class InfoPanel extends Panel{
 		super.onEvent(event);
 		
 		if(event.getPayload() instanceof SelectedEvent){
-			if(calculatePoints(allSelectedModuls)<23){
-				points.setObject(calculatePoints(allSelectedModuls)*(100/23));
+			if(calculatePoints(allSelectedModuls)<MAX_POINTS){
+				points.setObject((int) Math.round((calculatePoints(allSelectedModuls)*(100/MAX_POINTS))));
 			} else {
 				points.setObject(100);
 			}
 			
-			SelectedEvent selectedEvent = (SelectedEvent) event.getPayload();
-			selectedEvent.getTarget().add(progressBar);
+			((SelectedEvent) event.getPayload()).getTarget().add(progressBar);
+		} else if(event.getPayload() instanceof ProfChangedEvent){
+			if(calculatePoints(allSelectedModuls)<MAX_POINTS){
+				points.setObject((int) Math.round((calculatePoints(allSelectedModuls)*(100/MAX_POINTS))));
+			} else {
+				points.setObject(100);
+			}
+			
+			((ProfChangedEvent) event.getPayload()).getTarget().add(progressBar);
 		}
+		
+		
 	}
 
 	private static ProgressBar createProgressBar(IModel<Integer> points, Collection<SelectedModulContainer> allSelectedModuls){
@@ -67,7 +78,7 @@ public class InfoPanel extends Panel{
                 return new AbstractReadOnlyModel<String>() {
                     @Override
                     public String getObject() {
-                    	return calculatePoints(allSelectedModuls)+" von 23 Punkten";
+                    	return calculatePoints(allSelectedModuls)+" von " + MAX_POINTS + " Punkten";
                     }
                 };
             }
@@ -76,4 +87,5 @@ public class InfoPanel extends Panel{
         progressBar.addStacks(labeledStack);
         return progressBar;
 	}
+	
 }

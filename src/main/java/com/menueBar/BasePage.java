@@ -1,7 +1,5 @@
 package com.menueBar;
 
-import map.OpenStreetMapPage;
-
 import org.apache.wicket.markup.html.WebPage;
 
 import com.germany.HomePage;
@@ -25,5 +23,5 @@ public abstract class BasePage extends WebPage{
 	            .build());
 	    }
 
-	    public abstract MenuItemEnum getActiveMenu();
+	public abstract MenuItemEnum getActiveMenu();
 }

@@ -2,14 +2,14 @@ package com.modul;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+
+import com.google.common.collect.Lists;
 
 public class SelectedModulContainer implements Serializable{
 
@@ -19,8 +19,8 @@ public class SelectedModulContainer implements Serializable{
 	private Collection<IModel<String>> selectedModulNames;
 
 	public SelectedModulContainer(){
-		selectedModulNames = Collections.emptyList();
-		profModuls = new ListModel<>(Collections.emptyList());
+		selectedModulNames = Lists.newArrayList();
+		profModuls = new ListModel<>(Lists.newArrayList());
 	}
 	
 	public SelectedModulContainer(ListModel<Modul> profModuls, Collection<IModel<String>> selectedModulNames){
@@ -39,6 +39,10 @@ public class SelectedModulContainer implements Serializable{
 
 	public void setSelectedModulNames(Collection<IModel<String>> selectedModulNames) {
 		this.selectedModulNames = selectedModulNames;
+	}
+	
+	public void addSelectedModulName(IModel<String> selectedModulNames) {
+		this.selectedModulNames.add(selectedModulNames);
 	}
 	
 	public double calculatePoints(){
