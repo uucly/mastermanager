@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+import com.google.common.collect.Lists;
 import com.menueBar.BasePage;
 import com.menueBar.MenuItemEnum;
 import com.modul.InfoPanel;
@@ -38,7 +39,7 @@ public class StartPage extends BasePage{
 		Form<?> form = new Form<Object>("form");
 		form.add(new WahlPflichtPanel("wahlPanel1", selectedModuls1));
 		form.add(new WahlPflichtPanel("wahlPanel2", selectedModuls2));
-		form.add(new InfoPanel("infoPanel", Arrays.asList(selectedModuls1, selectedModuls2)));
+		form.add(new InfoPanel("infoPanel", Arrays.asList(selectedModuls1, selectedModuls2), Lists.newArrayList()));
 		return form;
 	}
 	

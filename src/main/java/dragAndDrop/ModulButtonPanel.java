@@ -42,13 +42,13 @@ public class ModulButtonPanel extends Panel{
 	private transient AbstractEvent profEvent;
 	
 	//TODO replace ProfCHangedEvent with EventInjector
-	public ModulButtonPanel(String id, final SelectedModulContainer modulContainer, AbstractEvent profEvent) throws IOException {
+	public ModulButtonPanel(String id, final SelectedModulContainer modulContainer, AbstractEvent profEvent, final IModel<Prof> prof) throws IOException {
 		super(id);
 		setOutputMarkupId(true);
 		this.profEvent = profEvent;
 		ModulParser modulParser = createModulParser(module);
 		moduleOfProf = new ListModel<Modul>();
-		modulContainer.setProfModuls(moduleOfProf);
+		//modulContainer.setProfModuls(moduleOfProf);
 		
 		form = new Form<Object>("form");
 		
@@ -58,12 +58,12 @@ public class ModulButtonPanel extends Panel{
 
 			@Override
 			protected void populateItem(ListItem<Modul> item) {				
-				Button b = new ModulButton("modulButton", modulContainer, Model.of(item.getModelObject().getName()));
+				Button b = new ModulButton("modulButton", modulContainer, item.getModelObject(), prof);
 				item.add(b);
 			}
 		};
 		
-		form.add(createDropDown(moduleOfProf, modulParser, profEvent));
+		form.add(createDropDown(moduleOfProf, prof, modulParser, profEvent));
 		form.add(modulList);
 		
 		add(form);
@@ -80,17 +80,16 @@ public class ModulButtonPanel extends Panel{
 		}
 	}
 	
-	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, ModulParser modulParser, AbstractEvent profEvent){
-		IModel<Prof> selected = Model.of(Prof.BREUNIG);
-		setModulOfProf(moduleOfProf, modulParser, selected);
-		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selected, SEARCH_ENGINES);
+	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, final IModel<Prof> selectedProf, ModulParser modulParser, AbstractEvent profEvent){
+		setModulOfProf(moduleOfProf, modulParser, selectedProf);
+		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selectedProf, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
 			
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				setModulOfProf(moduleOfProf, modulParser, selected);
+				setModulOfProf(moduleOfProf, modulParser, selectedProf);
 				profEvent.setTarget(target);
 				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, profEvent);
 			}
@@ -101,7 +100,9 @@ public class ModulButtonPanel extends Panel{
 	
 	private static void setModulOfProf( IModel<List<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> selected){
 		try{
-			moduleOfProf.setObject(modulParser.parse(selected.getObject().getPath()));
+			List<Modul> allModuls = modulParser.parse(selected.getObject().getPath());
+			moduleOfProf.setObject(allModuls);
+			selected.getObject().setAllModuls(allModuls);
 		}catch(IOException ex){
 			throw new RuntimeException(ex);
 		}
@@ -110,9 +111,8 @@ public class ModulButtonPanel extends Panel{
 	@Override
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
-		
-		if(event.getPayload().equals(profEvent)){
-			System.out.println((AbstractEvent)event.getPayload());
+		System.out.println(event.getPayload());
+		if(event.getPayload() instanceof AbstractEvent && profEvent.getId() == ((AbstractEvent)event.getPayload()).getId()){
 			((AbstractEvent)event.getPayload()).getTarget().add(form);
 		}
 	}
