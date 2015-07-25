@@ -36,7 +36,7 @@ public class WahlPflichtPanel extends Panel{
 		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
 		
 		selectedModuls.setProfModuls(moduleOfProf);
-		selectedModuls.setSelectedModulNames(Arrays.asList(selectedModul1, selectedModul2, selectedModul3, selectedModul4));
+		selectedModuls.addSelectedModulName(Arrays.asList(selectedModul1, selectedModul2, selectedModul3, selectedModul4));
 		
 		Form<?> form = new Form<Object>("form");
 		form.add(new ModulAutoCompleteTextField("auto1", selectedModul1, moduleOfProf));

@@ -12,7 +12,7 @@ import org.apache.wicket.model.Model;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.Stack;
-import dragAndDrop.ProfChangedEvent;
+import dragAndDrop.AbstractEvent;
 
 public class InfoPanel extends Panel{
 
@@ -56,14 +56,14 @@ public class InfoPanel extends Panel{
 			}
 			
 			((SelectedEvent) event.getPayload()).getTarget().add(progressBar);
-		} else if(event.getPayload() instanceof ProfChangedEvent){
+		} else if(event.getPayload() instanceof AbstractEvent){
 			if(calculatePoints(allSelectedModuls)<MAX_POINTS){
 				points.setObject((int) Math.round((calculatePoints(allSelectedModuls)*(100/MAX_POINTS))));
 			} else {
 				points.setObject(100);
 			}
 			
-			((ProfChangedEvent) event.getPayload()).getTarget().add(progressBar);
+			((AbstractEvent) event.getPayload()).getTarget().add(progressBar);
 		}
 		
 		

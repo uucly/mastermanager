@@ -28,7 +28,7 @@ public class SelectedModulContainer implements Serializable{
 		this.selectedModulNames = selectedModulNames;
 	}
 
-	public List<Modul> getObject() {
+	public List<Modul> getSelectedModuls() {
 		Predicate<Modul> filterModuls = m -> selectedModulNames.stream().filter(name -> m.getName().equals(name.getObject())).findFirst().isPresent();
 		return profModuls.getObject().stream().filter(filterModuls).collect(Collectors.toList());
 	}
@@ -37,16 +37,24 @@ public class SelectedModulContainer implements Serializable{
 		this.profModuls = profModuls;
 	}
 
+	public Collection<IModel<String>> getSelectedModulNames(){
+		return this.selectedModulNames;
+	}
+	
 	public void setSelectedModulNames(Collection<IModel<String>> selectedModulNames) {
 		this.selectedModulNames = selectedModulNames;
 	}
 	
-	public void addSelectedModulName(IModel<String> selectedModulNames) {
-		this.selectedModulNames.add(selectedModulNames);
+	public void addSelectedModulName(IModel<String> selectedModulName) {
+		this.selectedModulNames.add(selectedModulName);
+	}
+	
+	public void addSelectedModulName(List<IModel<String>> selectedModulNames) {
+		this.selectedModulNames.addAll(selectedModulNames);
 	}
 	
 	public double calculatePoints(){
-		return getObject().stream().mapToDouble(Modul::getPoints).sum();
+		return getSelectedModuls().stream().mapToDouble(Modul::getPoints).sum();
 	}
 
 }

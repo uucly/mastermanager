@@ -22,8 +22,8 @@ public class DragAndDropPage extends BasePage{
 		SelectedModulContainer modulContainer1 = new SelectedModulContainer();
 		SelectedModulContainer modulContainer2 = new SelectedModulContainer();
 		
-		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", modulContainer1);
-		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", modulContainer2);
+		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", modulContainer1, new ProfChangedEventLeft(null));
+		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", modulContainer1, new ProfChangedEventRight(null));
 		InfoPanel infoPanel = new InfoPanel("infoPanel", Arrays.asList(modulContainer1, modulContainer2));
 		
 		add(panel1, panel2, infoPanel);

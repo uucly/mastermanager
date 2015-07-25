@@ -2,16 +2,12 @@ package com.modul;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
-public class SelectedEvent {
+import dragAndDrop.AbstractEvent;
 
-	private final AjaxRequestTarget target;
-	
+public class SelectedEvent extends AbstractEvent {
+
 	public SelectedEvent(AjaxRequestTarget target) {
-		this.target = target;
-	}
-
-	public AjaxRequestTarget getTarget() {
-		return target;
+		super(target);
 	}
 
 }
