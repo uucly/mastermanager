@@ -31,6 +31,8 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 		
 		add(new OnChangeAjaxBehavior(){
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				moduls.getObject().stream().filter(m -> m.getName().equals(selected)).forEach(m -> m.setInUse(false));
@@ -41,6 +43,8 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 		});
 		
 		add(new AjaxFormComponentUpdatingBehavior("onChange"){
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {

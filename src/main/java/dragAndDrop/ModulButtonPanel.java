@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
@@ -16,13 +15,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.modul.Modul;
 import com.modul.ModulParser;
-import com.modul.SelectedModulContainer;
 import com.modul.WahlPflichtModule;
 import com.professoren.Prof;
 
@@ -32,8 +29,6 @@ public class ModulButtonPanel extends Panel{
 	private static final String ALL_PATH= "src/main/resources/WahlPflichtModule.txt";
 	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof.values());
 	
-	
-	
 	@SpringBean
 	private WahlPflichtModule module;
 	
@@ -42,13 +37,12 @@ public class ModulButtonPanel extends Panel{
 	private transient AbstractEvent profEvent;
 	
 	//TODO replace ProfCHangedEvent with EventInjector
-	public ModulButtonPanel(String id, final SelectedModulContainer modulContainer, AbstractEvent profEvent, final IModel<Prof> prof) throws IOException {
+	public ModulButtonPanel(String id, AbstractEvent profEvent, final IModel<Prof> prof) throws IOException {
 		super(id);
 		setOutputMarkupId(true);
 		this.profEvent = profEvent;
 		ModulParser modulParser = createModulParser(module);
 		moduleOfProf = new ListModel<Modul>();
-		//modulContainer.setProfModuls(moduleOfProf);
 		
 		form = new Form<Object>("form");
 		
@@ -58,7 +52,7 @@ public class ModulButtonPanel extends Panel{
 
 			@Override
 			protected void populateItem(ListItem<Modul> item) {				
-				Button b = new ModulButton("modulButton", modulContainer, item.getModelObject(), prof);
+				Button b = new ModulButton("modulButton", item.getModelObject(), prof);
 				item.add(b);
 			}
 		};
@@ -111,7 +105,6 @@ public class ModulButtonPanel extends Panel{
 	@Override
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
-		System.out.println(event.getPayload());
 		if(event.getPayload() instanceof AbstractEvent && profEvent.getId() == ((AbstractEvent)event.getPayload()).getId()){
 			((AbstractEvent)event.getPayload()).getTarget().add(form);
 		}

@@ -39,7 +39,7 @@ public class StartPage extends BasePage{
 		Form<?> form = new Form<Object>("form");
 		form.add(new WahlPflichtPanel("wahlPanel1", selectedModuls1));
 		form.add(new WahlPflichtPanel("wahlPanel2", selectedModuls2));
-		form.add(new InfoPanel("infoPanel", Arrays.asList(selectedModuls1, selectedModuls2), Lists.newArrayList()));
+		form.add(new InfoPanel("infoPanel", Lists.newArrayList()));
 		return form;
 	}
 	

@@ -1,6 +1,5 @@
 package com.modul;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.wicket.event.IEvent;
@@ -10,8 +9,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.ListModel;
-
 import com.professoren.Prof;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
@@ -24,19 +21,17 @@ public class InfoPanel extends Panel{
 	private static final double MAX_POINTS = 23;
 	
 	private final ProgressBar progressBar;
-	private final Collection<SelectedModulContainer> allSelectedModuls;
 	private final Model<Integer> points = Model.of(0);
 	private List<IModel<Prof>> profs;
 	
-	public InfoPanel(String id, Collection<SelectedModulContainer> allSelectedModuls, List<IModel<Prof>> profs) {
+	public InfoPanel(String id, List<IModel<Prof>> profs) {
 		super(id);
 		this.profs = profs;
-		this.allSelectedModuls = allSelectedModuls;
 		setOutputMarkupId(true);
 		Form<?> form = new Form<Object>("form");
 		Label label = new Label("wahlLabel");
 		
-		this.progressBar = createProgressBar(points, allSelectedModuls, profs);
+		this.progressBar = createProgressBar(points, profs);
         
         form.add(label);
 		form.add(this.progressBar);
@@ -44,10 +39,6 @@ public class InfoPanel extends Panel{
 		add(form);
 			
 	}
-	
-	/*private static int calculatePoints(Collection<SelectedModulContainer> allSelectedModuls){
-		return (int)allSelectedModuls.stream().mapToDouble(SelectedModulContainer::calculatePoints).sum();
-	}*/
 	
 	private static int calculatePoints(List<IModel<Prof>> profs){
 		return (int)Math.round(profs.stream().mapToDouble(m -> m.getObject().calculatePoints()).sum());
@@ -59,7 +50,6 @@ public class InfoPanel extends Panel{
 		
 		if(event.getPayload() instanceof SelectedEvent){
 			if(calculatePoints(profs)<MAX_POINTS){
-				//points.setObject((int) Math.round((calculatePoints(allSelectedModuls)*(100/MAX_POINTS))));
 				points.setObject(calculatePoints(profs));
 			} else {
 				points.setObject(100);
@@ -79,7 +69,7 @@ public class InfoPanel extends Panel{
 		
 	}
 
-	private static ProgressBar createProgressBar(IModel<Integer> points, Collection<SelectedModulContainer> allSelectedModuls, List<IModel<Prof>> profs2){
+	private static ProgressBar createProgressBar(IModel<Integer> points, List<IModel<Prof>> profs2){
 		ProgressBar progressBar = new ProgressBar("progress"); 
 		progressBar.setOutputMarkupId(true);
 		Stack labeledStack = new Stack(progressBar.getStackId(), points) {

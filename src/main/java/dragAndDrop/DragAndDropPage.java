@@ -10,7 +10,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.menueBar.BasePage;
 import com.menueBar.MenuItemEnum;
 import com.modul.InfoPanel;
-import com.modul.SelectedModulContainer;
 import com.modul.WahlPflichtModule;
 import com.professoren.Prof;
 
@@ -28,13 +27,11 @@ public class DragAndDropPage extends BasePage{
 	
 	
 	public DragAndDropPage() throws IOException {
-		SelectedModulContainer modulContainer1 = new SelectedModulContainer();
-		SelectedModulContainer modulContainer2 = new SelectedModulContainer();
 		IModel<Prof> prof1 = Model.of(Prof.BREUNIG), prof2= Model.of(Prof.HINZ);
 		
-		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", modulContainer1,profEventLeft, prof1);
-		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", modulContainer1,profEventRight, prof2);
-		InfoPanel infoPanel = new InfoPanel("infoPanel", Arrays.asList(modulContainer1, modulContainer2), Arrays.asList(prof1, prof2));
+		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1",profEventLeft, prof1);
+		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2",profEventRight, prof2);
+		InfoPanel infoPanel = new InfoPanel("infoPanel", Arrays.asList(prof1, prof2));
 		
 		add(panel1, panel2, infoPanel);
 	}

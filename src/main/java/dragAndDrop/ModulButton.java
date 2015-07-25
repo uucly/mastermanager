@@ -13,20 +13,17 @@ import org.apache.wicket.model.Model;
 
 import com.modul.Modul;
 import com.modul.SelectedEvent;
-import com.modul.SelectedModulContainer;
 import com.professoren.Prof;
 
 public class ModulButton extends AjaxButton {
 
 	private static final long serialVersionUID = 1L;
-	private final SelectedModulContainer modulContainer;
 	private IModel<Prof> prof;
 	private Modul modul;
 
-	public ModulButton(String id, SelectedModulContainer modulContainer, Modul modul, IModel<Prof> prof) {
+	public ModulButton(String id, Modul modul, IModel<Prof> prof) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
-		this.modulContainer = modulContainer;
 		this.modul = modul;
 		this.prof = prof;
 	}
@@ -36,7 +33,6 @@ public class ModulButton extends AjaxButton {
 		super.onSubmit(target, form);
 		setSelected();
 		prof.getObject().addSelectedModul(modul);
-		//modulContainer.addSelectedModulName(getModel());
 		target.add(this);
 		send(getPage(), Broadcast.DEPTH, new SelectedEvent(target));
 	}
@@ -44,10 +40,6 @@ public class ModulButton extends AjaxButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		/*if (modulContainer.getSelectedModulNames().contains(getModel())) {
-			setEnabled(false);
-		//	add(new AttributeAppender("class", Model.of(" btn-danger")));
-		}*/
 		if(prof.getObject().getSelectedModuls().contains(modul)){
 			setSelected();
 		} else if(containsProf(prof.getObject(), modul)) {
@@ -58,16 +50,7 @@ public class ModulButton extends AjaxButton {
 	@Override
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
-		/*if (event.getPayload() instanceof AbstractEvent) {
-			if (modulContainer.getSelectedModulNames().contains(getModel())) {
-				setEnabled(false);
-				((AbstractEvent) event.getPayload()).getTarget().add(this);
-			}
-		} else */if(event.getPayload() instanceof SelectedEvent){
-			/*if (modulContainer.getSelectedModulNames().contains(getModel())) {
-				setEnabled(false);
-				((SelectedEvent) event.getPayload()).getTarget().add(this);
-			}*/
+		if(event.getPayload() instanceof SelectedEvent){
 			if(containsProf(prof.getObject(), modul)){
 				setEnabled(false);
 				((SelectedEvent) event.getPayload()).getTarget().add(this);

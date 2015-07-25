@@ -26,17 +26,14 @@ public class WahlPflichtPanel extends Panel{
 	@SpringBean
 	private WahlPflichtModule module;
 	
-	public WahlPflichtPanel(String id, SelectedModulContainer selectedContainer) {
+	public WahlPflichtPanel(String id, SelectedModulContainer selectedContainer, IModel<Prof> prof) {
 		super(id);
-		add(createForm(createModulParser(module), selectedContainer));
+		add(createForm(createModulParser(module), selectedContainer, prof));
 	}
 	
-	private static Form<?> createForm(final ModulParser modulParser, SelectedModulContainer selectedModuls){
+	private static Form<?> createForm(final ModulParser modulParser, SelectedModulContainer selectedModuls, IModel<Prof> prof){
 		IModel<String> selectedModul1 = Model.of(""), selectedModul2 = Model.of(""), selectedModul3 = Model.of(""), selectedModul4 = Model.of("");
 		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
-		
-		//selectedModuls.setProfModuls(moduleOfProf);
-		//selectedModuls.addSelectedModulName(Arrays.asList(selectedModul1, selectedModul2, selectedModul3, selectedModul4));
 		
 		Form<?> form = new Form<Object>("form");
 		form.add(new ModulAutoCompleteTextField("auto1", selectedModul1, moduleOfProf));
