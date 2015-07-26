@@ -37,10 +37,21 @@ public class WahlPflichtPanel extends Panel{
 	private final Form<?> form;
 
 	private ModulAutoCompleteTextField t;
+
+	private IModel<Prof> prof;
+
+	private Model<String> first;
+
+	private Model<String> second;
+
+	private Model<String> third;
+
+	private Model<String> fourth;
 	
 	public WahlPflichtPanel(String id, IModel<Prof> prof, AbstractEvent profEvent) {
 		super(id);
 		this.profEvent = profEvent;
+		this.prof = prof;
 		form = createForm(createModulParser(module), prof, profEvent);
 		add(form);
 	}
@@ -49,11 +60,16 @@ public class WahlPflichtPanel extends Panel{
 		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
 	
 		List<Modul> firstFourModuls = loadFirstFourModuls(prof);
+		first = Model.of(firstFourModuls.get(0).getName());
+		second= Model.of(firstFourModuls.get(1).getName());
+		third = Model.of(firstFourModuls.get(2).getName());
+		fourth = Model.of(firstFourModuls.get(3).getName());
+		
 		Form<?> form = new Form<Object>("form");
-		form.add(new ModulAutoCompleteTextField("auto1", Model.of(firstFourModuls.get(0)),prof, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto2", Model.of(firstFourModuls.get(1)),prof, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto3", Model.of(firstFourModuls.get(2)),prof, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto4", Model.of(firstFourModuls.get(3)),prof, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto1", first,prof, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto2", second,prof, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto3", third,prof, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto4", fourth,prof, moduleOfProf));
 		form.add(createDropDown(moduleOfProf, modulParser, prof, profEvent));
 		return form;
 	}
@@ -80,7 +96,7 @@ public class WahlPflichtPanel extends Panel{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				moduleOfProf.setObject(loadModulsOfProf(modulParser, prof));
-				target.add(this.getFormComponent());
+				profEvent.setTarget(target);
 				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, profEvent);
 			}
 		});
@@ -103,6 +119,20 @@ public class WahlPflichtPanel extends Panel{
 			return new ModulParser(allModule);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public void onEvent(IEvent<?> event) {
+		super.onEvent(event);
+		if(event.getPayload() instanceof AbstractEvent && profEvent.getId() == ((AbstractEvent)event.getPayload()).getId()){
+			List<Modul> firstFourModuls = loadFirstFourModuls(prof);
+			first.setObject(firstFourModuls.get(0).getName());
+			second.setObject(firstFourModuls.get(1).getName());
+			third.setObject(firstFourModuls.get(2).getName());
+			fourth.setObject(firstFourModuls.get(3).getName());
+			
+			((AbstractEvent)event.getPayload()).getTarget().add(form);
 		}
 	}
 	

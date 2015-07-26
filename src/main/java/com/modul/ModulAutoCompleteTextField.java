@@ -24,8 +24,8 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 	private final IModel<List<Modul>> moduls;
 	private String selected;
 	
-	public ModulAutoCompleteTextField(String id, IModel<Modul> modulModel, IModel<Prof> prof, ListModel<Modul> moduls) {
-		super(id, Model.of(modulModel.getObject().getName()));
+	public ModulAutoCompleteTextField(String id, IModel<String> modulModel, IModel<Prof> prof, ListModel<Modul> moduls) {
+		super(id, modulModel);
 		this.moduls = moduls;
 		selected = "";
 		add(new OnChangeAjaxBehavior(){
