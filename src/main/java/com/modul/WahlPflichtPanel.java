@@ -26,14 +26,20 @@ public class WahlPflichtPanel extends Panel{
 	@SpringBean
 	private WahlPflichtModule module;
 	
-	public WahlPflichtPanel(String id, SelectedModulContainer selectedContainer, IModel<Prof> prof) {
+	public WahlPflichtPanel(String id, IModel<Prof> prof) {
 		super(id);
-		add(createForm(createModulParser(module), selectedContainer, prof));
+		add(createForm(createModulParser(module), prof));
 	}
 	
-	private static Form<?> createForm(final ModulParser modulParser, SelectedModulContainer selectedModuls, IModel<Prof> prof){
-		IModel<String> selectedModul1 = Model.of(""), selectedModul2 = Model.of(""), selectedModul3 = Model.of(""), selectedModul4 = Model.of("");
+	private static Form<?> createForm(final ModulParser modulParser, IModel<Prof> prof){
+		IModel<Modul> selectedModul1 = Model.of(new Modul("",0)), selectedModul2 = Model.of(new Modul("",0)), selectedModul3 = Model.of(new Modul("",0)), selectedModul4 = Model.of(new Modul("",0));
 		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
+		prof.getObject().addSelectedModul(selectedModul1.getObject());
+		prof.getObject().addSelectedModul(selectedModul2.getObject());
+		prof.getObject().addSelectedModul(selectedModul3.getObject());
+		prof.getObject().addSelectedModul(selectedModul4.getObject());
+		
+		
 		
 		Form<?> form = new Form<Object>("form");
 		form.add(new ModulAutoCompleteTextField("auto1", selectedModul1, moduleOfProf));
@@ -46,7 +52,7 @@ public class WahlPflichtPanel extends Panel{
 	
 	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, ModulParser modulParser){
 		IModel<Prof> selected = Model.of(Prof.BREUNIG);
-		setModulOfProf(moduleOfProf, modulParser, selected);
+		moduleOfProf.setObject(loadModulsOfProf(modulParser, selected));
 		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selected, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
 			
@@ -54,7 +60,7 @@ public class WahlPflichtPanel extends Panel{
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				setModulOfProf(moduleOfProf, modulParser, selected);
+				moduleOfProf.setObject(loadModulsOfProf(modulParser, selected));
 			}
 		});
 		
@@ -62,9 +68,9 @@ public class WahlPflichtPanel extends Panel{
 	}
 	
 	
-	private static void setModulOfProf( IModel<List<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> selected){
+	private static List<Modul> loadModulsOfProf(ModulParser modulParser, IModel<Prof> selected){
 		try{
-			moduleOfProf.setObject(modulParser.parse(selected.getObject().getPath()));
+			return modulParser.parse(selected.getObject().getPath());
 		}catch(IOException ex){
 			throw new RuntimeException(ex);
 		}

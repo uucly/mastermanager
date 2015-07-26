@@ -3,6 +3,7 @@ package dragAndDrop;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
@@ -75,7 +76,7 @@ public class ModulButtonPanel extends Panel{
 	}
 	
 	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, final IModel<Prof> selectedProf, ModulParser modulParser, AbstractEvent profEvent){
-		setModulOfProf(moduleOfProf, modulParser, selectedProf);
+		moduleOfProf.setObject(loadModulsOfProf(modulParser, selectedProf));
 		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selectedProf, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
 			
@@ -83,7 +84,7 @@ public class ModulButtonPanel extends Panel{
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				setModulOfProf(moduleOfProf, modulParser, selectedProf);
+				moduleOfProf.setObject(loadModulsOfProf(modulParser, selectedProf));
 				profEvent.setTarget(target);
 				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, profEvent);
 			}
@@ -92,11 +93,9 @@ public class ModulButtonPanel extends Panel{
 		return dropDown;
 	}
 	
-	private static void setModulOfProf( IModel<List<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> selected){
+	private static List<Modul> loadModulsOfProf(ModulParser modulParser, IModel<Prof> selected){
 		try{
-			List<Modul> allModuls = modulParser.parse(selected.getObject().getPath());
-			moduleOfProf.setObject(allModuls);
-			selected.getObject().setAllModuls(allModuls);
+			return modulParser.parse(selected.getObject().getPath());
 		}catch(IOException ex){
 			throw new RuntimeException(ex);
 		}

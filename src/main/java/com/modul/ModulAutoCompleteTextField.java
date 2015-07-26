@@ -3,6 +3,7 @@ package com.modul;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -11,6 +12,7 @@ import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
 import com.google.common.base.Strings;
@@ -24,8 +26,8 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 	private final IModel<List<Modul>> moduls;
 	private String selected;
 	
-	public ModulAutoCompleteTextField(String id, IModel<String> model, ListModel<Modul> moduls) {
-		super(id, model);
+	public ModulAutoCompleteTextField(String id, IModel<Modul> model, ListModel<Modul> moduls) {
+		super(id, Model.of(model.getObject().getName()));
 		this.moduls = moduls;
 		selected = "";
 		
@@ -48,6 +50,10 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
+				Optional<Modul> selectedModul = moduls.getObject().stream().filter(m -> m.getName().equals(selected)).findFirst();
+				if(selectedModul.isPresent()){
+					model.setObject(selectedModul.get());
+				}
 				send(getPage(), Broadcast.DEPTH, new SelectedEvent(target));
 			}
 			

@@ -14,13 +14,11 @@ public enum Prof {
 
 	private final String name, path;
 	private final List<Modul> selectedModuls;
-	private List<Modul> allModuls;
 	
 	Prof(String name, String path) {
 		this.name = name;
 		this.path = path;
 		selectedModuls = Lists.newArrayList();
-		allModuls = Lists.newArrayList();
 	}
 
 	public String getName() {
@@ -41,14 +39,6 @@ public enum Prof {
 	
 	public void addSelectedModul(Modul modul){
 		selectedModuls.add(modul);
-	}
-	
-	public void setAllModuls(List<Modul> allModuls){
-		this.allModuls = allModuls;
-	}
-	
-	public List<Modul> getAllModuls(){
-		return allModuls;
 	}
 	
 	public double calculatePoints(){
