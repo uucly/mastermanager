@@ -34,8 +34,9 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				moduls.getObject().stream().filter(m -> m.getName().equals(selected)).forEach(m -> m.setInUse(false));
-				selected = getModelObject();
+				//moduls.getObject().stream().filter(m -> m.getName().equals(selected)).forEach(m -> m.setInUse(false));
+				moduls.getObject().stream().filter(m -> m.getName().equals(getModelObject())).forEach(m -> m.setInUse(false));
+				//selected = getModelObject();
 				moduls.getObject().stream().filter(m -> m.getName().equals(getModelObject())).forEach(m -> m.setInUse(true));	
 			}
 			
@@ -48,7 +49,11 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
+				if(Strings.isNullOrEmpty(getModelObject())){
+					prof.getObject().getSelectedModuls().removeIf(m->m.getName().equals(selected));
+				}
 				Optional<Modul> selectedModul = moduls.getObject().stream().filter(m -> m.getName().equals(selected)).findFirst();
+				
 				if(selectedModul.isPresent()){
 					prof.getObject().addSelectedModul(selectedModul.get());
 				}
