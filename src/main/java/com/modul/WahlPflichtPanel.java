@@ -1,11 +1,15 @@
 package com.modul;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -14,7 +18,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import com.google.common.collect.Lists;
 import com.professoren.Prof;
+
+import dragAndDrop.AbstractEvent;
 
 public class WahlPflichtPanel extends Panel{
 
@@ -26,41 +33,55 @@ public class WahlPflichtPanel extends Panel{
 	@SpringBean
 	private WahlPflichtModule module;
 	
-	public WahlPflichtPanel(String id, IModel<Prof> prof) {
+	private final AbstractEvent profEvent;
+	private final Form<?> form;
+
+	private ModulAutoCompleteTextField t;
+	
+	public WahlPflichtPanel(String id, IModel<Prof> prof, AbstractEvent profEvent) {
 		super(id);
-		add(createForm(createModulParser(module), prof));
+		this.profEvent = profEvent;
+		form = createForm(createModulParser(module), prof, profEvent);
+		add(form);
 	}
 	
-	private static Form<?> createForm(final ModulParser modulParser, IModel<Prof> prof){
-		IModel<Modul> selectedModul1 = Model.of(new Modul("",0)), selectedModul2 = Model.of(new Modul("",0)), selectedModul3 = Model.of(new Modul("",0)), selectedModul4 = Model.of(new Modul("",0));
+	private  Form<?> createForm(final ModulParser modulParser, IModel<Prof> prof, AbstractEvent profEvent){
 		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
-		prof.getObject().addSelectedModul(selectedModul1.getObject());
-		prof.getObject().addSelectedModul(selectedModul2.getObject());
-		prof.getObject().addSelectedModul(selectedModul3.getObject());
-		prof.getObject().addSelectedModul(selectedModul4.getObject());
-		
-		
-		
+	
+		List<Modul> firstFourModuls = loadFirstFourModuls(prof);
 		Form<?> form = new Form<Object>("form");
-		form.add(new ModulAutoCompleteTextField("auto1", selectedModul1, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto2", selectedModul2, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto3", selectedModul3, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto4", selectedModul4, moduleOfProf));
-		form.add(createDropDown(moduleOfProf, modulParser));
+		form.add(new ModulAutoCompleteTextField("auto1", Model.of(firstFourModuls.get(0)),prof, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto2", Model.of(firstFourModuls.get(1)),prof, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto3", Model.of(firstFourModuls.get(2)),prof, moduleOfProf));
+		form.add(new ModulAutoCompleteTextField("auto4", Model.of(firstFourModuls.get(3)),prof, moduleOfProf));
+		form.add(createDropDown(moduleOfProf, modulParser, prof, profEvent));
 		return form;
 	}
 	
-	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, ModulParser modulParser){
-		IModel<Prof> selected = Model.of(Prof.BREUNIG);
-		moduleOfProf.setObject(loadModulsOfProf(modulParser, selected));
-		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",selected, SEARCH_ENGINES);
+	private static List<Modul> loadFirstFourModuls(IModel<Prof> prof) {
+		List<Modul> list = Lists.newArrayList();
+		for(Modul m : prof.getObject().getSelectedModuls()){
+			list.add(m);
+		}
+		
+		for(int i=list.size(); i<4;i++){
+			list.add(new Modul("",0));
+		}
+		return list;
+	}
+
+	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> prof, AbstractEvent profEvent){
+		moduleOfProf.setObject(loadModulsOfProf(modulParser, prof));
+		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",prof, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
 			
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				moduleOfProf.setObject(loadModulsOfProf(modulParser, selected));
+				moduleOfProf.setObject(loadModulsOfProf(modulParser, prof));
+				target.add(this.getFormComponent());
+				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, profEvent);
 			}
 		});
 		

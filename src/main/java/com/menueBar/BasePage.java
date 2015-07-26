@@ -17,8 +17,8 @@ public abstract class BasePage extends WebPage{
 	public BasePage() {
 		add(new TwitterBootstrapNavBarPanel.Builder("navBar", HomePage.class, "Example Web App", getActiveMenu())
 	            .withMenuItem(MenuItemEnum.Start, StartPage.class)
-	            .withMenuItem(MenuItemEnum.DRAG_DROP, DragAndDropPage.class)
-	            //.withMenuItemAsDropdown(MenuItemEnum.Start, StartPage.class, "Product One")
+	            .withMenuItemAsDropdown(MenuItemEnum.DRAG_DROP, DragAndDropPage.class, "Drop down")
+	            .withMenuItemAsDropdown(MenuItemEnum.Start, StartPage.class, "Autocomplete")
 
 	            .build());
 	    }

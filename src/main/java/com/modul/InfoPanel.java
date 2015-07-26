@@ -30,7 +30,7 @@ public class InfoPanel extends Panel{
 		setOutputMarkupId(true);
 		Form<?> form = new Form<Object>("form");
 		Label label = new Label("wahlLabel");
-		
+		points.setObject(calculatePoints(profs));
 		this.progressBar = createProgressBar(points, profs);
         
         form.add(label);
@@ -50,7 +50,7 @@ public class InfoPanel extends Panel{
 		
 		if(event.getPayload() instanceof SelectedEvent){
 			if(calculatePoints(profs)<MAX_POINTS){
-				points.setObject(calculatePoints(profs));
+				points.setObject((int) Math.round(calculatePoints(profs)*(100/MAX_POINTS)));
 			} else {
 				points.setObject(100);
 			}
@@ -69,16 +69,20 @@ public class InfoPanel extends Panel{
 		
 	}
 
-	private static ProgressBar createProgressBar(IModel<Integer> points, List<IModel<Prof>> profs2){
+	private static ProgressBar createProgressBar(IModel<Integer> points, List<IModel<Prof>> profs){
 		ProgressBar progressBar = new ProgressBar("progress"); 
 		progressBar.setOutputMarkupId(true);
 		Stack labeledStack = new Stack(progressBar.getStackId(), points) {
-            @Override
+            private static final long serialVersionUID = 1L;
+
+			@Override
             protected IModel<String> createLabelModel() {
                 return new AbstractReadOnlyModel<String>() {
-                    @Override
+            		private static final long serialVersionUID = 1L;
+
+					@Override
                     public String getObject() {
-                    	return calculatePoints(profs2)+" von " + MAX_POINTS + " Punkten";
+                    	return calculatePoints(profs)+" von " + MAX_POINTS + " Punkten";
                     }
                 };
             }

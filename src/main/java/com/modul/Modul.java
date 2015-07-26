@@ -39,7 +39,6 @@ public class Modul implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (inUse ? 1231 : 1237);
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(points);
@@ -56,8 +55,6 @@ public class Modul implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Modul other = (Modul) obj;
-		if (inUse != other.inUse)
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -68,6 +65,8 @@ public class Modul implements Serializable{
 			return false;
 		return true;
 	}
+
+	
 	
 	
 

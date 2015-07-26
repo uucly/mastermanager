@@ -17,7 +17,9 @@ import com.google.common.collect.Multimap;
 
 public class TwitterBootstrapNavBarPanel extends Panel {
 
-    private TwitterBootstrapNavBarPanel(final Builder builder) {
+    private static final long serialVersionUID = 1L;
+
+	private TwitterBootstrapNavBarPanel(final Builder builder) {
         super(builder.id);
 
         BookmarkablePageLink<Void> homePageLink = new BookmarkablePageLink<Void>("homePageLink", builder.homePage);
@@ -47,6 +49,8 @@ public class TwitterBootstrapNavBarPanel extends Panel {
 
     public static class Builder implements Serializable {
 
+        private static final long serialVersionUID = 1L;
+		
         private String id;
         private Class<? extends Page> homePage;
         private String applicationName;

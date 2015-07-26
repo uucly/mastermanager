@@ -16,21 +16,18 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
 import com.google.common.base.Strings;
+import com.professoren.Prof;
 
 public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private final IModel<List<Modul>> moduls;
 	private String selected;
 	
-	public ModulAutoCompleteTextField(String id, IModel<Modul> model, ListModel<Modul> moduls) {
-		super(id, Model.of(model.getObject().getName()));
+	public ModulAutoCompleteTextField(String id, IModel<Modul> modulModel, IModel<Prof> prof, ListModel<Modul> moduls) {
+		super(id, Model.of(modulModel.getObject().getName()));
 		this.moduls = moduls;
 		selected = "";
-		
 		add(new OnChangeAjaxBehavior(){
 
 			private static final long serialVersionUID = 1L;
@@ -44,6 +41,7 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 			
 		});
 		
+		
 		add(new AjaxFormComponentUpdatingBehavior("onChange"){
 
 			private static final long serialVersionUID = 1L;
@@ -52,7 +50,7 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 			protected void onUpdate(AjaxRequestTarget target) {
 				Optional<Modul> selectedModul = moduls.getObject().stream().filter(m -> m.getName().equals(selected)).findFirst();
 				if(selectedModul.isPresent()){
-					model.setObject(selectedModul.get());
+					prof.getObject().addSelectedModul(selectedModul.get());
 				}
 				send(getPage(), Broadcast.DEPTH, new SelectedEvent(target));
 			}
