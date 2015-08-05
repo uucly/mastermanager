@@ -8,10 +8,18 @@
 <body>
 	<wicket:extend>
 		<div wicket:id="pflicht" class="form-inline">
-			<form wicket:id="form" class="form-group">
-				<wicket:panel wicket:id="wahlPanel1"></wicket:panel>
-				<wicket:panel wicket:id="wahlPanel2"></wicket:panel>
-				<wicket:panel wicket:id="infoPanel"></wicket:panel>
+			<form wicket:id="form" class="form-group row">
+				<div class="row">
+					<div class="col-xs-8 col-sm-6">
+						<wicket:panel wicket:id="wahlPanel1"></wicket:panel>
+					</div>
+					<div class="col-xs-8 col-sm-6">
+						<wicket:panel wicket:id="wahlPanel2"></wicket:panel>
+					</div>
+					<div class="col-xs-8 col-sm-6">
+						<wicket:panel wicket:id="infoPanel"></wicket:panel>
+					</div>
+				</div>
 			</form>
 		</div>
 	</wicket:extend>

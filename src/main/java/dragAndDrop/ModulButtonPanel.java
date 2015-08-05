@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -48,39 +50,12 @@ public class ModulButtonPanel extends Panel{
 		super(id);
 		setOutputMarkupId(true);
 		this.profEvent = profEvent;
-		ModulParser modulParser = createModulParser(module);
 		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
 		IModel<String> text = Model.of("");
+		IModel<List<Modul>> selectedModuls = createSelectedModuls(text, moduleOfProf);
 		
-		IModel<List<Modul>> selectedModuls = new LoadableDetachableModel<List<Modul>>() {
-
-			@Override
-			protected List<Modul> load() {
-				if(text.getObject()!= null){
-					return moduleOfProf.getObject().stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
-				} else {
-					return moduleOfProf.getObject();
-				}
-			}
-			
-			@Override
-			public void detach() {
-				super.detach();
-			}
-		};
+		MarkupContainer container = new WebMarkupContainer("container");
 		form = new Form<Object>("form");
-		
-		
-		ListView<Modul> modulList = new ListView<Modul>("listView",selectedModuls) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void populateItem(ListItem<Modul> item) {				
-				Button b = new ModulButton("modulButton", item.getModelObject(), prof);
-				item.add(b);
-			}
-		};
 		
 		TextField<String> textField = new TextField<String>("textField", text);
 		textField.add(new OnChangeAjaxBehavior(){
@@ -96,11 +71,12 @@ public class ModulButtonPanel extends Panel{
 			
 		});
 		
-		add(textField);
-		add(createDropDown(moduleOfProf, prof, modulParser, profEvent));
-		form.add(modulList);
-		
-		add(form);
+		container.add(textField);
+		container.add(createDropDown(moduleOfProf, prof, createModulParser(module), profEvent));
+		form.add(new ButtonListView("listView", selectedModuls, prof));
+		container.add(form);
+		add(container);
+		//add(form);
 	}
 	
 	
@@ -146,5 +122,21 @@ public class ModulButtonPanel extends Panel{
 		if(event.getPayload() instanceof AbstractEvent && profEvent.getId() == ((AbstractEvent)event.getPayload()).getId()){
 			((AbstractEvent)event.getPayload()).getTarget().add(form);
 		}
+	}
+	
+	private static IModel<List<Modul>> createSelectedModuls(IModel<String> text, ListModel<Modul> moduleOfProf){
+		return new LoadableDetachableModel<List<Modul>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<Modul> load() {
+				if(text.getObject()!= null){
+					return moduleOfProf.getObject().stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
+				} else {
+					return moduleOfProf.getObject();
+				}
+			}
+		};
 	}
 }
