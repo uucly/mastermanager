@@ -34,9 +34,14 @@ public class StartPage extends BasePage{
 	
 	public StartPage() throws IOException{
 		
-		WebMarkupContainer address = new WebMarkupContainer("pflicht");
-		address.add(createForm(leftEvent, rightEvent));
-		add(address);
+		//WebMarkupContainer address = new WebMarkupContainer("pflicht");
+		//address.add(createForm(leftEvent, rightEvent));
+		IModel<Prof> prof1 = Model.of(Prof.BREUNIG);
+		IModel<Prof> prof2 = Model.of(Prof.HINZ);
+		
+		add(new WahlPflichtPanel("wahlPanel1", prof1, leftEvent));
+		add(new WahlPflichtPanel("wahlPanel2", prof2, rightEvent));
+		add(new InfoPanel("infoPanel", Lists.newArrayList(prof1, prof2)));
 		//	add(HeaderContributor.forJavaScript("http://www.google.com/jsapi?key=ABCDEFG"));
 	}
 	

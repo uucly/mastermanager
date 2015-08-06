@@ -33,8 +33,9 @@ public class DragAndDropPage extends BasePage{
 		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1",profEventLeft, prof1);
 		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2",profEventRight, prof2);
 		InfoPanel infoPanel = new InfoPanel("infoPanel", Arrays.asList(prof1, prof2));
-		form.add(panel1,panel2,infoPanel);
-		add(form);
+		add(panel1, panel2, infoPanel);
+		//form.add(panel1,panel2,infoPanel);
+		//add(form);
 	}
 	
 	@Override
