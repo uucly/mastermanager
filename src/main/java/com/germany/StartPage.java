@@ -1,6 +1,10 @@
 package com.germany;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import models.TransformationModel2;
 
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -41,11 +45,11 @@ public class StartPage extends BasePage{
 		
 		add(new WahlPflichtPanel("wahlPanel1", prof1, leftEvent));
 		add(new WahlPflichtPanel("wahlPanel2", prof2, rightEvent));
-		add(new InfoPanel("infoPanel", Lists.newArrayList(prof1, prof2)));
+		add(new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(prof1, prof2, (p1, p2) -> Arrays.asList(p1,p2))));
 		//	add(HeaderContributor.forJavaScript("http://www.google.com/jsapi?key=ABCDEFG"));
 	}
 	
-	private static Form<?> createForm(ProfChangedEventLeft leftEvent, ProfChangedEventRight rightEvent) throws IOException{
+	/*private static Form<?> createForm(ProfChangedEventLeft leftEvent, ProfChangedEventRight rightEvent) throws IOException{
 		IModel<Prof> prof1 = Model.of(Prof.BREUNIG);
 		IModel<Prof> prof2 = Model.of(Prof.HINZ);
 		
@@ -54,7 +58,7 @@ public class StartPage extends BasePage{
 		form.add(new WahlPflichtPanel("wahlPanel2", prof2, rightEvent));
 		form.add(new InfoPanel("infoPanel", Lists.newArrayList(prof1, prof2)));
 		return form;
-	}
+	}*/
 	
 	@Override
     public void renderHead(IHeaderResponse response) {

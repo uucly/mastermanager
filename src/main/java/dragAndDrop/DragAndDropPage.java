@@ -2,9 +2,13 @@ package dragAndDrop;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+
+import models.TransformationModel2;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -32,7 +36,15 @@ public class DragAndDropPage extends BasePage{
 		Form form = new Form("form");
 		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1",profEventLeft, prof1);
 		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2",profEventRight, prof2);
-		InfoPanel infoPanel = new InfoPanel("infoPanel", Arrays.asList(prof1, prof2));
+		InfoPanel infoPanel = new InfoPanel("infoPanel", new LoadableDetachableModel<List<Prof>>() {
+
+			@Override
+			protected List<Prof> load() {
+				return Arrays.asList(prof1.getObject(), prof2.getObject());
+			}
+		});
+
+		//InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(prof1, prof2, (p1, p2) -> Arrays.asList(p1,p2))/*Arrays.asList(prof1, prof2)*/);
 		add(panel1, panel2, infoPanel);
 		//form.add(panel1,panel2,infoPanel);
 		//add(form);

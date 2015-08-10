@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.modul.Modul;
 
-public enum Prof {
+public enum Prof{
 
 	BREUNIG("Breunig", getModulPath("Breunig")), 
 	HINZ("Hinz", getModulPath("Hinz")), 
