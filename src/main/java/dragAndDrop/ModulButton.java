@@ -66,7 +66,7 @@ public class ModulButton extends AjaxButton {
 	
 	private void setSelected(){
 		setEnabled(false);
-		add(new AttributeModifier("class", Model.of("btn btn-xs btn-danger")));
+		add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));
 	}
 
 }

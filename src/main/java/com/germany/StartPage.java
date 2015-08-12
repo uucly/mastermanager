@@ -38,8 +38,6 @@ public class StartPage extends BasePage{
 	
 	public StartPage() throws IOException{
 		
-		//WebMarkupContainer address = new WebMarkupContainer("pflicht");
-		//address.add(createForm(leftEvent, rightEvent));
 		IModel<Prof> prof1 = Model.of(Prof.BREUNIG);
 		IModel<Prof> prof2 = Model.of(Prof.HINZ);
 		
@@ -49,16 +47,6 @@ public class StartPage extends BasePage{
 		//	add(HeaderContributor.forJavaScript("http://www.google.com/jsapi?key=ABCDEFG"));
 	}
 	
-	/*private static Form<?> createForm(ProfChangedEventLeft leftEvent, ProfChangedEventRight rightEvent) throws IOException{
-		IModel<Prof> prof1 = Model.of(Prof.BREUNIG);
-		IModel<Prof> prof2 = Model.of(Prof.HINZ);
-		
-		Form<?> form = new Form<Object>("form");
-		form.add(new WahlPflichtPanel("wahlPanel1", prof1, leftEvent));
-		form.add(new WahlPflichtPanel("wahlPanel2", prof2, rightEvent));
-		form.add(new InfoPanel("infoPanel", Lists.newArrayList(prof1, prof2)));
-		return form;
-	}*/
 	
 	@Override
     public void renderHead(IHeaderResponse response) {

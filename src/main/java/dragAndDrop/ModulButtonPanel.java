@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.management.RuntimeErrorException;
+
 import models.TransformationModel;
 import models.TransformationModel2;
 
@@ -41,8 +43,7 @@ public class ModulButtonPanel extends Panel {
 
 	private static final long serialVersionUID = 1L;
 	private static final String ALL_PATH = "src/main/resources/WahlPflichtModule.txt";
-	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof
-			.values());
+	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof.values());
 
 	@SpringBean
 	private WahlPflichtModule module;
@@ -51,15 +52,13 @@ public class ModulButtonPanel extends Panel {
 	private transient AbstractEvent profEvent;
 
 	// TODO replace ProfCHangedEvent with EventInjector
-	public ModulButtonPanel(String id, AbstractEvent profEvent,
-			final IModel<Prof> prof) throws IOException {
+	public ModulButtonPanel(String id, AbstractEvent profEvent, final IModel<Prof> prof) throws IOException {
 		super(id);
 		setOutputMarkupId(true);
 		this.profEvent = profEvent;
 		IModel<List<Modul>> moduleOfProf = new ListModel<Modul>();
 		IModel<String> text = Model.of("");
-		IModel<List<Modul>> selectedModuls = createSelectedModuls(text,
-				moduleOfProf);
+		IModel<List<Modul>> selectedModuls = createSelectedModuls(text, moduleOfProf);
 
 		MarkupContainer container = new WebMarkupContainer("container");
 		form = new Form<Object>("form");
@@ -78,11 +77,23 @@ public class ModulButtonPanel extends Panel {
 
 		});
 
+		IModel<List<Modul>> selectedPflichtModuls = new LoadableDetachableModel<List<Modul>>() {
+
+			@Override
+			protected List<Modul> load() {
+				try {
+					return createModulParser(module).parse(prof.getObject().getPflichtModulPath());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
 		container.add(textField);
-		container.add(createDropDown(moduleOfProf, prof,
-				createModulParser(module), profEvent));
+		container.add(createDropDown(moduleOfProf, prof, createModulParser(module), profEvent));
+		container.add(new ButtonListView("pflichtListView", selectedPflichtModuls, prof));
 		form.add(new ButtonListView("listView", selectedModuls, prof));
 		container.add(form);
+		
 		add(container);
 	}
 
@@ -96,21 +107,17 @@ public class ModulButtonPanel extends Panel {
 		}
 	}
 
-	private static DropDownChoice<Prof> createDropDown(
-			final IModel<List<Modul>> moduleOfProf,
-			final IModel<Prof> selectedProf, ModulParser modulParser,
-			AbstractEvent profEvent) {
+	private static DropDownChoice<Prof> createDropDown( final IModel<List<Modul>> moduleOfProf, final IModel<Prof> selectedProf, ModulParser modulParser, AbstractEvent profEvent) {
 		moduleOfProf.setObject(loadModulsOfProf(modulParser, selectedProf));
-		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",
-				selectedProf, SEARCH_ENGINES);
+		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown", selectedProf, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				moduleOfProf.setObject(loadModulsOfProf(modulParser,
-						selectedProf));
+				moduleOfProf.setObject(loadModulsOfProf(modulParser, selectedProf));
+				
 				profEvent.setTarget(target);
 				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, profEvent);
 			}
@@ -119,8 +126,7 @@ public class ModulButtonPanel extends Panel {
 		return dropDown;
 	}
 
-	private static List<Modul> loadModulsOfProf(ModulParser modulParser,
-			IModel<Prof> selected) {
+	private static List<Modul> loadModulsOfProf(ModulParser modulParser, IModel<Prof> selected) {
 		try {
 			return modulParser.parse(selected.getObject().getPath());
 		} catch (IOException ex) {
@@ -138,16 +144,8 @@ public class ModulButtonPanel extends Panel {
 		}
 	}
 
-	private static IModel<List<Modul>> createSelectedModuls(
-			IModel<String> text, IModel<List<Modul>> moduleOfProf) {
-		/*
-		 * return new TransformationModel2<String, List<Modul>,
-		 * List<Modul>>(text, moduleOfProf, (t, moduls) -> { if(t != null){
-		 * return moduls.stream().filter(m ->
-		 * m.getName().toUpperCase().contains(
-		 * t.toUpperCase())).collect(Collectors.toList()); } else { return
-		 * moduls; } });
-		 */
+	private static IModel<List<Modul>> createSelectedModuls(IModel<String> text, IModel<List<Modul>> moduleOfProf) {
+		
 		return new LoadableDetachableModel<List<Modul>>() {
 
 			private static final long serialVersionUID = 1L;

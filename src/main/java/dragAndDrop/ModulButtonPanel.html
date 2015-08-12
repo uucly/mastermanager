@@ -4,24 +4,39 @@
 <link rel="stylesheet" type="text/css" href="style.css" />
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
 	<wicket:panel>
-	<div wicket:id="container">
-		<div style="padding-bottom: 10px; padding-top: 10px">
-					<th>Vertiefungsrichtung</th> <select wicket:id="dropDown"></select>
+		<div wicket:id="container">
+			<div style="padding-bottom: 10px; padding-top: 10px">
+				<th>Vertiefungsrichtung</th> 
+				<select wicket:id="dropDown"></select>
+			</div>
+			<div class="modulBorder">
+				<span class="btn-group-vertical" role="group"> <span
+					wicket:id="pflichtListView"> <input style="float: left"
+						type="submit" wicket:id="modulButton"
+						class="btn btn-info btn-xs btn-block"></input><br /> <br />
+				</span>
+				</span>
+
 			</div>
 			<div>
 				<input wicket:id="textField"></input>
 			</div>
-			
-		<form wicket:id="form">
-			<pre style="float: left">
-			<span wicket:id="listView"> <input style="float: left"
-					type="submit" wicket:id="modulButton" class="btn btn-info btn-xs"></input><br /><br />
-			</span>
-		</pre>
-		</form>
+
+			<form wicket:id="form">
+				<div class="modulBorder">
+					<span class="btn-group-vertical" role="group"> <span
+						wicket:id="listView"> <input style="float: left"
+							type="submit" wicket:id="modulButton"
+							class="btn btn-info btn-xs btn-block"></input><br /> <br />
+					</span>
+					</span>
+
+				</div>
+			</form>
 		</div>
 	</wicket:panel>
 </body>

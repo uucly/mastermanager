@@ -1,9 +1,14 @@
 package com.modul;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,6 +20,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+
 import com.google.common.collect.Lists;
 import com.professoren.Prof;
 
@@ -32,6 +38,7 @@ public class InfoPanel extends Panel{
 	private IModel<List<Prof>> profs;
 	private Form<Object> form;
 	private IModel<List<Modul>> allCurrentSelectedModuls;
+	private IModel allSelectedModuls;
 	
 	public InfoPanel(String id, IModel<List<Prof>> profs) {
 		super(id);
@@ -41,6 +48,15 @@ public class InfoPanel extends Panel{
 		points.setObject(calculatePoints(profs));
 		this.progressBar = createProgressBar(points, profs);
 		
+		allSelectedModuls = new LoadableDetachableModel<List<Modul>>() {
+
+			@Override
+			protected List<Modul> load() {
+				List<Modul> list = Lists.newArrayList();
+				Arrays.asList(Prof.values()).stream().forEach(p->list.addAll(p.getSelectedModuls()));
+				return list;
+			}
+		};
 		allCurrentSelectedModuls = new LoadableDetachableModel<List<Modul>>() {
 			@Override
 			protected List<Modul> load() {
@@ -50,28 +66,8 @@ public class InfoPanel extends Panel{
 			}
 			
 		};
-		/*IModel<List<Modul>> allCurrentSelectedModuls = new TransformationModel<List<Prof>, List<Modul>>(profs, p -> {
-			List<Modul> list = Lists.newArrayList();
-			p.stream().forEach(m -> list.addAll(m.getSelectedModuls()));
-			return list;
-		});*/
-		/*ListView<Modul> selectedButtons = new ListView<Modul>("verticalButtonGroup", allCurrentSelectedModuls) {
-
-			@Override
-			protected void populateItem(ListItem<Modul> item) {
-				item.add(new AjaxLink<Modul>("selectedModulButton", Model.of(item.getModelObject())) {
-
-					@Override
-					public void onClick(AjaxRequestTarget target) {
-						profs.getObject().stream().filter(prof -> prof.getSelectedModuls().remove(item.getModelObject()));
-						remove(item);
-						send(getPage(), Broadcast.DEPTH, new RemoveModulEvent(target));
-					}});
-			}
-		};
 		
-		selectedButtons.setOutputMarkupId(true);*/
-        ListView<Modul> modulListView = createListView(allCurrentSelectedModuls, profs);
+        ListView<Modul> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs);
 		form.add(modulListView);
         form.add(new Label("wahlLabel"));
 		form.add(progressBar);
@@ -134,14 +130,17 @@ public class InfoPanel extends Panel{
         return progressBar;
 	}
 	
-	private static ListView<Modul> createListView(IModel<List<Modul>> allCurrentSelectedModuls, IModel<List<Prof>> profs){
-		return new ListView<Modul>("verticalButtonGroup", allCurrentSelectedModuls) {
+	private static ListView<Modul> createListView(IModel<List<Modul>> allSelectedModuls, IModel<List<Modul>> allCurrentSelectedModuls, IModel<List<Prof>> profs){
+		return new ListView<Modul>("verticalButtonGroup", allSelectedModuls) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void populateItem(ListItem<Modul> item) {
 				AjaxButton button = createButton(item.getModelObject().getName());
+				if(allCurrentSelectedModuls.getObject().contains(item.getModel().getObject())){
+					button.add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));//new AttributeAppender("class", " btn-success"));
+				}
 				button.add(new Label("label", item.getModelObject().getName()));
 				item.add(button);
 			}
@@ -152,7 +151,7 @@ public class InfoPanel extends Panel{
 					private static final long serialVersionUID = 1L;
 
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
-						profs.getObject().stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
+						Arrays.asList(Prof.values()).stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
 						send(getPage(), Broadcast.DEPTH, new RemoveModulEvent(target));
 					};
 				};
@@ -165,6 +164,7 @@ public class InfoPanel extends Panel{
 	protected void onDetach() {
 		super.onDetach();
 		allCurrentSelectedModuls.detach();
+		allSelectedModuls.detach();
 		profs.detach();
 	}
 }

@@ -25,5 +25,10 @@ public class ButtonListView extends ListView<Modul>{
 		Button b = new ModulButton("modulButton", item.getModelObject(), prof);
 		item.add(b);
 	}
+	
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+	}
 
 }

@@ -45,3 +45,14 @@ Strassenwesen fuer Geodaeten,1
 Struktur- und Objektextraktion in 2D und 3D,4
 Text- and Data Mining in der Geoinformatik,3
 Visualisierung von Geodaten in 2D/3D/4D,3
+GeoDB,4
+Projekt Geoinformatik,4
+Rezente Geodynamik,4
+Seminar Erdsystembeobachtung,1
+SAR und InSAR-Fernerkundung,3
+Regionale Schwerefeldmodellierung,3
+Dimensionelle Vermessungsverfahren,8
+Ausgewaehlte Kapitel zu GNSS,2
+Struktur- und Objektextraktion in 2D und 3D,4
+Bildsequenzanalyse,2
+Statistische Mustererkennung und Wissensbasierte Bildanalyse,5

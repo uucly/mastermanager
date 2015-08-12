@@ -46,8 +46,6 @@ public class DragAndDropPage extends BasePage{
 
 		//InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(prof1, prof2, (p1, p2) -> Arrays.asList(p1,p2))/*Arrays.asList(prof1, prof2)*/);
 		add(panel1, panel2, infoPanel);
-		//form.add(panel1,panel2,infoPanel);
-		//add(form);
 	}
 	
 	@Override

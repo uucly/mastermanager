@@ -92,3 +92,15 @@ div.wicket-aa ul {
 	margin: 0;
 }
 
+.modulBorder {
+	float: left;
+	border-style: solid;
+	border-color: rgb(200, 200, 200);
+	background-color: rgb(240, 240, 240);
+	border-width: 2px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
