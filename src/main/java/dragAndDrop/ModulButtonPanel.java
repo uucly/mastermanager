@@ -48,8 +48,9 @@ public class ModulButtonPanel extends Panel {
 	@SpringBean
 	private WahlPflichtModule module;
 
-	private Form<Object> form;
+	private Form<Object> formWahl;
 	private transient AbstractEvent profEvent;
+	private Form formPflicht;
 
 	// TODO replace ProfCHangedEvent with EventInjector
 	public ModulButtonPanel(String id, AbstractEvent profEvent, final IModel<Prof> prof) throws IOException {
@@ -60,15 +61,14 @@ public class ModulButtonPanel extends Panel {
 		IModel<String> text = Model.of("");
 		IModel<List<Modul>> selectedModuls = createSelectedModuls(text, moduleOfProf);
 
-		MarkupContainer container = new WebMarkupContainer("container");
-		form = new Form<Object>("form");
+		formWahl = new Form<Object>("formWahl");
 
 		TextField<String> textField = new TextField<String>("textField", text);
 		textField.add(new OnChangeAjaxBehavior() {
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				target.add(form);
+				target.add(formWahl);
 			}
 
 			public void detach(Component component) {
@@ -88,11 +88,16 @@ public class ModulButtonPanel extends Panel {
 				}
 			}
 		};
+		
+		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(textField);
 		container.add(createDropDown(moduleOfProf, prof, createModulParser(module), profEvent));
-		container.add(new ButtonListView("pflichtListView", selectedPflichtModuls, prof));
-		form.add(new ButtonListView("listView", selectedModuls, prof));
-		container.add(form);
+		
+		formPflicht = new Form("formPflicht");
+		formPflicht.add(new ButtonListView("pflichtListView", selectedPflichtModuls, prof));
+		formWahl.add(new ButtonListView("listView", selectedModuls, prof));
+		container.add(formPflicht);
+		container.add(formWahl);
 		
 		add(container);
 	}
@@ -138,9 +143,11 @@ public class ModulButtonPanel extends Panel {
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
 		if (event.getPayload() instanceof AbstractEvent && profEvent.getId() == ((AbstractEvent) event.getPayload()).getId()) {
-			((AbstractEvent) event.getPayload()).getTarget().add(form);
+			((AbstractEvent) event.getPayload()).getTarget().add(formWahl);
+			((AbstractEvent) event.getPayload()).getTarget().add(formPflicht);
+			
 		} else if(event.getPayload() instanceof RemoveModulEvent){
-			((RemoveModulEvent) event.getPayload()).getTarget().add(form);
+			((RemoveModulEvent) event.getPayload()).getTarget().add(formWahl);
 		}
 	}
 
