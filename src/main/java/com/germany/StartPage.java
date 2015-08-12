@@ -37,14 +37,12 @@ public class StartPage extends BasePage{
 	ProfChangedEventRight rightEvent;
 	
 	public StartPage() throws IOException{
-		
 		IModel<Prof> prof1 = Model.of(Prof.BREUNIG);
 		IModel<Prof> prof2 = Model.of(Prof.HINZ);
 		
 		add(new WahlPflichtPanel("wahlPanel1", prof1, leftEvent));
 		add(new WahlPflichtPanel("wahlPanel2", prof2, rightEvent));
 		add(new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(prof1, prof2, (p1, p2) -> Arrays.asList(p1,p2))));
-		//	add(HeaderContributor.forJavaScript("http://www.google.com/jsapi?key=ABCDEFG"));
 	}
 	
 	
