@@ -1,5 +1,6 @@
 package com.professoren;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -15,12 +16,14 @@ public enum Prof{
 	private final String name, wahlModulPath;
 	private final List<Modul> selectedModuls;
 	private final String pflichtModulPath;
+	private final List<Modul> selectedPflichtModuls;
 	
 	Prof(String name, String wahlModulPath, String pflichtModulPath) {
 		this.name = name;
 		this.wahlModulPath = wahlModulPath;
 		this.pflichtModulPath = pflichtModulPath;
 		selectedModuls = Lists.newArrayList();
+		selectedPflichtModuls = Lists.newArrayList();
 	}
 
 	private static String getPflichtModulPath(String prof) {
@@ -43,12 +46,24 @@ public enum Prof{
 		return selectedModuls;
 	}
 	
+	public List<Modul> getSelectedPflichtModuls() {
+		return selectedPflichtModuls;
+	}
+	
 	public void addSelectedModul(Modul modul){
 		selectedModuls.add(modul);
 	}
 	
-	public double calculatePoints(){
+	public void addSelectedPflichtModul(Modul modul){
+		selectedPflichtModuls.add(modul);
+	}
+	
+	public double calculateWahlPoints(){
 		return selectedModuls.stream().mapToDouble(Modul::getPoints).sum();
+	}
+	
+	public double calculatePflichtPoints(){
+		return selectedPflichtModuls.stream().mapToDouble(Modul::getPoints).sum();
 	}
 
 	public String getPflichtModulPath() {

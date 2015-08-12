@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -35,25 +36,30 @@ public class InfoPanel extends Panel{
 	
 	private final ProgressBar progressBar;
 	private final IModel<Integer> points = Model.of(0);
+	private final IModel<Integer> pflichtPoints = Model.of(0);
 	private IModel<List<Prof>> profs;
 	private Form<Object> form;
 	private IModel<List<Modul>> allCurrentSelectedModuls;
 	private IModel allSelectedModuls;
+	private ProgressBar pflichtProgressBar;
 	
 	public InfoPanel(String id, IModel<List<Prof>> profs) {
 		super(id);
 		setOutputMarkupId(true);
 		this.profs = profs;
 		form = new Form<Object>("form");
-		points.setObject(calculatePoints(profs));
-		this.progressBar = createProgressBar(points, profs);
-		
+		points.setObject(calculatePoints(profs, Prof::calculateWahlPoints));
+		pflichtPoints.setObject(calculatePoints(profs, Prof::calculatePflichtPoints));
+		this.progressBar = createWahlProgressBar(points, profs);
+		this.pflichtProgressBar = createPflichtProgressBar(pflichtPoints, profs);
 		allSelectedModuls = new LoadableDetachableModel<List<Modul>>() {
 
 			@Override
 			protected List<Modul> load() {
 				List<Modul> list = Lists.newArrayList();
 				Arrays.asList(Prof.values()).stream().forEach(p->list.addAll(p.getSelectedModuls()));
+				Arrays.asList(Prof.values()).stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
+				
 				return list;
 			}
 		};
@@ -62,6 +68,8 @@ public class InfoPanel extends Panel{
 			protected List<Modul> load() {
 				List<Modul> list = Lists.newArrayList();
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedModuls()));
+				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
+				
 				return list;
 			}
 			
@@ -69,45 +77,70 @@ public class InfoPanel extends Panel{
 		
         ListView<Modul> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs);
 		form.add(modulListView);
-        form.add(new Label("wahlLabel"));
-		form.add(progressBar);
-        
+        form.add(progressBar);
+        form.add(pflichtProgressBar);
 		add(form);
 			
 	}
 		
-	private static int calculatePoints(IModel<List<Prof>> profs2){
-		return (int)Math.round(profs2.getObject().stream().mapToDouble(Prof::calculatePoints).sum());
+	private static ProgressBar createPflichtProgressBar(IModel<Integer> pflichtPoints, IModel<List<Prof>> profs) {
+		ProgressBar progressBar = new ProgressBar("pflichtProgress"); 
+		progressBar.setOutputMarkupId(true);
+		Stack labeledStack = new Stack(progressBar.getStackId(), pflichtPoints) {
+            private static final long serialVersionUID = 1L;
+
+			@Override
+            protected IModel<String> createLabelModel() {
+                return new AbstractReadOnlyModel<String>() {
+            		private static final long serialVersionUID = 1L;
+
+					@Override
+                    public String getObject() {
+                    	return calculatePoints(profs, Prof::calculatePflichtPoints)+" von " + MAX_POINTS + " Punkten";
+                    }
+                };
+            }
+        };
+        labeledStack.labeled(true).type(ProgressBar.Type.SUCCESS);
+        progressBar.addStacks(labeledStack);
+        return progressBar;
 	}
+
+	private static int calculatePoints(IModel<List<Prof>> profs, Function<Prof, Double> calculate){
+		return (int)Math.round(profs.getObject().stream().mapToDouble(p -> calculate.apply(p)).sum());
+	}
+	
 	
 	@Override
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
-		
+		int summary = calculatePoints(profs, Prof::calculateWahlPoints);
+		int summaryPflicht = calculatePoints(profs, Prof::calculatePflichtPoints);
 		if(event.getPayload() instanceof SelectedEvent){
-			setPoints(profs, points);
+			setPoints(summary, points);
+			setPoints(summaryPflicht, pflichtPoints);
 			((SelectedEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof AbstractEvent){
-			setPoints(profs, points);
-			
+			setPoints(summary, points);
+			setPoints(summaryPflicht, pflichtPoints);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof RemoveModulEvent){
-			setPoints(profs, points);
+			setPoints(summary, points);
+			setPoints(summaryPflicht, pflichtPoints);
 			((RemoveModulEvent) event.getPayload()).getTarget().add(form);
 		}
 		
 	}
 	
-	private static void setPoints(IModel<List<Prof>> profs, IModel<Integer> points){
-		int summary = calculatePoints(profs);
+	private static void setPoints(int summary, IModel<Integer> points){
 		if(summary < MAX_POINTS){
-			points.setObject((int) Math.round(calculatePoints(profs)*(100/MAX_POINTS)));
+			points.setObject((int) Math.round(summary*(100/MAX_POINTS)));
 		} else {
 			points.setObject(100);
 		}
 	}
 
-	private static ProgressBar createProgressBar(IModel<Integer> points, IModel<List<Prof>> profs2){
+	private static ProgressBar createWahlProgressBar(IModel<Integer> points, IModel<List<Prof>> profs2){
 		ProgressBar progressBar = new ProgressBar("progress"); 
 		progressBar.setOutputMarkupId(true);
 		Stack labeledStack = new Stack(progressBar.getStackId(), points) {
@@ -120,7 +153,7 @@ public class InfoPanel extends Panel{
 
 					@Override
                     public String getObject() {
-                    	return calculatePoints(profs2)+" von " + MAX_POINTS + " Punkten";
+                    	return calculatePoints(profs2, Prof::calculateWahlPoints)+" von " + MAX_POINTS + " Punkten";
                     }
                 };
             }
@@ -152,6 +185,8 @@ public class InfoPanel extends Panel{
 
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
 						Arrays.asList(Prof.values()).stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
+						Arrays.asList(Prof.values()).stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
+						
 						send(getPage(), Broadcast.DEPTH, new RemoveModulEvent(target));
 					};
 				};

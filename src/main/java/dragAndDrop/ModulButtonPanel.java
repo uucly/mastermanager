@@ -94,8 +94,24 @@ public class ModulButtonPanel extends Panel {
 		container.add(createDropDown(moduleOfProf, prof, createModulParser(module), profEvent));
 		
 		formPflicht = new Form("formPflicht");
-		formPflicht.add(new ButtonListView("pflichtListView", selectedPflichtModuls, prof));
-		formWahl.add(new ButtonListView("listView", selectedModuls, prof));
+		formPflicht.add(new ListView<Modul>("pflichtListView", selectedPflichtModuls){
+
+			@Override
+			protected void populateItem(ListItem<Modul> item) {
+				Button b = new ModulPflichtButton("modulButton", item.getModelObject(), prof);
+				item.add(b);
+			}
+			
+		});
+		formWahl.add(new ListView<Modul>("listView", selectedModuls){
+
+			@Override
+			protected void populateItem(ListItem<Modul> item) {
+				Button b = new ModulButton("modulButton", item.getModelObject(), prof);
+				item.add(b);
+			}
+			
+		});
 		container.add(formPflicht);
 		container.add(formWahl);
 		
@@ -148,6 +164,8 @@ public class ModulButtonPanel extends Panel {
 			
 		} else if(event.getPayload() instanceof RemoveModulEvent){
 			((RemoveModulEvent) event.getPayload()).getTarget().add(formWahl);
+			((RemoveModulEvent) event.getPayload()).getTarget().add(formPflicht);
+			
 		}
 	}
 
