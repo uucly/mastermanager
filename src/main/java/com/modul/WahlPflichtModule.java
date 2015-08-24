@@ -9,15 +9,15 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.modul.Modul;
+import com.modul.Course;
 
 @Service
 public class WahlPflichtModule {
 
-	public List<Modul> parse(String path) throws IOException {
-		Function<String, Modul> parseToModul = line -> {
+	public List<Course> parse(String path) throws IOException {
+		Function<String, Course> parseToModul = line -> {
 			String[] split = line.split(",");
-			return new Modul(split[0], Double.parseDouble(split[1]));
+			return new Course(split[0], Double.parseDouble(split[1]));
 		};
 		return Files.lines(Paths.get(path)).map(parseToModul).collect(Collectors.toList());
 	}

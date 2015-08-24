@@ -11,17 +11,17 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import com.modul.Modul;
+import com.modul.Course;
 import com.modul.SelectedEvent;
 import com.professoren.Prof;
 
-public class ModulButton extends AjaxButton {
+public class CoursePflichtButton extends AjaxButton {
 
 	private static final long serialVersionUID = 1L;
 	private IModel<Prof> prof;
-	private Modul modul;
+	private Course modul;
 
-	public ModulButton(String id, Modul modul, IModel<Prof> prof) {
+	public CoursePflichtButton(String id, Course modul, IModel<Prof> prof) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
 		this.modul = modul;
@@ -32,7 +32,7 @@ public class ModulButton extends AjaxButton {
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 		super.onSubmit(target, form);
 		setSelected();
-		prof.getObject().addSelectedModul(modul);
+		prof.getObject().addSelectedPflichtModul(modul);
 		target.add(this);
 		send(getPage(), Broadcast.DEPTH, new SelectedEvent(target));
 	}
@@ -40,7 +40,7 @@ public class ModulButton extends AjaxButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(prof.getObject().getSelectedModuls().contains(modul)){
+		if(prof.getObject().getSelectedPflichtModuls().contains(modul)){
 			setSelected();
 		} else if(containsProf(prof.getObject(), modul)) {
 			setEnabled(false);
@@ -60,8 +60,8 @@ public class ModulButton extends AjaxButton {
 		
 	}
 	
-	private static boolean containsProf(Prof prof, Modul modul){
-		return Arrays.asList(Prof.values()).stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedModuls().contains(modul));
+	private static boolean containsProf(Prof prof, Course modul){
+		return Arrays.asList(Prof.values()).stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedPflichtModuls().contains(modul));
 	}
 	
 	private void setSelected(){

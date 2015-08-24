@@ -7,17 +7,17 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ModulParser implements Serializable{
+public class CourseParser implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private final List<Modul> allModules;
+	private final List<Course> allModules;
 
-	public ModulParser(List<Modul> allModules) {
+	public CourseParser(List<Course> allModules) {
 		this.allModules = allModules;
 
 	}
 
-	public List<Modul> parse(String path) throws IOException {
+	public List<Course> parse(String path) throws IOException {
 		return Files.lines(Paths.get(path))
 				.map(l -> allModules.get(Integer.parseInt(l)-1))
 				.collect(Collectors.toList());

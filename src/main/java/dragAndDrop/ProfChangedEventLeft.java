@@ -9,9 +9,5 @@ public class ProfChangedEventLeft extends AbstractEvent {
 	public ProfChangedEventLeft() {
 		super();
 	}
-	
-	public ProfChangedEventLeft(AjaxRequestTarget target) {
-		super(target);
-	}
 		
 }

@@ -36,7 +36,7 @@ public class WahlPflichtPanel extends Panel{
 	private final AbstractEvent profEvent;
 	private final Form<?> form;
 
-	private ModulAutoCompleteTextField t;
+	private CourseAutoCompleteTextField t;
 
 	private IModel<Prof> prof;
 
@@ -56,37 +56,37 @@ public class WahlPflichtPanel extends Panel{
 		add(form);
 	}
 	
-	private  Form<?> createForm(final ModulParser modulParser, IModel<Prof> prof, AbstractEvent profEvent){
-		ListModel<Modul> moduleOfProf = new ListModel<Modul>();
+	private  Form<?> createForm(final CourseParser modulParser, IModel<Prof> prof, AbstractEvent profEvent){
+		ListModel<Course> moduleOfProf = new ListModel<Course>();
 	
-		List<Modul> firstFourModuls = loadFirstFourModuls(prof);
+		List<Course> firstFourModuls = loadFirstFourModuls(prof);
 		first = Model.of(firstFourModuls.get(0).getName());
 		second= Model.of(firstFourModuls.get(1).getName());
 		third = Model.of(firstFourModuls.get(2).getName());
 		fourth = Model.of(firstFourModuls.get(3).getName());
 		
 		Form<?> form = new Form<Object>("form");
-		form.add(new ModulAutoCompleteTextField("auto1", first,prof, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto2", second,prof, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto3", third,prof, moduleOfProf));
-		form.add(new ModulAutoCompleteTextField("auto4", fourth,prof, moduleOfProf));
+		form.add(new CourseAutoCompleteTextField("auto1", first,prof, moduleOfProf));
+		form.add(new CourseAutoCompleteTextField("auto2", second,prof, moduleOfProf));
+		form.add(new CourseAutoCompleteTextField("auto3", third,prof, moduleOfProf));
+		form.add(new CourseAutoCompleteTextField("auto4", fourth,prof, moduleOfProf));
 		form.add(createDropDown(moduleOfProf, modulParser, prof, profEvent));
 		return form;
 	}
 	
-	private static List<Modul> loadFirstFourModuls(IModel<Prof> prof) {
-		List<Modul> list = Lists.newArrayList();
-		for(Modul m : prof.getObject().getSelectedModuls()){
+	private static List<Course> loadFirstFourModuls(IModel<Prof> prof) {
+		List<Course> list = Lists.newArrayList();
+		for(Course m : prof.getObject().getSelectedModuls()){
 			list.add(m);
 		}
 		
 		for(int i=list.size(); i<4;i++){
-			list.add(new Modul("",0));
+			list.add(new Course("",0));
 		}
 		return list;
 	}
 
-	private static DropDownChoice<Prof> createDropDown(final IModel<List<Modul>> moduleOfProf, ModulParser modulParser, IModel<Prof> prof, AbstractEvent profEvent){
+	private static DropDownChoice<Prof> createDropDown(final IModel<List<Course>> moduleOfProf, CourseParser modulParser, IModel<Prof> prof, AbstractEvent profEvent){
 		moduleOfProf.setObject(loadModulsOfProf(modulParser, prof));
 		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown",prof, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
@@ -105,7 +105,7 @@ public class WahlPflichtPanel extends Panel{
 	}
 	
 	
-	private static List<Modul> loadModulsOfProf(ModulParser modulParser, IModel<Prof> selected){
+	private static List<Course> loadModulsOfProf(CourseParser modulParser, IModel<Prof> selected){
 		try{
 			return modulParser.parse(selected.getObject().getPath());
 		}catch(IOException ex){
@@ -113,10 +113,10 @@ public class WahlPflichtPanel extends Panel{
 		}
 	}
 	
-	private static ModulParser createModulParser(WahlPflichtModule module){
+	private static CourseParser createModulParser(WahlPflichtModule module){
 		try {
-			List<Modul> allModule = module.parse(ALL_PATH);
-			return new ModulParser(allModule);
+			List<Course> allModule = module.parse(ALL_PATH);
+			return new CourseParser(allModule);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -126,7 +126,7 @@ public class WahlPflichtPanel extends Panel{
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
 		if(event.getPayload() instanceof AbstractEvent && profEvent.getId() == ((AbstractEvent)event.getPayload()).getId()){
-			List<Modul> firstFourModuls = loadFirstFourModuls(prof);
+			List<Course> firstFourModuls = loadFirstFourModuls(prof);
 			first.setObject(firstFourModuls.get(0).getName());
 			second.setObject(firstFourModuls.get(1).getName());
 			third.setObject(firstFourModuls.get(2).getName());

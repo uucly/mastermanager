@@ -33,9 +33,9 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import com.modul.Modul;
-import com.modul.ModulParser;
-import com.modul.RemoveModulEvent;
+import com.modul.Course;
+import com.modul.CourseParser;
+import com.modul.RemoveCourseEvent;
 import com.modul.WahlPflichtModule;
 import com.professoren.Prof;
 
@@ -50,68 +50,26 @@ public class ModulButtonPanel extends Panel {
 
 	private Form<Object> formWahl;
 	private transient AbstractEvent profEvent;
-	private Form formPflicht;
+	private Form<?> formPflicht;
 
 	// TODO replace ProfCHangedEvent with EventInjector
 	public ModulButtonPanel(String id, AbstractEvent profEvent, final IModel<Prof> prof) throws IOException {
 		super(id);
 		setOutputMarkupId(true);
 		this.profEvent = profEvent;
-		IModel<List<Modul>> moduleOfProf = new ListModel<Modul>();
+		IModel<List<Course>> moduleOfProf = new ListModel<Course>();
 		IModel<String> text = Model.of("");
-		IModel<List<Modul>> selectedModuls = createSelectedModuls(text, moduleOfProf);
+		IModel<List<Course>> selectedModuls = createSelectedModuls(text, moduleOfProf);
 
 		formWahl = new Form<Object>("formWahl");
-
-		TextField<String> textField = new TextField<String>("textField", text);
-		textField.add(new OnChangeAjaxBehavior() {
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				target.add(formWahl);
-			}
-
-			public void detach(Component component) {
-				selectedModuls.detach();
-			};
-
-		});
-
-		IModel<List<Modul>> selectedPflichtModuls = new LoadableDetachableModel<List<Modul>>() {
-
-			@Override
-			protected List<Modul> load() {
-				try {
-					return createModulParser(module).parse(prof.getObject().getPflichtModulPath());
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		};
 		
 		MarkupContainer container = new WebMarkupContainer("container");
-		container.add(textField);
+		container.add(createTextField(text, formWahl, selectedModuls));
 		container.add(createDropDown(moduleOfProf, prof, createModulParser(module), profEvent));
 		
-		formPflicht = new Form("formPflicht");
-		formPflicht.add(new ListView<Modul>("pflichtListView", selectedPflichtModuls){
-
-			@Override
-			protected void populateItem(ListItem<Modul> item) {
-				Button b = new ModulPflichtButton("modulButton", item.getModelObject(), prof);
-				item.add(b);
-			}
-			
-		});
-		formWahl.add(new ListView<Modul>("listView", selectedModuls){
-
-			@Override
-			protected void populateItem(ListItem<Modul> item) {
-				Button b = new ModulButton("modulButton", item.getModelObject(), prof);
-				item.add(b);
-			}
-			
-		});
+		formPflicht = new Form<Object>("formPflicht");
+		formPflicht.add(createPflichListView(module, prof));
+		formWahl.add(createListView(selectedModuls, prof));
 		container.add(formPflicht);
 		container.add(formWahl);
 		
@@ -119,16 +77,16 @@ public class ModulButtonPanel extends Panel {
 	}
 
 	/*	*/
-	private static ModulParser createModulParser(WahlPflichtModule module) {
+	private static CourseParser createModulParser(WahlPflichtModule module) {
 		try {
-			List<Modul> allModule = module.parse(ALL_PATH);
-			return new ModulParser(allModule);
+			List<Course> allModule = module.parse(ALL_PATH);
+			return new CourseParser(allModule);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private static DropDownChoice<Prof> createDropDown( final IModel<List<Modul>> moduleOfProf, final IModel<Prof> selectedProf, ModulParser modulParser, AbstractEvent profEvent) {
+	private static DropDownChoice<Prof> createDropDown( final IModel<List<Course>> moduleOfProf, final IModel<Prof> selectedProf, CourseParser modulParser, AbstractEvent profEvent) {
 		moduleOfProf.setObject(loadModulsOfProf(modulParser, selectedProf));
 		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown", selectedProf, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
@@ -147,7 +105,7 @@ public class ModulButtonPanel extends Panel {
 		return dropDown;
 	}
 
-	private static List<Modul> loadModulsOfProf(ModulParser modulParser, IModel<Prof> selected) {
+	private static List<Course> loadModulsOfProf(CourseParser modulParser, IModel<Prof> selected) {
 		try {
 			return modulParser.parse(selected.getObject().getPath());
 		} catch (IOException ex) {
@@ -157,26 +115,85 @@ public class ModulButtonPanel extends Panel {
 
 	@Override
 	public void onEvent(IEvent<?> event) {
-		super.onEvent(event);
 		if (event.getPayload() instanceof AbstractEvent && profEvent.getId() == ((AbstractEvent) event.getPayload()).getId()) {
-			((AbstractEvent) event.getPayload()).getTarget().add(formWahl);
-			((AbstractEvent) event.getPayload()).getTarget().add(formPflicht);
+			((AbstractEvent) event.getPayload()).getTarget().add(formWahl, formPflicht);
 			
-		} else if(event.getPayload() instanceof RemoveModulEvent){
-			((RemoveModulEvent) event.getPayload()).getTarget().add(formWahl);
-			((RemoveModulEvent) event.getPayload()).getTarget().add(formPflicht);
-			
+		} else if(event.getPayload() instanceof RemoveCourseEvent){
+			((RemoveCourseEvent) event.getPayload()).getTarget().add(formWahl, formPflicht);			
 		}
 	}
 
-	private static IModel<List<Modul>> createSelectedModuls(IModel<String> text, IModel<List<Modul>> moduleOfProf) {
-		
-		return new LoadableDetachableModel<List<Modul>>() {
+	
+	private static IModel<List<Course>> createPflichtCourseModel(WahlPflichtModule module, IModel<Prof> prof){
+		return new LoadableDetachableModel<List<Course>>() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected List<Modul> load() {
+			protected List<Course> load() {
+				try {
+					return createModulParser(module).parse(prof.getObject().getPflichtModulPath());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
+	}
+	
+	
+	private static TextField<String> createTextField(IModel<String> text, Form<Object> formWahl, IModel<List<Course>> selectedModuls){
+		TextField<String> textField = new TextField<String>("textField", text);
+		textField.add(new OnChangeAjaxBehavior() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
+				target.add(formWahl);
+			}
+
+			public void detach(Component component) {
+				selectedModuls.detach();
+			};
+
+		});
+		return textField;
+	}
+	
+	private static ListView<Course> createPflichListView(WahlPflichtModule module, IModel<Prof> prof){
+		return new ListView<Course>("pflichtListView", createPflichtCourseModel(module, prof)){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void populateItem(ListItem<Course> item) {
+				item.add(new CoursePflichtButton("modulButton", item.getModelObject(), prof));
+			}
+			
+		};
+	}
+	
+	private static ListView<Course> createListView(IModel<List<Course>> selectedModuls, IModel<Prof> prof){
+		return new ListView<Course>("listView", selectedModuls){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void populateItem(ListItem<Course> item) {
+				item.add(new CourseButton("modulButton", item.getModelObject(), prof));
+			}
+			
+		};
+	}
+	
+	private static IModel<List<Course>> createSelectedModuls(IModel<String> text, IModel<List<Course>> moduleOfProf) {
+		
+		return new LoadableDetachableModel<List<Course>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<Course> load() {
 				if (text.getObject() != null) {
 					return moduleOfProf.getObject().stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
 				} else {

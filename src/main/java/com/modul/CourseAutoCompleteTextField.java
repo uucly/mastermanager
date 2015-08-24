@@ -18,13 +18,13 @@ import org.apache.wicket.model.util.ListModel;
 import com.google.common.base.Strings;
 import com.professoren.Prof;
 
-public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
+public class CourseAutoCompleteTextField extends AutoCompleteTextField<String> {
 
 	private static final long serialVersionUID = 1L;
-	private final IModel<List<Modul>> moduls;
+	private final IModel<List<Course>> moduls;
 	private String selected;
 	
-	public ModulAutoCompleteTextField(String id, IModel<String> modulModel, IModel<Prof> prof, ListModel<Modul> moduls) {
+	public CourseAutoCompleteTextField(String id, IModel<String> modulModel, IModel<Prof> prof, ListModel<Course> moduls) {
 		super(id, modulModel);
 		this.moduls = moduls;
 		selected = "";
@@ -52,7 +52,7 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 				if(Strings.isNullOrEmpty(getModelObject())){
 					prof.getObject().getSelectedModuls().removeIf(m->m.getName().equals(selected));
 				}
-				Optional<Modul> selectedModul = moduls.getObject().stream().filter(m -> m.getName().equals(selected)).findFirst();
+				Optional<Course> selectedModul = moduls.getObject().stream().filter(m -> m.getName().equals(selected)).findFirst();
 				
 				if(selectedModul.isPresent()){
 					prof.getObject().addSelectedModul(selectedModul.get());
@@ -69,7 +69,7 @@ public class ModulAutoCompleteTextField extends AutoCompleteTextField<String> {
 			return Collections.<String>emptyList().iterator();
 		}
 
-		return moduls.getObject().stream().filter(Modul::isNotInUse).filter(m -> m.getName().toUpperCase().startsWith(input.toUpperCase())).map(m -> m.getName()).collect(Collectors.toList()).iterator();
+		return moduls.getObject().stream().filter(Course::isNotInUse).filter(m -> m.getName().toUpperCase().startsWith(input.toUpperCase())).map(m -> m.getName()).collect(Collectors.toList()).iterator();
 	}
 	
 }

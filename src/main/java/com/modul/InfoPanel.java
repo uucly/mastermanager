@@ -1,15 +1,12 @@
 package com.modul;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
@@ -39,8 +36,8 @@ public class InfoPanel extends Panel{
 	private final IModel<Integer> pflichtPoints = Model.of(0);
 	private IModel<List<Prof>> profs;
 	private Form<Object> form;
-	private IModel<List<Modul>> allCurrentSelectedModuls;
-	private IModel allSelectedModuls;
+	private IModel<List<Course>> allCurrentSelectedModuls;
+	private IModel<List<Course>> allSelectedModuls;
 	private ProgressBar pflichtProgressBar;
 	
 	public InfoPanel(String id, IModel<List<Prof>> profs) {
@@ -52,21 +49,26 @@ public class InfoPanel extends Panel{
 		pflichtPoints.setObject(calculatePoints(profs, Prof::calculatePflichtPoints));
 		this.progressBar = createWahlProgressBar(points, profs);
 		this.pflichtProgressBar = createPflichtProgressBar(pflichtPoints, profs);
-		allSelectedModuls = new LoadableDetachableModel<List<Modul>>() {
+		allSelectedModuls = new LoadableDetachableModel<List<Course>>() {
+
+			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected List<Modul> load() {
-				List<Modul> list = Lists.newArrayList();
+			protected List<Course> load() {
+				List<Course> list = Lists.newArrayList();
 				Arrays.asList(Prof.values()).stream().forEach(p->list.addAll(p.getSelectedModuls()));
 				Arrays.asList(Prof.values()).stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
 				
 				return list;
 			}
 		};
-		allCurrentSelectedModuls = new LoadableDetachableModel<List<Modul>>() {
+		allCurrentSelectedModuls = new LoadableDetachableModel<List<Course>>() {
+			
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			protected List<Modul> load() {
-				List<Modul> list = Lists.newArrayList();
+			protected List<Course> load() {
+				List<Course> list = Lists.newArrayList();
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedModuls()));
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
 				
@@ -75,7 +77,7 @@ public class InfoPanel extends Panel{
 			
 		};
 		
-        ListView<Modul> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs);
+        ListView<Course> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs);
 		form.add(modulListView);
         form.add(progressBar);
         form.add(pflichtProgressBar);
@@ -124,10 +126,10 @@ public class InfoPanel extends Panel{
 			setPoints(summary, points);
 			setPoints(summaryPflicht, pflichtPoints);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
-		} else if(event.getPayload() instanceof RemoveModulEvent){
+		} else if(event.getPayload() instanceof RemoveCourseEvent){
 			setPoints(summary, points);
 			setPoints(summaryPflicht, pflichtPoints);
-			((RemoveModulEvent) event.getPayload()).getTarget().add(form);
+			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
 		}
 		
 	}
@@ -163,13 +165,13 @@ public class InfoPanel extends Panel{
         return progressBar;
 	}
 	
-	private static ListView<Modul> createListView(IModel<List<Modul>> allSelectedModuls, IModel<List<Modul>> allCurrentSelectedModuls, IModel<List<Prof>> profs){
-		return new ListView<Modul>("verticalButtonGroup", allSelectedModuls) {
+	private static ListView<Course> createListView(IModel<List<Course>> allSelectedModuls, IModel<List<Course>> allCurrentSelectedModuls, IModel<List<Prof>> profs){
+		return new ListView<Course>("verticalButtonGroup", allSelectedModuls) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<Modul> item) {
+			protected void populateItem(ListItem<Course> item) {
 				AjaxButton button = createButton(item.getModelObject().getName());
 				if(allCurrentSelectedModuls.getObject().contains(item.getModel().getObject())){
 					button.add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));//new AttributeAppender("class", " btn-success"));
@@ -187,7 +189,7 @@ public class InfoPanel extends Panel{
 						Arrays.asList(Prof.values()).stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
 						Arrays.asList(Prof.values()).stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
 						
-						send(getPage(), Broadcast.DEPTH, new RemoveModulEvent(target));
+						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
 					};
 				};
 			}

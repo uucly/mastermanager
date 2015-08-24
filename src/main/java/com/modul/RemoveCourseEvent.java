@@ -2,11 +2,11 @@ package com.modul;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
-public class RemoveModulEvent {
+public class RemoveCourseEvent {
 
 	private final AjaxRequestTarget target;
 	
-	public RemoveModulEvent(AjaxRequestTarget target) {
+	public RemoveCourseEvent(AjaxRequestTarget target) {
 		this.target = target;
 	}
 

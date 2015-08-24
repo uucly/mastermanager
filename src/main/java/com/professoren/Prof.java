@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.modul.Modul;
+import com.modul.Course;
 
 public enum Prof{
 
@@ -14,9 +14,9 @@ public enum Prof{
 	HECK( "Heck", getWahlModulPath("Heck"), getPflichtModulPath("heck"));
 
 	private final String name, wahlModulPath;
-	private final List<Modul> selectedModuls;
+	private final List<Course> selectedModuls;
 	private final String pflichtModulPath;
-	private final List<Modul> selectedPflichtModuls;
+	private final List<Course> selectedPflichtModuls;
 	
 	Prof(String name, String wahlModulPath, String pflichtModulPath) {
 		this.name = name;
@@ -42,31 +42,36 @@ public enum Prof{
 		return "src/main/resources/" + prof + "_Wahl.txt";
 	}
 
-	public List<Modul> getSelectedModuls() {
+	public List<Course> getSelectedModuls() {
 		return selectedModuls;
 	}
 	
-	public List<Modul> getSelectedPflichtModuls() {
+	public List<Course> getSelectedPflichtModuls() {
 		return selectedPflichtModuls;
 	}
 	
-	public void addSelectedModul(Modul modul){
+	public void addSelectedModul(Course modul){
 		selectedModuls.add(modul);
 	}
 	
-	public void addSelectedPflichtModul(Modul modul){
+	public void addSelectedPflichtModul(Course modul){
 		selectedPflichtModuls.add(modul);
 	}
 	
 	public double calculateWahlPoints(){
-		return selectedModuls.stream().mapToDouble(Modul::getPoints).sum();
+		return selectedModuls.stream().mapToDouble(Course::getPoints).sum();
 	}
 	
 	public double calculatePflichtPoints(){
-		return selectedPflichtModuls.stream().mapToDouble(Modul::getPoints).sum();
+		return selectedPflichtModuls.stream().mapToDouble(Course::getPoints).sum();
 	}
 
 	public String getPflichtModulPath() {
 		return pflichtModulPath;
+	}
+	
+	public void clearAll(){
+		selectedModuls.clear();
+		selectedPflichtModuls.clear();
 	}
 }
