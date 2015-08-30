@@ -17,9 +17,13 @@ public class CourseParser implements Serializable{
 
 	}
 
-	public List<Course> parse(String path) throws IOException {
-		return Files.lines(Paths.get(path))
-				.map(l -> allModules.get(Integer.parseInt(l)-1))
-				.collect(Collectors.toList());
+	public List<Course> parse(String path) {
+		try {
+			return Files.lines(Paths.get(path))
+					.map(l -> allModules.get(Integer.parseInt(l)-1))
+					.collect(Collectors.toList());
+		} catch (NumberFormatException | IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

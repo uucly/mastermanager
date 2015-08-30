@@ -1,6 +1,5 @@
 package com.professoren;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -11,7 +10,7 @@ public enum Prof{
 	BREUNIG("Breunig", getWahlModulPath("Breunig"), getPflichtModulPath("breunig")), 
 	HINZ("Hinz", getWahlModulPath("Hinz"), getPflichtModulPath("hinz")), 
 	HENNES("Hennes,", getWahlModulPath("Hennes"), getPflichtModulPath("hennes")), 
-	HECK( "Heck", getWahlModulPath("Heck"), getPflichtModulPath("heck"));
+	HECK("Heck", getWahlModulPath("Heck"), getPflichtModulPath("heck"));
 
 	private final String name, wahlModulPath;
 	private final List<Course> selectedModuls;

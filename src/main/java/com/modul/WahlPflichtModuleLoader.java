@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import com.modul.Course;
 
 @Service
-public class WahlPflichtModule {
+public class WahlPflichtModuleLoader {
 
-	public List<Course> parse(String path) throws IOException {
+	public List<Course> loadAllWahlCourseOfPath(String path) throws IOException {
 		Function<String, Course> parseToModul = line -> {
 			String[] split = line.split(",");
 			return new Course(split[0], Double.parseDouble(split[1]));

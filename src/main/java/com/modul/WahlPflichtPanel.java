@@ -31,7 +31,7 @@ public class WahlPflichtPanel extends Panel{
 	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof.values());
 	
 	@SpringBean
-	private WahlPflichtModule module;
+	private WahlPflichtModuleLoader module;
 	
 	private final AbstractEvent profEvent;
 	private final Form<?> form;
@@ -106,16 +106,12 @@ public class WahlPflichtPanel extends Panel{
 	
 	
 	private static List<Course> loadModulsOfProf(CourseParser modulParser, IModel<Prof> selected){
-		try{
 			return modulParser.parse(selected.getObject().getPath());
-		}catch(IOException ex){
-			throw new RuntimeException(ex);
-		}
 	}
 	
-	private static CourseParser createModulParser(WahlPflichtModule module){
+	private static CourseParser createModulParser(WahlPflichtModuleLoader module){
 		try {
-			List<Course> allModule = module.parse(ALL_PATH);
+			List<Course> allModule = module.loadAllWahlCourseOfPath(ALL_PATH);
 			return new CourseParser(allModule);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

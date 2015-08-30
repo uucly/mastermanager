@@ -36,7 +36,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.modul.Course;
 import com.modul.CourseParser;
 import com.modul.RemoveCourseEvent;
-import com.modul.WahlPflichtModule;
+import com.modul.WahlPflichtModuleLoader;
 import com.professoren.Prof;
 
 public class ModulButtonPanel extends Panel {
@@ -46,7 +46,7 @@ public class ModulButtonPanel extends Panel {
 	private static final List<Prof> SEARCH_ENGINES = Arrays.asList(Prof.values());
 
 	@SpringBean
-	private WahlPflichtModule module;
+	private WahlPflichtModuleLoader module;
 
 	private Form<Object> formWahl;
 	private transient AbstractEvent profEvent;
@@ -65,6 +65,8 @@ public class ModulButtonPanel extends Panel {
 		
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl, selectedModuls));
+		moduleOfProf.setObject(module.loadAllWahlCourseOfPath(prof.getObject().getPath()));
+		
 		container.add(createDropDown(moduleOfProf, prof, createModulParser(module), profEvent));
 		
 		formPflicht = new Form<Object>("formPflicht");
@@ -76,10 +78,9 @@ public class ModulButtonPanel extends Panel {
 		add(container);
 	}
 
-	/*	*/
-	private static CourseParser createModulParser(WahlPflichtModule module) {
+	private static CourseParser createModulParser(WahlPflichtModuleLoader module) {
 		try {
-			List<Course> allModule = module.parse(ALL_PATH);
+			List<Course> allModule = module.loadAllWahlCourseOfPath(ALL_PATH);
 			return new CourseParser(allModule);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -87,7 +88,6 @@ public class ModulButtonPanel extends Panel {
 	}
 
 	private static DropDownChoice<Prof> createDropDown( final IModel<List<Course>> moduleOfProf, final IModel<Prof> selectedProf, CourseParser modulParser, AbstractEvent profEvent) {
-		moduleOfProf.setObject(loadModulsOfProf(modulParser, selectedProf));
 		DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown", selectedProf, SEARCH_ENGINES);
 		dropDown.add(new OnChangeAjaxBehavior() {
 
@@ -95,7 +95,7 @@ public class ModulButtonPanel extends Panel {
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				moduleOfProf.setObject(loadModulsOfProf(modulParser, selectedProf));
+				moduleOfProf.setObject(modulParser.parse(selectedProf.getObject().getPath()));
 				
 				profEvent.setTarget(target);
 				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, profEvent);
@@ -105,13 +105,6 @@ public class ModulButtonPanel extends Panel {
 		return dropDown;
 	}
 
-	private static List<Course> loadModulsOfProf(CourseParser modulParser, IModel<Prof> selected) {
-		try {
-			return modulParser.parse(selected.getObject().getPath());
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
 
 	@Override
 	public void onEvent(IEvent<?> event) {
@@ -124,18 +117,14 @@ public class ModulButtonPanel extends Panel {
 	}
 
 	
-	private static IModel<List<Course>> createPflichtCourseModel(WahlPflichtModule module, IModel<Prof> prof){
+	private static IModel<List<Course>> createPflichtCourseModel(WahlPflichtModuleLoader module, IModel<Prof> prof){
 		return new LoadableDetachableModel<List<Course>>() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected List<Course> load() {
-				try {
 					return createModulParser(module).parse(prof.getObject().getPflichtModulPath());
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
 			}
 		};
 	}
@@ -160,7 +149,7 @@ public class ModulButtonPanel extends Panel {
 		return textField;
 	}
 	
-	private static ListView<Course> createPflichListView(WahlPflichtModule module, IModel<Prof> prof){
+	private static ListView<Course> createPflichListView(WahlPflichtModuleLoader module, IModel<Prof> prof){
 		return new ListView<Course>("pflichtListView", createPflichtCourseModel(module, prof)){
 
 			private static final long serialVersionUID = 1L;
