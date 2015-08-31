@@ -36,7 +36,7 @@ public class CoursePflichtButton extends AjaxButton {
 		setSelected();
 		prof.getObject().addSelectedPflichtModul(modul);
 		target.add(this);
-		send(getPage(), Broadcast.DEPTH, new SelectedEvent(target));
+		send(getPage(), Broadcast.DEPTH, new SelectedEvent(target, modul));
 	}
 
 	@Override
