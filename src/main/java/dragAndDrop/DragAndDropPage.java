@@ -21,12 +21,16 @@ public class DragAndDropPage extends BasePage{
 	
 	public DragAndDropPage(){
 		WahlPflichtModuleLoader courseLoader = new WahlPflichtModuleLoader("src/main/resources/WahlPflichtModule.txt");
-		Prof breunig = new Prof("Breunig"), hinz = new Prof("Hinz"), heck = new Prof("Heck"), hennes = new Prof("Hennes");
+		Prof breunig = new Prof("Breunig", courseLoader.loadCourseOfProf(getCoursePath("BreunigPflicht.txt"))), 
+				hinz = new Prof("Hinz", courseLoader.loadCourseOfProf(getCoursePath("HinzPflicht.txt"))), 
+				heck = new Prof("Heck", courseLoader.loadCourseOfProf(getCoursePath("HeckPflicht.txt"))), 
+				hennes = new Prof("Hennes", courseLoader.loadCourseOfProf(getCoursePath("HennesPflicht.txt")));
+		
 		List<Prof> allProfs = Arrays.asList(breunig, hinz, heck, hennes);
 		IModel<Prof> profLeft = Model.of(breunig), profRight = Model.of(hinz);
 		Form form = new Form("form");
-		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1",new ProfChangedEventLeft(), profLeft, profRight,  allProfs, courseLoader);
-		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2",new ProfChangedEventRight(), profRight, profRight, allProfs, courseLoader);
+		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", profLeft, profRight,  allProfs, courseLoader);
+		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", profRight, profLeft, allProfs, courseLoader);
 		InfoPanel infoPanel = new InfoPanel("infoPanel", new LoadableDetachableModel<List<Prof>>() {
 
 			@Override
@@ -39,9 +43,14 @@ public class DragAndDropPage extends BasePage{
 		add(panel1, panel2, infoPanel);
 	}
 	
+	
 	@Override
 	public MenuItemEnum getActiveMenu() {
 		return MenuItemEnum.DRAG_DROP;
+	}
+	
+	private static String getCoursePath(String fileName) {
+		return "src/main/resources/" + fileName;
 	}
 	
 }

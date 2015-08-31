@@ -20,12 +20,14 @@ public class CourseButton extends AjaxButton {
 	private final IModel<Prof> prof;
 	private final Course modul;
 	private final List<Prof> allProfs;
+	private IModel<Prof> profRight;
 
-	public CourseButton(String id, Course modul, IModel<Prof> prof, List<Prof> allProfs) {
+	public CourseButton(String id, Course modul, IModel<Prof> prof, IModel<Prof> profRight, List<Prof> allProfs) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
 		this.modul = modul;
 		this.prof = prof;
+		this.profRight = profRight;
 		this.allProfs = allProfs;
 	}
 
@@ -42,6 +44,8 @@ public class CourseButton extends AjaxButton {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		if(isSelected(prof.getObject(), modul)){
+			setSelected();
+		} else if(profRight.getObject().getPflichtCourse().contains(modul)){
 			setSelected();
 		} else if(containsProf(prof.getObject(), modul, allProfs)) {
 			setEnabled(false);

@@ -6,10 +6,10 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 
 public abstract class AbstractEvent implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	private AjaxRequestTarget target;
 	private double id = Math.random()*100;
-	
-	public AbstractEvent(){}
 	
 	public AbstractEvent(AjaxRequestTarget target){
 		this.target = target;
