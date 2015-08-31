@@ -43,16 +43,16 @@ public class CourseButton extends AjaxButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(isSelected(prof.getObject(), modul)){
+		if(isAlreadySelected(prof.getObject(), modul)){
 			setSelected();
 		} else if(profRight.getObject().getPflichtCourse().contains(modul)){
-			setSelected();
-		} else if(containsProf(prof.getObject(), modul, allProfs)) {
+			setEnabled(false);
+		} else if(isAlreadySelectedInOtherProf(prof.getObject(), modul, allProfs)) {
 			setEnabled(false);
 		}
 	}
 	
-	private static boolean isSelected(Prof prof, Course course){
+	private static boolean isAlreadySelected(Prof prof, Course course){
 		return prof.getSelectedModuls().contains(course);
 	}
 
@@ -60,7 +60,7 @@ public class CourseButton extends AjaxButton {
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
 		if(event.getPayload() instanceof SelectedEvent){
-			if(containsProf(prof.getObject(), modul, allProfs)){
+			if(isAlreadySelectedInOtherProf(prof.getObject(), modul, allProfs)){
 				setEnabled(false);
 				((SelectedEvent) event.getPayload()).getTarget().add(this);
 			}
@@ -69,7 +69,7 @@ public class CourseButton extends AjaxButton {
 		
 	}
 	
-	private static boolean containsProf(Prof prof, Course modul, List<Prof> allProfs){
+	private static boolean isAlreadySelectedInOtherProf(Prof prof, Course modul, List<Prof> allProfs){
 		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedModuls().contains(modul));
 	}
 	
