@@ -17,7 +17,7 @@ public class CourseParser implements Serializable{
 
 	}
 
-	public List<Course> parse(String path) {
+	public List<Course> loadCourseOfProf(String path) {
 		try {
 			return Files.lines(Paths.get(path))
 					.map(l -> allModules.get(Integer.parseInt(l)-1))

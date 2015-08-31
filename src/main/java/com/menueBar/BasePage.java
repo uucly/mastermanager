@@ -3,7 +3,6 @@ package com.menueBar;
 import org.apache.wicket.markup.html.WebPage;
 
 import com.germany.HomePage;
-import com.germany.StartPage;
 
 import dragAndDrop.DragAndDropPage;
 

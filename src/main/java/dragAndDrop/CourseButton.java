@@ -1,7 +1,6 @@
 package dragAndDrop;
 
-import java.util.Arrays;
-
+import java.util.List;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -18,14 +17,16 @@ import com.professoren.Prof;
 public class CourseButton extends AjaxButton {
 
 	private static final long serialVersionUID = 1L;
-	private IModel<Prof> prof;
-	private Course modul;
+	private final IModel<Prof> prof;
+	private final Course modul;
+	private final List<Prof> allProfs;
 
-	public CourseButton(String id, Course modul, IModel<Prof> prof) {
+	public CourseButton(String id, Course modul, IModel<Prof> prof, List<Prof> allProfs) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
 		this.modul = modul;
 		this.prof = prof;
+		this.allProfs = allProfs;
 	}
 
 	@Override
@@ -40,18 +41,22 @@ public class CourseButton extends AjaxButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(prof.getObject().getSelectedModuls().contains(modul)){
+		if(isSelected(prof.getObject(), modul)){
 			setSelected();
-		} else if(containsProf(prof.getObject(), modul)) {
+		} else if(containsProf(prof.getObject(), modul, allProfs)) {
 			setEnabled(false);
 		}
+	}
+	
+	private static boolean isSelected(Prof prof, Course course){
+		return prof.getSelectedModuls().contains(course);
 	}
 
 	@Override
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
 		if(event.getPayload() instanceof SelectedEvent){
-			if(containsProf(prof.getObject(), modul)){
+			if(containsProf(prof.getObject(), modul, allProfs)){
 				setEnabled(false);
 				((SelectedEvent) event.getPayload()).getTarget().add(this);
 			}
@@ -60,8 +65,8 @@ public class CourseButton extends AjaxButton {
 		
 	}
 	
-	private static boolean containsProf(Prof prof, Course modul){
-		return Arrays.asList(Prof.values()).stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedModuls().contains(modul));
+	private static boolean containsProf(Prof prof, Course modul, List<Prof> allProfs){
+		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedModuls().contains(modul));
 	}
 	
 	private void setSelected(){

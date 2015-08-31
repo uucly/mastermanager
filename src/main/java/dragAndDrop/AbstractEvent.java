@@ -1,8 +1,10 @@
 package dragAndDrop;
 
+import java.io.Serializable;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
-public abstract class AbstractEvent{
+public abstract class AbstractEvent implements Serializable{
 
 	private AjaxRequestTarget target;
 	private double id = Math.random()*100;

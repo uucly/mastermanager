@@ -1,6 +1,6 @@
 package dragAndDrop;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,12 +20,14 @@ public class CoursePflichtButton extends AjaxButton {
 	private static final long serialVersionUID = 1L;
 	private IModel<Prof> prof;
 	private Course modul;
+	private List<Prof> allProfs;
 
-	public CoursePflichtButton(String id, Course modul, IModel<Prof> prof) {
+	public CoursePflichtButton(String id, Course modul, IModel<Prof> prof, List<Prof> allProfs) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
 		this.modul = modul;
 		this.prof = prof;
+		this.allProfs = allProfs;
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public class CoursePflichtButton extends AjaxButton {
 		super.onBeforeRender();
 		if(prof.getObject().getSelectedPflichtModuls().contains(modul)){
 			setSelected();
-		} else if(containsProf(prof.getObject(), modul)) {
+		} else if(containsProf(prof.getObject(), modul, allProfs)) {
 			setEnabled(false);
 		}
 	}
@@ -51,7 +53,7 @@ public class CoursePflichtButton extends AjaxButton {
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
 		if(event.getPayload() instanceof SelectedEvent){
-			if(containsProf(prof.getObject(), modul)){
+			if(containsProf(prof.getObject(), modul, allProfs)){
 				setEnabled(false);
 				((SelectedEvent) event.getPayload()).getTarget().add(this);
 			}
@@ -60,8 +62,8 @@ public class CoursePflichtButton extends AjaxButton {
 		
 	}
 	
-	private static boolean containsProf(Prof prof, Course modul){
-		return Arrays.asList(Prof.values()).stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedPflichtModuls().contains(modul));
+	private static boolean containsProf(Prof prof, Course modul, List<Prof> allProfs){
+		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedPflichtModuls().contains(modul));
 	}
 	
 	private void setSelected(){

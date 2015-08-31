@@ -1,33 +1,25 @@
 package com.professoren;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.modul.Course;
 
-public enum Prof{
+public class Prof implements Serializable{
 
-	BREUNIG("Breunig", getWahlModulPath("Breunig"), getPflichtModulPath("breunig")), 
-	HINZ("Hinz", getWahlModulPath("Hinz"), getPflichtModulPath("hinz")), 
-	HENNES("Hennes,", getWahlModulPath("Hennes"), getPflichtModulPath("hennes")), 
-	HECK("Heck", getWahlModulPath("Heck"), getPflichtModulPath("heck"));
-
-	private final String name, wahlModulPath;
+	private final String name, wahlModulPath, pflichtModulPath;
 	private final List<Course> selectedModuls;
-	private final String pflichtModulPath;
 	private final List<Course> selectedPflichtModuls;
 	
-	Prof(String name, String wahlModulPath, String pflichtModulPath) {
+	public Prof(String name) {
 		this.name = name;
-		this.wahlModulPath = wahlModulPath;
-		this.pflichtModulPath = pflichtModulPath;
+		this.wahlModulPath = getCoursePath(name + "_Wahl.txt");
+		this.pflichtModulPath = getCoursePath(name+"Pflicht.txt");
 		selectedModuls = Lists.newArrayList();
 		selectedPflichtModuls = Lists.newArrayList();
 	}
 
-	private static String getPflichtModulPath(String prof) {
-		return "src/main/resources/"+prof+"Pflicht.txt";
-	}
 
 	public String getName() {
 		return name;
@@ -37,8 +29,8 @@ public enum Prof{
 		return wahlModulPath;
 	}
 
-	private static String getWahlModulPath(String prof) {
-		return "src/main/resources/" + prof + "_Wahl.txt";
+	private static String getCoursePath(String fileName) {
+		return "src/main/resources/" + fileName;
 	}
 
 	public List<Course> getSelectedModuls() {
@@ -72,5 +64,10 @@ public enum Prof{
 	public void clearAll(){
 		selectedModuls.clear();
 		selectedPflichtModuls.clear();
+	}
+	
+	@Override
+	public String toString(){
+		return name;
 	}
 }

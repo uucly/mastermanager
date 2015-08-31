@@ -1,6 +1,5 @@
 package com.modul;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -40,7 +39,7 @@ public class InfoPanel extends Panel{
 	private IModel<List<Course>> allSelectedModuls;
 	private ProgressBar pflichtProgressBar;
 	
-	public InfoPanel(String id, IModel<List<Prof>> profs) {
+	public InfoPanel(String id, IModel<List<Prof>> profs, List<Prof> allProfs) {
 		super(id);
 		setOutputMarkupId(true);
 		this.profs = profs;
@@ -56,8 +55,8 @@ public class InfoPanel extends Panel{
 			@Override
 			protected List<Course> load() {
 				List<Course> list = Lists.newArrayList();
-				Arrays.asList(Prof.values()).stream().forEach(p->list.addAll(p.getSelectedModuls()));
-				Arrays.asList(Prof.values()).stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedModuls()));
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
 				
 				return list;
 			}
@@ -77,7 +76,7 @@ public class InfoPanel extends Panel{
 			
 		};
 		
-        ListView<Course> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs);
+        ListView<Course> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
 		form.add(modulListView);
         form.add(progressBar);
         form.add(pflichtProgressBar);
@@ -165,7 +164,7 @@ public class InfoPanel extends Panel{
         return progressBar;
 	}
 	
-	private static ListView<Course> createListView(IModel<List<Course>> allSelectedModuls, IModel<List<Course>> allCurrentSelectedModuls, IModel<List<Prof>> profs){
+	private static ListView<Course> createListView(IModel<List<Course>> allSelectedModuls, IModel<List<Course>> allCurrentSelectedModuls, IModel<List<Prof>> profs, List<Prof> allProfs){
 		return new ListView<Course>("verticalButtonGroup", allSelectedModuls) {
 
 			private static final long serialVersionUID = 1L;
@@ -186,8 +185,8 @@ public class InfoPanel extends Panel{
 					private static final long serialVersionUID = 1L;
 
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
-						Arrays.asList(Prof.values()).stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
-						Arrays.asList(Prof.values()).stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
+						allProfs.stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
+						allProfs.stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
 						
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
 					};
