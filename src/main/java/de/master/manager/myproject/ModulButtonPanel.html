@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+	<wicket:panel>
+		<div wicket:id="container">
+			<div class="modulBorder">
+				<div style="padding-bottom: 10px; padding-top: 10px">
+					<th>Vertiefungsrichtung</th> <select wicket:id="dropDown"></select>
+				</div>
+				<form wicket:id="formPflicht">
+					<div>
+						<strong>Pflichtmodule:</strong>
+					</div>
+					<span class="btn-group-vertical" role="group"> <span
+						wicket:id="pflichtListView"> <input style="float: left"
+							type="submit" wicket:id="modulButton"
+							class="btn btn-info btn-xs btn-block"></input><br /> <br />
+					</span>
+					</span>
+
+				</form>
+
+				<div>
+					<strong>Wahlmodule:</strong>
+				</div>
+				<div>
+					<input wicket:id="textField" style="margin-bottom: 15px;"></input>
+				</div>
+				<form wicket:id="formWahl">
+
+					<span class="btn-group-vertical" role="group"> <span
+						wicket:id="listView"> <input style="float: left"
+							type="submit" wicket:id="modulButton"
+							class="btn btn-info btn-xs btn-block"></input><br /> <br/>
+					</span>
+					</span>
+				</form>
+			</div>
+
+		</div>
+	</wicket:panel>
+</body>
+</html>

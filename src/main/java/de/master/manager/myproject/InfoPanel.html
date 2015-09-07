@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<wicket:panel wicket:id="pflicht" class="form-inline">
+		<form wicket:id="form" class="form-group">
+			Pflicht:
+			<table>
+				<tr>
+					<td width="240" colspan="2">
+						<div wicket:id="pflichtProgress"></div>
+					</td>
+				</tr>
+			</table>
+			
+			Wahlpflicht:
+			<table>
+				<tr>
+					<td width="240" colspan="2">
+						<div wicket:id="progress"></div>
+					</td>
+				</tr>
+			</table>
+			<br /> <b>Ausgew&auml;hlte Kurse: </b><br />
+			<div class="btn-group-vertical" role="group">
+				<div wicket:id="verticalButtonGroup">
+					<button wicket:id="selectedModulButton" style="float: left; margin-bottom: 3px;" type="submit" class="btn btn-info btn-xs btn-block">
+						<i class="glyphicon glyphicon-trash"></i>
+						<span wicket:id="label"></span>
+					</button>
+					
+				</div>
+			</div>
+		</form>
+	</wicket:panel>
+</body>
+</html>
