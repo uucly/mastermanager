@@ -46,11 +46,11 @@ public abstract class BasePage extends WebPage{
 	public BasePage() {
 		add(new HtmlTag("html"));
 
-        add(new OptimizedMobileViewportMetaTag("viewport"));
+        /*add(new OptimizedMobileViewportMetaTag("viewport"));
         add(new IeEdgeMetaTag("ie-edge"));
         add(new MetaTag("description", Model.of("description"), Model.of("Apache Wicket & Bootstrap Demo")));
         add(new MetaTag("author", Model.of("author"), Model.of("Michael Haitz <michael.haitz@agile-coders.de>")));
-
+*/
         add(newNavbar("navbar"));
         /*add(newNavigation("navigation"));
         add(new Footer("footer"));
@@ -78,18 +78,18 @@ public abstract class BasePage extends WebPage{
         navbar.setInverted(true);
 
         // show brand name
-        navbar.setBrandName(Model.of("Wicket Bootstrap"));
+        navbar.setBrandName(Model.of("Master Manager"));
 
-        navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                        new NavbarButton<Void>(HomePage.class, Model.of("Overview")).setIconType(GlyphIconType.home),
+        navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT//,
+                      //  new NavbarButton<Void>(HomePage.class, Model.of("Overview")).setIconType(GlyphIconType.home),
                        // new NavbarButton<Void>(BaseCssPage.class, Model.of("Base CSS")),
                        // new NavbarButton<Void>(ComponentsPage.class, Model.of("Components")),
-                        new NavbarExternalLink(Model.of("https://github.com/l0rdn1kk0n/wicket-bootstrap"))
+                      /*  new NavbarExternalLink(Model.of("https://github.com/l0rdn1kk0n/wicket-bootstrap"))
                                 .setLabel(Model.of("Github"))
                                 .setTarget(BootstrapExternalLink.Target.blank)
-                                .setIconType(GlyphIconType.export))
+                                .setIconType(GlyphIconType.export)*/)
         );
-        navbar.addComponents(new NavbarText(navbar.newExtraItemId(), "Plain text").position(Navbar.ComponentPosition.RIGHT));
+     /*   navbar.addComponents(new NavbarText(navbar.newExtraItemId(), "Plain text").position(Navbar.ComponentPosition.RIGHT));
 
         DropDownButton dropdown = new NavbarDropDownButton(Model.of("Themes")) {
             @Override
@@ -117,7 +117,7 @@ public abstract class BasePage extends WebPage{
             }
         }.setIconType(GlyphIconType.book);
 
-        navbar.addComponents(new ImmutableNavbarComponent(dropdown, Navbar.ComponentPosition.RIGHT));
+        navbar.addComponents(new ImmutableNavbarComponent(dropdown, Navbar.ComponentPosition.RIGHT));*/
 
         return navbar;
     }

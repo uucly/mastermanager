@@ -72,6 +72,11 @@
 			<artifactId>wicket-bootstrap-themes</artifactId>
 			<version>0.10.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.wicketstuff</groupId>
+			<artifactId>wicketstuff-annotation</artifactId>
+			<version>7.0.0</version>
+		</dependency>
 
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
 		<dependency>

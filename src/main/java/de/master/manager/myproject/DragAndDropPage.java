@@ -13,12 +13,13 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.file.File;
+import org.wicketstuff.annotation.mount.MountPath;
 
 import de.master.manager.myproject.menueBar.BasePage;
 import de.master.manager.myproject.menueBar.MenuItemEnum;
 
-
-public class DragAndDropPage extends WebPage{
+@MountPath(value = "/", alt = "/home")
+public class DragAndDropPage extends BasePage{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -36,7 +37,7 @@ public class DragAndDropPage extends WebPage{
 		if(fe.exists()){
 			System.out.println(true);
 		}*/
-		String bla = getClassRelativePath();
+		//String bla = getClassRelativePath();
 		InputStream resource = getClass().getResourceAsStream("WahlPflichtModule.txt");
 		InputStream breunigPflichtResource = getClass().getResourceAsStream("BreunigPflicht.txt");
 		InputStream hinzPflichtResource = getClass().getResourceAsStream("HinzPflicht.txt");

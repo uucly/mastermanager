@@ -1,14 +1,10 @@
 package de.master.manager.myproject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.Lists;
 
 public class WahlPflichtModuleLoader implements Serializable{
 
@@ -25,15 +21,7 @@ public class WahlPflichtModuleLoader implements Serializable{
 	}
 	
 	public List<Course> loadCourseOfProf(String path) {
-		StringTokenizer token = new StringTokenizer(path, ",");
-		List<Course> coursesOfProf = new ArrayList<>();
-		while(token.hasMoreElements()){
-			String course = (String) token.nextElement();
-			System.out.println(course);
-			coursesOfProf.add(allCourses.get(Integer.parseInt(course)-1));
-		}
-		//return coursesOfProf;
-		return Pattern.compile(",").splitAsStream(path).map(s -> {System.out.println(s);return allCourses.get(Integer.parseInt(s)-1);}).collect(Collectors.toList());
+		return Pattern.compile(",").splitAsStream(path).map(s -> allCourses.get(Integer.parseInt(s)-1)).collect(Collectors.toList());
 	}
 
 }
