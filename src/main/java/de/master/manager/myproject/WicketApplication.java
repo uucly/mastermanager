@@ -1,5 +1,7 @@
 package de.master.manager.myproject;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 
@@ -11,24 +13,18 @@ import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
 
-
-
-
-
 /**
- * Application object for your web application.
- * If you want to run this application without deploying, run the Start class.
+ * Application object for your web application. If you want to run this
+ * application without deploying, run the Start class.
  * 
  * @see de.master.manager.myproject.Start#main(String[])
  */
-public class WicketApplication extends WebApplication
-{
+public class WicketApplication extends WebApplication {
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class<? extends WebPage> getHomePage()
-	{
+	public Class<? extends WebPage> getHomePage() {
 		return DragAndDropPage.class;
 	}
 
@@ -36,24 +32,30 @@ public class WicketApplication extends WebApplication
 	 * @see org.apache.wicket.Application#init()
 	 */
 	@Override
-	public void init()
-	{
+	public void init() {
 		super.init();
 		configureBootstrap();
-	//	mountPage("com/dragAndDrop", DragAndDropPage.class);
+		// mountPage("com/dragAndDrop", DragAndDropPage.class);
+	}
+
+	/**
+	 * configures wicket-bootstrap and installs the settings.
+	 */
+	private void configureBootstrap() {
+
+		final IBootstrapSettings settings = new BootstrapSettings();
+		final ThemeProvider themeProvider = new BootswatchThemeProvider(
+				BootswatchTheme.Flatly);
+		// settings.setJsResourceFilterName("footer-container")
+		// .setThemeProvider(themeProvider);
+
+		Bootstrap.install(this, settings);
+		BootstrapLess.install(this);
 	}
 	
-	/**
-     * configures wicket-bootstrap and installs the settings.
-     */
-   private void configureBootstrap() {
-	   
-	   final IBootstrapSettings settings = new BootstrapSettings();
-       final ThemeProvider themeProvider = new BootswatchThemeProvider(BootswatchTheme.Flatly);
-     //  settings.setJsResourceFilterName("footer-container")
-       //        .setThemeProvider(themeProvider);
+	@Override
+	public RuntimeConfigurationType getConfigurationType() {
+		return RuntimeConfigurationType.DEVELOPMENT;
+	}
 
-       Bootstrap.install(this, settings);
-       BootstrapLess.install(this);
-    }
 }

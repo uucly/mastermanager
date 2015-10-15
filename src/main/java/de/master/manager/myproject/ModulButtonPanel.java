@@ -30,8 +30,7 @@ public class ModulButtonPanel extends Panel {
 	private Form<Object> formWahl;
 	private Form<?> formPflicht;
 	
-	// TODO replace ProfCHangedEvent with EventInjector
-	public ModulButtonPanel(String id, final IModel<Prof> profLeft, IModel<Prof> profRight, List<Prof> allProfs, final WahlPflichtModuleLoader courseLoader) {
+	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final WahlPflichtModuleLoader courseLoader) {
 		super(id);
 		setOutputMarkupId(true);
 		IModel<String> text = Model.of("");
@@ -41,30 +40,20 @@ public class ModulButtonPanel extends Panel {
 		
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
-		container.add(createDropDown(profLeft, allProfs));
+		IModel<List<Prof>> dropDownList = new TransformationModel<Prof, List<Prof>>(profOfOtherPanel, prof -> allProfs.stream().filter(p -> !p.equals(prof)).collect(Collectors.toList()));
+		container.add(createDropDown(profOfThisPanel, dropDownList));
 		
-		formPflicht.add(createPflichListView(loadPflichtCourses(profLeft), profLeft, allProfs));
-		formWahl.add(createWahlListView(loadWahlCourses(text, profLeft, courseLoader), profLeft, profRight, allProfs));
+		formPflicht.add(createPflichListView(new TransformationModel<Prof, List<Course>>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
+		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
 		container.add(formPflicht);
 		container.add(formWahl);
 		
 		add(container);
 	}
 	
-	
-	private IModel<List<Course>> loadPflichtCourses(final IModel<Prof> prof) {
-		return new LoadableDetachableModel<List<Course>>() {
 
-			@Override
-			protected List<Course> load() {
-				return prof.getObject().getPflichtCourse();
-			}
-		};
-	}
-
-
-	private static DropDownChoice<Prof> createDropDown(final IModel<Prof> selectedProf, List<Prof> allProfs) {
-		final DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown", selectedProf, allProfs);
+	private static DropDownChoice<Prof> createDropDown(final IModel<Prof> selectedProf, IModel<List<Prof>> dropDowns) {
+		final DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown", selectedProf, dropDowns);
 		dropDown.add(new OnChangeAjaxBehavior() {
 			private static final long serialVersionUID = 1L;
 			@Override
