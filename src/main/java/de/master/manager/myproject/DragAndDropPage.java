@@ -23,6 +23,7 @@ public class DragAndDropPage extends BasePage{
 	
 	
 	public DragAndDropPage() throws IOException{
+		/* load all needed wahlcourses and pflichtcourses */
 		InputStream resource = getClass().getResourceAsStream("WahlPflichtModule.txt");
 		InputStream breunigPflichtResource = getClass().getResourceAsStream("BreunigPflicht.txt");
 		InputStream hinzPflichtResource = getClass().getResourceAsStream("HinzPflicht.txt");
@@ -35,13 +36,13 @@ public class DragAndDropPage extends BasePage{
 				heck = new Prof("Heck", courseLoader.loadCourseOfProf(IOUtils.toString(heckPflichtResource, "UTF-8"))), 
 				hennes = new Prof("Hennes", courseLoader.loadCourseOfProf(IOUtils.toString(hennesPflichtResource, "UTF-8")));
 		
+		/* load the ui */
 		List<Prof> allProfs = Arrays.asList(breunig, hinz, heck, hennes);
 		IModel<Prof> profLeft = Model.of(breunig), profRight = Model.of(hinz);
-		Form form = new Form("form");
 		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", profLeft, profRight,  allProfs, courseLoader);
 		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", profRight, profLeft, allProfs, courseLoader);
 		
-		InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profLeft, profRight, (p1,p2) -> Arrays.asList(profLeft.getObject(), profRight.getObject())), allProfs);
+		InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profLeft, profRight, Arrays::asList), allProfs);
 		add(panel1, panel2, infoPanel);
 	}
 	
