@@ -23,6 +23,8 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.Prog
 import de.master.manager.events.AbstractEvent;
 import de.master.manager.events.RemoveCourseEvent;
 import de.master.manager.events.SelectedEvent;
+import de.master.manager.profStuff.Course;
+import de.master.manager.profStuff.Prof;
 
 
 

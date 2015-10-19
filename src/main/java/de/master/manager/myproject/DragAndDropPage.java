@@ -11,8 +11,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.wicketstuff.annotation.mount.MountPath;
 
+import de.master.manager.menueBar.BasePage;
 import de.master.manager.model.TransformationModel2;
-import de.master.manager.myproject.menueBar.BasePage;
+import de.master.manager.profStuff.Prof;
+import de.master.manager.profStuff.WahlPflichtModuleLoader;
 
 @MountPath(value = "/", alt = "/home")
 public class DragAndDropPage extends BasePage{

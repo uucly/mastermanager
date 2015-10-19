@@ -1,4 +1,4 @@
-package de.master.manager.myproject.menueBar;
+package de.master.manager.menueBar;
 
 public enum MenuItemEnum {
     

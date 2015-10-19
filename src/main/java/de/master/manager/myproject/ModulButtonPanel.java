@@ -25,6 +25,9 @@ import org.apache.wicket.model.Model;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.events.RemoveCourseEvent;
 import de.master.manager.model.TransformationModel;
+import de.master.manager.profStuff.Course;
+import de.master.manager.profStuff.Prof;
+import de.master.manager.profStuff.WahlPflichtModuleLoader;
 
 
 public class ModulButtonPanel extends Panel {

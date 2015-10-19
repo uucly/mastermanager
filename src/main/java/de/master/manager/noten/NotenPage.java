@@ -1,8 +1,6 @@
 package de.master.manager.noten;
 
-import org.apache.wicket.markup.html.panel.Panel;
-
-import de.master.manager.myproject.menueBar.BasePage;
+import de.master.manager.menueBar.BasePage;
 
 public class NotenPage extends BasePage{
 

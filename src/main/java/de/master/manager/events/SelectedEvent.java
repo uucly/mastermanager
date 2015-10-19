@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
-import de.master.manager.myproject.Course;
+import de.master.manager.profStuff.Course;
 
 public class SelectedEvent implements Serializable {
 	

@@ -1,4 +1,4 @@
-package de.master.manager.myproject;
+package de.master.manager.profStuff;
 
 import java.io.Serializable;
 import java.util.List;

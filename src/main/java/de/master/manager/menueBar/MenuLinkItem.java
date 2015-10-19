@@ -1,4 +1,4 @@
-package de.master.manager.myproject.menueBar;
+package de.master.manager.menueBar;
 
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
