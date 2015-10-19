@@ -11,7 +11,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import events.SelectedEvent;
+import de.master.manager.events.SelectedEvent;
 
 public class CourseButton extends AjaxButton {
 

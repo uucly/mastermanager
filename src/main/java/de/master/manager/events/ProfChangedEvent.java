@@ -1,4 +1,4 @@
-package events;
+package de.master.manager.events;
 
 import java.io.Serializable;
 

@@ -22,8 +22,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
-import events.ProfChangedEvent;
-import events.RemoveCourseEvent;
+import de.master.manager.events.ProfChangedEvent;
+import de.master.manager.events.RemoveCourseEvent;
+import de.master.manager.model.TransformationModel;
 
 
 public class ModulButtonPanel extends Panel {

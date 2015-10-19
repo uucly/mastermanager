@@ -1,4 +1,4 @@
-package de.master.manager.myproject;
+package de.master.manager.model;
 
 import java.util.Objects;
 import java.util.function.BiFunction;

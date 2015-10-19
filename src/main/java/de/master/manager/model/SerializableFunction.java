@@ -1,4 +1,4 @@
-package de.master.manager.myproject;
+package de.master.manager.model;
 
 import java.io.Serializable;
 import java.util.function.Function;

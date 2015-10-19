@@ -20,9 +20,9 @@ import org.apache.wicket.model.Model;
 import com.google.common.collect.Lists;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
-import events.AbstractEvent;
-import events.RemoveCourseEvent;
-import events.SelectedEvent;
+import de.master.manager.events.AbstractEvent;
+import de.master.manager.events.RemoveCourseEvent;
+import de.master.manager.events.SelectedEvent;
 
 
 
