@@ -6,26 +6,19 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.wicketstuff.annotation.mount.MountPath;
 
-import de.master.manager.menueBar.BasePage;
 import de.master.manager.model.TransformationModel2;
-import de.master.manager.noten.NavsPanel;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.WahlPflichtModuleLoader;
 
-@MountPath(value = "/", alt = "/home")
-public class DragAndDropPage extends BasePage{
+public class CoursePanel extends Panel{
 
-	private static final long serialVersionUID = 1L;
-	
-	public DragAndDropPage() throws IOException{
-		NavsPanel panel = new NavsPanel("navPanel");
-		add(panel);
+	public CoursePanel(String id) throws IOException {
+		super(id);
+		
 		/* load all needed wahlcourses and pflichtcourses */
 		InputStream resource = getClass().getResourceAsStream("WahlPflichtModule.txt");
 		InputStream breunigPflichtResource = getClass().getResourceAsStream("BreunigPflicht.txt");
@@ -48,5 +41,5 @@ public class DragAndDropPage extends BasePage{
 		InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profLeft, profRight, Arrays::asList), allProfs);
 		add(panel1, panel2, infoPanel);
 	}
-	
+
 }

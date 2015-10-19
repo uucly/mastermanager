@@ -61,8 +61,8 @@ public abstract class BasePage extends WebPage{
         navbar.setBrandName(Model.of("Master Manager"));
 
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                        new NavbarButton<Void>(DragAndDropPage.class, Model.of("Overview")).setIconType(GlyphIconType.home),
-                        new NavbarButton<Void>(NotenPage.class, Model.of("Notenspiegel"))
+                        new NavbarButton<Void>(DragAndDropPage.class, Model.of("Overview")).setIconType(GlyphIconType.home)
+                        //,new NavbarButton<Void>(NotenPage.class, Model.of("Notenspiegel"))
                        // new NavbarButton<Void>(ComponentsPage.class, Model.of("Components")),
                       /*  new NavbarExternalLink(Model.of("https://github.com/l0rdn1kk0n/wicket-bootstrap"))
                                 .setLabel(Model.of("Github"))
