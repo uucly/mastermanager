@@ -11,6 +11,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import events.SelectedEvent;
+
 public class CoursePflichtButton extends AjaxButton {
 
 	private static final long serialVersionUID = 1L;
