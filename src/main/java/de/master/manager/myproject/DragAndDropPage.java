@@ -2,7 +2,6 @@ package de.master.manager.myproject;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.apache.commons.io.IOUtils;
 import org.wicketstuff.annotation.mount.MountPath;
 
@@ -16,20 +15,36 @@ public class DragAndDropPage extends BasePage{
 
 	private static final long serialVersionUID = 1L;
 	
-	public DragAndDropPage() throws IOException{
-		InputStream resource = getClass().getResourceAsStream("WahlPflichtModule.txt");
-		InputStream breunigPflichtResource = getClass().getResourceAsStream("BreunigPflicht.txt");
-		InputStream hinzPflichtResource = getClass().getResourceAsStream("HinzPflicht.txt");
-		InputStream heckPflichtResource = getClass().getResourceAsStream("HeckPflicht.txt");
-		InputStream hennesPflichtResource = getClass().getResourceAsStream("HennesPflicht.txt");
+	public DragAndDropPage(){
+		WahlPflichtModuleLoader courseLoader = new WahlPflichtModuleLoader(loadFilePath("WahlPflichtModule.txt"));
 		
-		WahlPflichtModuleLoader courseLoader = new WahlPflichtModuleLoader(IOUtils.toString(resource, "UTF-8"));
-		Prof breunig = new Prof("Breunig", courseLoader.loadCourseOfProf(IOUtils.toString(breunigPflichtResource, "UTF-8"))), 
-				hinz = new Prof("Hinz", courseLoader.loadCourseOfProf(IOUtils.toString(hinzPflichtResource, "UTF-8"))), 
-				heck = new Prof("Heck", courseLoader.loadCourseOfProf(IOUtils.toString(heckPflichtResource, "UTF-8"))), 
-				hennes = new Prof("Hennes", courseLoader.loadCourseOfProf(IOUtils.toString(hennesPflichtResource, "UTF-8")));
+		Prof breunig = loadProf("BreunigPflicht.txt", "Breunig", courseLoader), 
+				hinz = loadProf("HinzPflicht.txt", "Hinz", courseLoader),
+				heck = loadProf("HeckPflicht.txt", "Heck", courseLoader), 
+				hennes = loadProf("HennesPflicht.txt", "Hennes", courseLoader);
 		NavsPanel panel = new NavsPanel("navPanel", courseLoader, breunig, hinz, heck, hennes);
 		add(panel);
 	}
 	
+	
+	/* methods */
+	
+	private Prof loadProf(String pflichtFileName, String profName, WahlPflichtModuleLoader courseLoader){
+		String filePath = loadFilePath(pflichtFileName);
+		return new Prof(profName, courseLoader.loadCourseOfProf(filePath));
+	}
+	
+	/**
+	 * 
+	 * @param fileName with file ending (e.g. fileName.txt)
+	 * @return path to file
+	 */
+	private String loadFilePath(String fileName){
+		InputStream pflichtResource = getClass().getResourceAsStream(fileName);
+		try {
+			return IOUtils.toString(pflichtResource, "UTF-8");
+		} catch (IOException e) {
+			throw new RuntimeException("Cannot load file" + fileName, e);
+		}
+	}
 }
