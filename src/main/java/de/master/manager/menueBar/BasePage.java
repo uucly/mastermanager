@@ -14,7 +14,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.core.settings.ITheme;
 import de.master.manager.myproject.DragAndDropPage;
-import de.master.manager.noten.NotenPage;
 
 public abstract class BasePage extends WebPage{
 
