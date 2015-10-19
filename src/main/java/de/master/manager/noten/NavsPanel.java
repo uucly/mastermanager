@@ -9,6 +9,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -28,24 +29,26 @@ public class NavsPanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
 	private Panel currentPanel;
+	private MarkupContainer container;
 	
 	public NavsPanel(String id, WahlPflichtModuleLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes) throws IOException {
 		super(id);
 		List<Prof> allProfs = Lists.newArrayList(breunig, hinz, heck, hennes);
-		MarkupContainer container = new WebMarkupContainer("container");
+		container = new WebMarkupContainer("container");
+		container.setOutputMarkupId(true);
 		IModel<Prof> profOfPanel1 = Model.of(breunig);
 		IModel<Prof> profOfPanel2 = Model.of(hinz);
 		
-		IModel<List<Prof>> dropDownList1 = new TransformationModel<Prof, List<Prof>>(profOfPanel1, prof -> allProfs.stream().filter(p -> !p.equals(prof)).collect(Collectors.toList()));
+		IModel<List<Prof>> dropDownList1 = new TransformationModel<Prof, List<Prof>>(profOfPanel2, prof -> allProfs.stream().filter(p -> !p.equals(prof)).collect(Collectors.toList()));
 		container.add(createDropDown("dropDown1", profOfPanel1, dropDownList1));
 		
-		IModel<List<Prof>> dropDownList2 = new TransformationModel<Prof, List<Prof>>(profOfPanel2, prof -> allProfs.stream().filter(p -> !p.equals(prof)).collect(Collectors.toList()));
+		IModel<List<Prof>> dropDownList2 = new TransformationModel<Prof, List<Prof>>(profOfPanel1, prof -> allProfs.stream().filter(p -> !p.equals(prof)).collect(Collectors.toList()));
 		container.add(createDropDown("dropDown2", profOfPanel2, dropDownList2));
 		add(container);
 		
-		currentPanel = new CoursePanel("panel", courseLoader, breunig, hinz, heck, hennes);
+		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);
-		AjaxLink<?> cousePanelLink = createLink("courses",  new CoursePanel("panel", courseLoader, breunig, hinz, heck, hennes));
+		AjaxLink<?> cousePanelLink = createLink("courses",  new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs));
 		AjaxLink<?> notenLink = createLink("noten",  new NotePanel("panel"));
 				
 		add(cousePanelLink);
@@ -75,8 +78,17 @@ public class NavsPanel extends Panel{
 			protected void onUpdate(AjaxRequestTarget target) {
 				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, new ProfChangedEvent(target));
 			}
+			
 		});
 
 		return dropDown;
+	}
+	
+	@Override
+	public void onEvent(IEvent<?> event) {
+		Object payload = event.getPayload();
+		if(payload instanceof ProfChangedEvent){
+			((ProfChangedEvent) payload).getTarget().add(container);
+		}
 	}
 }

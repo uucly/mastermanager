@@ -47,8 +47,6 @@ public class ModulButtonPanel extends Panel {
 		
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
-		IModel<List<Prof>> dropDownList = new TransformationModel<Prof, List<Prof>>(profOfOtherPanel, prof -> allProfs.stream().filter(p -> !p.equals(prof)).collect(Collectors.toList()));
-		container.add(createDropDown(profOfThisPanel, dropDownList));
 		
 		formPflicht.add(createPflichListView(new TransformationModel<Prof, List<Course>>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
 		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
@@ -56,20 +54,6 @@ public class ModulButtonPanel extends Panel {
 		container.add(formWahl);
 		
 		add(container);
-	}
-	
-
-	private static DropDownChoice<Prof> createDropDown(final IModel<Prof> selectedProf, IModel<List<Prof>> dropDowns) {
-		final DropDownChoice<Prof> dropDown = new DropDownChoice<Prof>("dropDown", selectedProf, dropDowns);
-		dropDown.add(new OnChangeAjaxBehavior() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			protected void onUpdate(AjaxRequestTarget target) {
-				dropDown.send(dropDown.getPage(), Broadcast.DEPTH, new ProfChangedEvent(target));
-			}
-		});
-
-		return dropDown;
 	}
 
 
