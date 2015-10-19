@@ -27,7 +27,7 @@ public class DragAndDropPage extends BasePage{
 		NavsPanel panel = new NavsPanel("navPanel");
 		add(panel);
 		/* load all needed wahlcourses and pflichtcourses */
-		InputStream resource = getClass().getResourceAsStream("WahlPflichtModule.txt");
+		/*InputStream resource = getClass().getResourceAsStream("WahlPflichtModule.txt");
 		InputStream breunigPflichtResource = getClass().getResourceAsStream("BreunigPflicht.txt");
 		InputStream hinzPflichtResource = getClass().getResourceAsStream("HinzPflicht.txt");
 		InputStream heckPflichtResource = getClass().getResourceAsStream("HeckPflicht.txt");
@@ -39,14 +39,13 @@ public class DragAndDropPage extends BasePage{
 				heck = new Prof("Heck", courseLoader.loadCourseOfProf(IOUtils.toString(heckPflichtResource, "UTF-8"))), 
 				hennes = new Prof("Hennes", courseLoader.loadCourseOfProf(IOUtils.toString(hennesPflichtResource, "UTF-8")));
 		
-		/* load the ui */
 		List<Prof> allProfs = Arrays.asList(breunig, hinz, heck, hennes);
 		IModel<Prof> profLeft = Model.of(breunig), profRight = Model.of(hinz);
 		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", profLeft, profRight,  allProfs, courseLoader);
 		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", profRight, profLeft, allProfs, courseLoader);
 		
 		InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profLeft, profRight, Arrays::asList), allProfs);
-		add(panel1, panel2, infoPanel);
+		add(panel1, panel2, infoPanel);*/
 	}
 	
 }

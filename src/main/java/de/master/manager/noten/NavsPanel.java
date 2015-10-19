@@ -2,38 +2,56 @@ package de.master.manager.noten;
 
 import java.io.IOException;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import de.master.manager.myproject.DragAndDropPage;
+import de.master.manager.myproject.CoursePanel;
+import de.master.manager.myproject.NotePanel;
 
 public class NavsPanel extends Panel{
 
-	public NavsPanel(String id) {
+	private Panel currentPanel;
+	
+	public NavsPanel(String id) throws IOException {
 		super(id);
-		
-		Link cousePanelLink = new Link("courses") {
+		currentPanel = new CoursePanel("panel");
+		currentPanel.setOutputMarkupPlaceholderTag(true);
+		AjaxLink cousePanelLink = new AjaxLink("courses") {
 
 			@Override
-			public void onClick() {
+			public void onClick(AjaxRequestTarget target) {
 				try {
-					this.setResponsePage(new DragAndDropPage());
+					Panel newPanel= new CoursePanel("panel");
+					newPanel.setOutputMarkupId(true);
+					currentPanel.replaceWith(newPanel);
+					currentPanel = newPanel;
+					target.add(newPanel);
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					e.printStackTrace();
 				}
+				add(new AttributeAppender("class", "active"));
 			}
 		};
 		
-		Link notenLink = new Link("noten") {
+		AjaxLink notenLink = new AjaxLink("noten") {
 
 			@Override
-			public void onClick() {
-					this.setResponsePage(new NotenPage());
-			}
+			public void onClick(AjaxRequestTarget target) {
+					Panel newPanel= new NotePanel("panel");
+					newPanel.setOutputMarkupId(true);
+					currentPanel.replaceWith(newPanel);
+					currentPanel = newPanel;
+					target.add(currentPanel);
+					add(new AttributeAppender("class", "active"));
+				}
 		};
 		
 		add(cousePanelLink);
 		add(notenLink);
+		add(currentPanel);
 	}
 
 }
