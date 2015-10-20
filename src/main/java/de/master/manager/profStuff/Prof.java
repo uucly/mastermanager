@@ -14,7 +14,7 @@ public class Prof implements Serializable{
 	
 	public Prof(String name, List<Course> pflichtCourses) {
 		this.name = name;
-		this.wahlModulPath = name + "_Wahl.txt";//getCoursePath(name + "_Wahl.txt");
+		this.wahlModulPath = name + "_Wahl.txt";
 		selectedModuls = Lists.newArrayList();
 		selectedPflichtModuls = Lists.newArrayList();
 		this.pflichtCourses = pflichtCourses;
@@ -27,10 +27,6 @@ public class Prof implements Serializable{
 
 	public String getPath() {
 		return wahlModulPath;
-	}
-
-	private static String getCoursePath(String fileName) {
-		return "src/main/resources/" + fileName;
 	}
 
 	public List<Course> getSelectedModuls() {

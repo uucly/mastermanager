@@ -1,8 +1,10 @@
 package de.master.manager.noten;
 
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.profStuff.Prof;
 
 public class NotePanel extends Panel{
@@ -12,8 +14,15 @@ public class NotePanel extends Panel{
 	public NotePanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
 		super(id);
 		NoteProfPanel noteProfPanel1 = new NoteProfPanel("noteProfPanel1", profOfPanel1);
-		
-		add(noteProfPanel1);
+		NoteProfPanel noteProfPanel2 = new NoteProfPanel("noteProfPanel2", profOfPanel2);
+		add(noteProfPanel1, noteProfPanel2);
 	}
 
+	@Override
+	public void onEvent(IEvent<?> event) {
+		Object payload = event.getPayload();
+		if(payload instanceof ProfChangedEvent){
+			((ProfChangedEvent) payload).getTarget().add(this);
+		}
+	}
 }
