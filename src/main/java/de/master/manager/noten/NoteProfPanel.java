@@ -1,5 +1,6 @@
 package de.master.manager.noten;
 
+
 import java.util.List;
 
 import org.apache.wicket.markup.html.basic.Label;
@@ -19,15 +20,26 @@ public class NoteProfPanel extends Panel{
 
 	public NoteProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
-		IModel<List<Course>> loadSelectedModuls = new TransformationModel<Prof, List<Course>>(profOfPanel, p -> p.getSelectedModuls());
-		ListView<Course> courseListView = new ListView<Course>("courses", loadSelectedModuls) {
+		IModel<List<Course>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<Course>>(profOfPanel, Prof::getPflichtCourse);
+		
+		ListView<Course> pflichtCourseListView = new ListView<Course>("pflichtCourses", loadSelectedPflichtCourses) {
+
+			@Override
+			protected void populateItem(ListItem<Course> item) {
+				item.add(new Label("pflichtCourse", item.getModelObject().getName()));
+			}
+		};
+		
+		TransformationModel<Prof, List<Course>> loadSelectedWahlCourses = new TransformationModel<Prof, List<Course>>(profOfPanel, Prof::getSelectedModuls);
+		ListView<Course> wahlCourseListView = new ListView<Course>("wahlCourses", loadSelectedWahlCourses) {
 
 			@Override
 			protected void populateItem(ListItem<Course> item) {
 				item.add(new Label("wahlCourse", item.getModelObject().getName()));
 			}
 		};
-		add(courseListView);
+		add(wahlCourseListView);
+		add(pflichtCourseListView);
 	}
 
 }
