@@ -21,7 +21,6 @@ import com.google.common.collect.Lists;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.model.TransformationModel;
 import de.master.manager.myproject.CoursePanel;
-import de.master.manager.myproject.NotePanel;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.WahlPflichtModuleLoader;
 
@@ -42,7 +41,7 @@ public class NavsPanel extends Panel{
 		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);
 		AjaxLink<?> cousePanelLink = createLink("courses",  currentPanel);
-		AjaxLink<?> notenLink = createLink("noten",  new NotePanel("panel"));
+		AjaxLink<?> notenLink = createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2));
 				
 		add(cousePanelLink);
 		add(notenLink);
