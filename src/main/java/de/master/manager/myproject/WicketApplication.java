@@ -27,6 +27,8 @@ public class WicketApplication extends WebApplication {
 		return DragAndDropPage.class;
 	}
 
+	
+	
 	/**
 	 * @see org.apache.wicket.Application#init()
 	 */
