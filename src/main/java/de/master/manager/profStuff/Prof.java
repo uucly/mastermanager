@@ -1,6 +1,7 @@
 package de.master.manager.profStuff;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
@@ -54,6 +55,13 @@ public class Prof implements Serializable{
 		return selectedPflichtModuls.stream().mapToDouble(AbstractCourse::getPoints).sum();
 	}
 	
+	public OptionalDouble calculateFinalGrade(){
+		List<ModulCourse> jointCourseLists = new ArrayList<ModulCourse>(selectedModuls.size() + selectedPflichtModuls.size());
+		jointCourseLists.addAll(selectedPflichtModuls);
+		jointCourseLists.addAll(selectedModuls);
+		return jointCourseLists.stream().filter(m -> m.getNote().isPresent()).mapToDouble(m -> m.getNote().get()).average();
+	}
+	
 	public OptionalDouble calculateFinalWahlGrade(){
 		return selectedModuls.stream().filter(course -> course.getNote().isPresent()).mapToDouble(course -> course.getNote().get()).average();
 	}
@@ -61,6 +69,8 @@ public class Prof implements Serializable{
 	public OptionalDouble calculateFinalPflichtGrade(){
 		return selectedPflichtModuls.stream().filter(course -> course.getNote().isPresent()).mapToDouble(course -> course.getNote().get()).average();
 	}
+	
+	
 	
 
 	public void clearAll(){

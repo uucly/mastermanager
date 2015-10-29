@@ -16,7 +16,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-import com.google.javascript.jscomp.ControlFlowGraph.Branch;
 
 import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ModulCourse;
@@ -30,6 +29,7 @@ public class NoteProfPanel extends Panel{
 
 	public NoteProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
+		setOutputMarkupId(true);
 		IModel<List<ModulCourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedPflichtModuls);
 		
 		ListView<ModulCourse> pflichtCourseListView = new ListView<ModulCourse>("pflichtCourses", loadSelectedPflichtCourses) {
