@@ -34,20 +34,15 @@ public class NoteProfPanel extends Panel{
 		super(id);
 		setOutputMarkupId(true);
 		IModel<List<ModulCourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedPflichtModuls);
+		IModel<List<ModulCourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedModuls);
 		
-		ListView<ModulCourse> pflichtCourseListView = new ListView<ModulCourse>("pflichtCourses", loadSelectedPflichtCourses) {
+		add(createWahlCourseListView(loadSelectedWahlCourses));
+		add(createPflichtCourseListView(loadSelectedPflichtCourses));
+	}
 
-			@Override
-			protected void populateItem(ListItem<ModulCourse> item) {
-				ModulCourse currentCourse = item.getModelObject();
-				item.add(new Label("pflichtCourse", currentCourse.getName()));
-				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getNote()));
-			}
+	/* methods */
 
-			
-		};
-		
-		TransformationModel<Prof, List<ModulCourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedModuls);
+	private static ListView<ModulCourse> createWahlCourseListView(IModel<List<ModulCourse>> loadSelectedWahlCourses) {
 		ListView<ModulCourse> wahlCourseListView = new ListView<ModulCourse>("wahlCourses", loadSelectedWahlCourses) {
 
 			@Override
@@ -57,14 +52,24 @@ public class NoteProfPanel extends Panel{
 				item.add(createNotenDropDown("dropDownNotenWahl", item, currentCourse.getNote()));
 			}
 		};
-		
-		
-		add(wahlCourseListView);
-		add(pflichtCourseListView);
+		return wahlCourseListView;
+	}
+
+
+	private static ListView<ModulCourse> createPflichtCourseListView(IModel<List<ModulCourse>> loadSelectedPflichtCourses) {
+		ListView<ModulCourse> pflichtCourseListView = new ListView<ModulCourse>("pflichtCourses", loadSelectedPflichtCourses) {
+
+			@Override
+			protected void populateItem(ListItem<ModulCourse> item) {
+				ModulCourse currentCourse = item.getModelObject();
+				item.add(new Label("pflichtCourse", currentCourse.getName()));
+				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getNote()));
+			}
+		};
+		return pflichtCourseListView;
 	}
 
 	
-	/* methods */
 	private static DropDownChoice<Double> createNotenDropDown(String id, ListItem<ModulCourse> item, Optional<Double> note) {
 		IModel<Double> noteModel = note.isPresent() ? Model.of(note.get()) : Model.of(); 
 		DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>(id, noteModel, NOTEN_LIST);

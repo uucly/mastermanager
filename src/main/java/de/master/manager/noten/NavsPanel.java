@@ -30,24 +30,24 @@ public class NavsPanel extends Panel{
 	private Panel currentPanel;
 	private MarkupContainer profDropDownContainer;
 	
+	/* constructor */
 	public NavsPanel(String id, WahlPflichtModuleLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes){
 		super(id);
 		List<Prof> allProfs = Lists.newArrayList(breunig, hinz, heck, hennes);
 		IModel<Prof> profOfPanel1 = Model.of(breunig);
 		IModel<Prof> profOfPanel2 = Model.of(hinz);
 		
-		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
-		
 		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);
-		AjaxLink<?> cousePanelLink = createLink("courses",  currentPanel);
-		AjaxLink<?> notenLink = createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2));
-				
-		add(cousePanelLink);
-		add(notenLink);
+		
+		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
+		add(createLink("courses",  currentPanel));
+		add(createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2)));
 		add(currentPanel);
 	}
 
+	/* methods */
+	
 	private static MarkupContainer createProfDropDownContainer(List<Prof> allProfs, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
 		WebMarkupContainer profDropDownContainer = new WebMarkupContainer("container");
 		profDropDownContainer.setOutputMarkupId(true);
@@ -88,6 +88,7 @@ public class NavsPanel extends Panel{
 	}
 
 	
+	/* event */
 	
 	@Override
 	public void onEvent(IEvent<?> event) {
