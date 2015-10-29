@@ -16,8 +16,8 @@ public class ModulCourse extends AbstractCourse{
 		return note;
 	}
 
-	public void setNote(double note) {
-		this.note = Optional.of(note);
+	public void setNote(Optional<Double> note) {
+		this.note = note;
 	}
 	
 	
