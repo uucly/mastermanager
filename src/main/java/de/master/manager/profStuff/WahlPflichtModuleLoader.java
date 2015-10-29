@@ -9,18 +9,18 @@ import java.util.stream.Collectors;
 public class WahlPflichtModuleLoader implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private final List<Course> allCourses;
+	private final List<ModulCourse> allCourses;
 
 	public WahlPflichtModuleLoader(String pathToAllCourse){
-		Function<String, Course> parseToModul = line -> {
+		Function<String, ModulCourse> parseToModul = line -> {
 			String[] split = line.split(",");
-			return new Course(split[0], Double.parseDouble(split[1]));
+			return new ModulCourse(split[0], Double.parseDouble(split[1]));
 		};
 		
 		allCourses = Pattern.compile("\n").splitAsStream(pathToAllCourse).map(parseToModul).collect(Collectors.toList());
 	}
 	
-	public List<Course> loadCourseOfProf(String path) {
+	public List<ModulCourse> loadCourseOfProf(String path) {
 		return Pattern.compile(",").splitAsStream(path).map(s -> allCourses.get(Integer.parseInt(s)-1)).collect(Collectors.toList());
 	}
 

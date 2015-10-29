@@ -8,11 +8,11 @@ import com.google.common.collect.Lists;
 public class Prof implements Serializable{
 
 	private final String name, wahlModulPath;
-	private final List<Course> selectedModuls;
-	private final List<Course> selectedPflichtModuls;
-	private final List<Course> pflichtCourses;
+	private final List<ModulCourse> selectedModuls;
+	private final List<ModulCourse> selectedPflichtModuls;
+	private final List<ModulCourse> pflichtCourses;
 	
-	public Prof(String name, List<Course> pflichtCourses) {
+	public Prof(String name, List<ModulCourse> pflichtCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
 		selectedModuls = Lists.newArrayList();
@@ -29,28 +29,28 @@ public class Prof implements Serializable{
 		return wahlModulPath;
 	}
 
-	public List<Course> getSelectedModuls() {
+	public List<ModulCourse> getSelectedModuls() {
 		return selectedModuls;
 	}
 	
-	public List<Course> getSelectedPflichtModuls() {
+	public List<ModulCourse> getSelectedPflichtModuls() {
 		return selectedPflichtModuls;
 	}
 	
-	public void addSelectedModul(Course modul){
+	public void addSelectedModul(ModulCourse modul){
 		selectedModuls.add(modul);
 	}
 	
-	public void addSelectedPflichtModul(Course modul){
+	public void addSelectedPflichtModul(ModulCourse modul){
 		selectedPflichtModuls.add(modul);
 	}
 	
 	public double calculateWahlPoints(){
-		return selectedModuls.stream().mapToDouble(Course::getPoints).sum();
+		return selectedModuls.stream().mapToDouble(AbstractCourse::getPoints).sum();
 	}
 	
 	public double calculatePflichtPoints(){
-		return selectedPflichtModuls.stream().mapToDouble(Course::getPoints).sum();
+		return selectedPflichtModuls.stream().mapToDouble(AbstractCourse::getPoints).sum();
 	}
 
 	public void clearAll(){
@@ -64,7 +64,7 @@ public class Prof implements Serializable{
 	}
 
 
-	public List<Course> getPflichtCourse() {
+	public List<ModulCourse> getPflichtCourse() {
 		return pflichtCourses;
 	}
 }

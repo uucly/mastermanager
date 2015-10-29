@@ -3,7 +3,10 @@ package de.master.manager.noten;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -13,7 +16,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.master.manager.model.TransformationModel;
-import de.master.manager.profStuff.Course;
+import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 
 public class NoteProfPanel extends Panel{
@@ -24,32 +27,50 @@ public class NoteProfPanel extends Panel{
 
 	public NoteProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
-		IModel<List<Course>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<Course>>(profOfPanel, Prof::getSelectedPflichtModuls);
+		IModel<List<ModulCourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedPflichtModuls);
 		
-		ListView<Course> pflichtCourseListView = new ListView<Course>("pflichtCourses", loadSelectedPflichtCourses) {
+		ListView<ModulCourse> pflichtCourseListView = new ListView<ModulCourse>("pflichtCourses", loadSelectedPflichtCourses) {
 
 			@Override
-			protected void populateItem(ListItem<Course> item) {
-				item.add(new Label("pflichtCourse", item.getModelObject().getName()));
-				DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>("dropDownNotenPflicht", NOTEN_LIST);
-				item.add(dropDownNoten);
+			protected void populateItem(ListItem<ModulCourse> item) {
+				ModulCourse currentCourse = item.getModelObject();
+				item.add(new Label("pflichtCourse", currentCourse.getName()));
+				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getNote()));
+			}
+
+			
+		};
+		
+		TransformationModel<Prof, List<ModulCourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedModuls);
+		ListView<ModulCourse> wahlCourseListView = new ListView<ModulCourse>("wahlCourses", loadSelectedWahlCourses) {
+
+			@Override
+			protected void populateItem(ListItem<ModulCourse> item) {
+				ModulCourse currentCourse = item.getModelObject();
+				item.add(new Label("wahlCourse", currentCourse.getName()));
+				item.add(createNotenDropDown("dropDownNotenWahl", item, currentCourse.getNote()));
 			}
 		};
 		
-		TransformationModel<Prof, List<Course>> loadSelectedWahlCourses = new TransformationModel<Prof, List<Course>>(profOfPanel, Prof::getSelectedModuls);
-		ListView<Course> wahlCourseListView = new ListView<Course>("wahlCourses", loadSelectedWahlCourses) {
-
-			@Override
-			protected void populateItem(ListItem<Course> item) {
-				item.add(new Label("wahlCourse", item.getModelObject().getName()));
-				DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>("dropDownNotenWahl", NOTEN_LIST);
-				item.add(dropDownNoten);
-			}
-		};
-		
+		Panel noteInfoPanel = new NoteInfoPanel("noteInfoPanel", loadSelectedPflichtCourses, loadSelectedWahlCourses);
 		
 		add(wahlCourseListView);
 		add(pflichtCourseListView);
+		add(noteInfoPanel);
 	}
 
+	
+	/* methods */
+	private static DropDownChoice<Double> createNotenDropDown(String id, ListItem<ModulCourse> item, Optional<Double> note) {
+		IModel<Double> noteModel = note.isPresent() ? Model.of(note.get()) : Model.of(); 
+		DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>(id, noteModel, NOTEN_LIST);
+		dropDownNoten.add(new OnChangeAjaxBehavior() {
+			
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
+				item.getModelObject().setNote(noteModel.getObject());
+			}
+		});
+		return dropDownNoten;
+	}
 }

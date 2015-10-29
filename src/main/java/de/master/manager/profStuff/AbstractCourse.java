@@ -2,14 +2,14 @@ package de.master.manager.profStuff;
 
 import java.io.Serializable;
 
-public class Course implements Serializable{
+public abstract class AbstractCourse implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private final String name;
 	private final double points;
 	private boolean inUse;
 	
-	public Course(String name, double points) {
+	public AbstractCourse(String name, double points) {
 		this.name = name;
 		this.points = points;
 		this.setInUse(false);
@@ -54,7 +54,7 @@ public class Course implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Course other = (Course) obj;
+		AbstractCourse other = (AbstractCourse) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

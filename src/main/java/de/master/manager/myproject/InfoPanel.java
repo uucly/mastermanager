@@ -23,7 +23,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.Prog
 import de.master.manager.events.AbstractEvent;
 import de.master.manager.events.RemoveCourseEvent;
 import de.master.manager.events.SelectedEvent;
-import de.master.manager.profStuff.Course;
+import de.master.manager.profStuff.AbstractCourse;
 import de.master.manager.profStuff.Prof;
 
 
@@ -38,8 +38,8 @@ public class InfoPanel extends Panel{
 	private final IModel<Integer> pflichtPoints = Model.of(0);
 	private IModel<List<Prof>> profs;
 	private Form<Object> form;
-	private IModel<List<Course>> allCurrentSelectedModuls;
-	private IModel<List<Course>> allSelectedModuls;
+	private IModel<List<AbstractCourse>> allCurrentSelectedModuls;
+	private IModel<List<AbstractCourse>> allSelectedModuls;
 	private ProgressBar pflichtProgressBar;
 	
 	public InfoPanel(String id, final IModel<List<Prof>> profs, final List<Prof> allProfs) {
@@ -51,26 +51,26 @@ public class InfoPanel extends Panel{
 		pflichtPoints.setObject(calculatePoints(profs, Prof::calculatePflichtPoints));
 		this.progressBar = createWahlProgressBar(points, profs);
 		this.pflichtProgressBar = createPflichtProgressBar(pflichtPoints, profs);
-		allSelectedModuls = new LoadableDetachableModel<List<Course>>() {
+		allSelectedModuls = new LoadableDetachableModel<List<AbstractCourse>>() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected List<Course> load() {
-				List<Course> list = Lists.newArrayList();
+			protected List<AbstractCourse> load() {
+				List<AbstractCourse> list = Lists.newArrayList();
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedModuls()));
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
 				
 				return list;
 			}
 		};
-		allCurrentSelectedModuls = new LoadableDetachableModel<List<Course>>() {
+		allCurrentSelectedModuls = new LoadableDetachableModel<List<AbstractCourse>>() {
 			
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected List<Course> load() {
-				List<Course> list = Lists.newArrayList();
+			protected List<AbstractCourse> load() {
+				List<AbstractCourse> list = Lists.newArrayList();
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedModuls()));
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
 				
@@ -79,7 +79,7 @@ public class InfoPanel extends Panel{
 			
 		};
 		
-        ListView<Course> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
+        ListView<AbstractCourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
 		form.add(modulListView);
         form.add(progressBar);
         form.add(pflichtProgressBar);
@@ -133,13 +133,13 @@ public class InfoPanel extends Panel{
 		return progressBar;
 	}
 	
-	private static ListView<Course> createListView(IModel<List<Course>> allSelectedModuls, final IModel<List<Course>> allCurrentSelectedModuls, IModel<List<Prof>> profs, final List<Prof> allProfs){
-		return new ListView<Course>("verticalButtonGroup", allSelectedModuls) {
+	private static ListView<AbstractCourse> createListView(IModel<List<AbstractCourse>> allSelectedModuls, final IModel<List<AbstractCourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, final List<Prof> allProfs){
+		return new ListView<AbstractCourse>("verticalButtonGroup", allSelectedModuls) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<Course> item) {
+			protected void populateItem(ListItem<AbstractCourse> item) {
 				AjaxButton button = createButton(item.getModelObject().getName());
 				if(allCurrentSelectedModuls.getObject().contains(item.getModel().getObject())){
 					button.add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));//new AttributeAppender("class", " btn-success"));

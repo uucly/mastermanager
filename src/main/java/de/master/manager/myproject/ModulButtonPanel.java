@@ -25,7 +25,8 @@ import org.apache.wicket.model.Model;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.events.RemoveCourseEvent;
 import de.master.manager.model.TransformationModel;
-import de.master.manager.profStuff.Course;
+import de.master.manager.profStuff.AbstractCourse;
+import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.WahlPflichtModuleLoader;
 
@@ -48,7 +49,7 @@ public class ModulButtonPanel extends Panel {
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
 		
-		formPflicht.add(createPflichListView(new TransformationModel<Prof, List<Course>>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
+		formPflicht.add(createPflichListView(new TransformationModel<Prof, List<ModulCourse>>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
 		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
 		container.add(formPflicht);
 		container.add(formWahl);
@@ -80,35 +81,35 @@ public class ModulButtonPanel extends Panel {
 		return textField;
 	}
 	
-	private static ListView<Course> createPflichListView(IModel<List<Course>> pflichtCourses, final IModel<Prof> prof, final List<Prof> allProfs){
-		return new ListView<Course>("pflichtListView", pflichtCourses){
+	private static ListView<ModulCourse> createPflichListView(IModel<List<ModulCourse>> pflichtCourses, final IModel<Prof> prof, final List<Prof> allProfs){
+		return new ListView<ModulCourse>("pflichtListView", pflichtCourses){
 			private static final long serialVersionUID = 1L;
 			@Override
-			protected void populateItem(ListItem<Course> item) {
+			protected void populateItem(ListItem<ModulCourse> item) {
 				item.add(new CoursePflichtButton("modulButton", item.getModelObject(), prof, allProfs));
 			}
 			
 		};
 	}
 	
-	private static ListView<Course> createWahlListView(IModel<List<Course>> selectedModuls, final IModel<Prof> profLeft, final IModel<Prof> profRight, final List<Prof> allProfs){
-		return new ListView<Course>("listView", selectedModuls){
+	private static ListView<ModulCourse> createWahlListView(IModel<List<ModulCourse>> selectedModuls, final IModel<Prof> profLeft, final IModel<Prof> profRight, final List<Prof> allProfs){
+		return new ListView<ModulCourse>("listView", selectedModuls){
 			private static final long serialVersionUID = 1L;
 			@Override
-			protected void populateItem(ListItem<Course> item) {
+			protected void populateItem(ListItem<ModulCourse> item) {
 				item.add(new CourseButton("modulButton", item.getModelObject(), profLeft, profRight, allProfs));
 			}
 			
 		};
 	}
 	
-	private static IModel<List<Course>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final WahlPflichtModuleLoader courseLoader) {
-		return new LoadableDetachableModel<List<Course>>() {
+	private static IModel<List<ModulCourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final WahlPflichtModuleLoader courseLoader) {
+		return new LoadableDetachableModel<List<ModulCourse>>() {
 			private static final long serialVersionUID = 1L;
 			@Override
-			protected List<Course> load() {
+			protected List<ModulCourse> load() {
 				InputStream resource = getClass().getResourceAsStream(prof.getObject().getPath());
-				List<Course> coursesOfProf;
+				List<ModulCourse> coursesOfProf;
 				try {
 					coursesOfProf = courseLoader.loadCourseOfProf(IOUtils.toString(resource,"UTF-8"));
 				} catch (IOException e) {

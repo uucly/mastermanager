@@ -12,18 +12,19 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.master.manager.events.SelectedEvent;
-import de.master.manager.profStuff.Course;
+import de.master.manager.profStuff.AbstractCourse;
+import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 
 public class CourseButton extends AjaxButton {
 
 	private static final long serialVersionUID = 1L;
 	private final IModel<Prof> prof;
-	private final Course modul;
+	private final ModulCourse modul;
 	private final List<Prof> allProfs;
 	private IModel<Prof> profRight;
 
-	public CourseButton(String id, Course modul, IModel<Prof> prof, IModel<Prof> profRight, List<Prof> allProfs) {
+	public CourseButton(String id, ModulCourse modul, IModel<Prof> prof, IModel<Prof> profRight, List<Prof> allProfs) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
 		this.modul = modul;
@@ -54,7 +55,7 @@ public class CourseButton extends AjaxButton {
 		}
 	}
 	
-	private static boolean isAlreadySelected(Prof prof, Course course){
+	private static boolean isAlreadySelected(Prof prof, AbstractCourse course){
 		return prof.getSelectedModuls().contains(course);
 	}
 
@@ -70,7 +71,7 @@ public class CourseButton extends AjaxButton {
 		}
 	}
 	
-	private static boolean isAlreadySelectedInOtherProf(Prof prof, Course modul, List<Prof> allProfs){
+	private static boolean isAlreadySelectedInOtherProf(Prof prof, AbstractCourse modul, List<Prof> allProfs){
 		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedModuls().contains(modul));
 	}
 	
