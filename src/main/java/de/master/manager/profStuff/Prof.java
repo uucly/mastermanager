@@ -2,6 +2,7 @@ package de.master.manager.profStuff;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.OptionalDouble;
 
 import com.google.common.collect.Lists;
 
@@ -52,6 +53,15 @@ public class Prof implements Serializable{
 	public double calculatePflichtPoints(){
 		return selectedPflichtModuls.stream().mapToDouble(AbstractCourse::getPoints).sum();
 	}
+	
+	public OptionalDouble calculateFinalWahlGrade(){
+		return selectedModuls.stream().filter(course -> course.getNote().isPresent()).mapToDouble(course -> course.getNote().get()).average();
+	}
+	
+	public OptionalDouble calculateFinalPflichtGrade(){
+		return selectedPflichtModuls.stream().filter(course -> course.getNote().isPresent()).mapToDouble(course -> course.getNote().get()).average();
+	}
+	
 
 	public void clearAll(){
 		selectedModuls.clear();

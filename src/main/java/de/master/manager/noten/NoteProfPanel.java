@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -14,6 +15,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+
+import com.google.javascript.jscomp.ControlFlowGraph.Branch;
 
 import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ModulCourse;
@@ -52,11 +55,9 @@ public class NoteProfPanel extends Panel{
 			}
 		};
 		
-		Panel noteInfoPanel = new NoteInfoPanel("noteInfoPanel", loadSelectedPflichtCourses, loadSelectedWahlCourses);
 		
 		add(wahlCourseListView);
 		add(pflichtCourseListView);
-		add(noteInfoPanel);
 	}
 
 	
@@ -69,6 +70,7 @@ public class NoteProfPanel extends Panel{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				item.getModelObject().setNote(noteModel.getObject());
+				getComponent().send(getComponent().getPage(), Broadcast.DEPTH, new GradeChangedEvent(target));
 			}
 		});
 		return dropDownNoten;

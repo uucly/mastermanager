@@ -15,7 +15,9 @@ public class NotePanel extends Panel{
 		super(id);
 		NoteProfPanel noteProfPanel1 = new NoteProfPanel("noteProfPanel1", profOfPanel1);
 		NoteProfPanel noteProfPanel2 = new NoteProfPanel("noteProfPanel2", profOfPanel2);
+		Panel noteInfoPanel = new NoteInfoPanel("noteInfoPanel", profOfPanel1, profOfPanel2);
 		add(noteProfPanel1, noteProfPanel2);
+		add(noteInfoPanel);
 	}
 
 	@Override
