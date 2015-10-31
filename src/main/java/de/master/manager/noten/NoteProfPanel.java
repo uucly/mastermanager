@@ -48,7 +48,7 @@ public class NoteProfPanel extends Panel{
 			@Override
 			protected void populateItem(ListItem<ModulCourse> item) {
 				ModulCourse currentCourse = item.getModelObject();
-				item.add(new Label("wahlCourse", currentCourse.getName() + "Credits: "+ currentCourse.getPoints()));
+				item.add(new Label("wahlCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
 				item.add(createNotenDropDown("dropDownNotenWahl", item, currentCourse.getNote()));
 			}
 		};
@@ -62,7 +62,7 @@ public class NoteProfPanel extends Panel{
 			@Override
 			protected void populateItem(ListItem<ModulCourse> item) {
 				ModulCourse currentCourse = item.getModelObject();
-				item.add(new Label("pflichtCourse", currentCourse.getName() + "Credits: "+ currentCourse.getPoints()));
+				item.add(new Label("pflichtCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
 				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getNote()));
 			}
 		};

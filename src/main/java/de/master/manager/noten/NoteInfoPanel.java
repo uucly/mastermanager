@@ -28,8 +28,12 @@ public class NoteInfoPanel extends Panel{
 	private static final IModel<String> calculateFinalGrade(IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2){
 		return new TransformationModel2<Prof, Prof, String>(profOfPanel1, profOfPanel2,(p1, p2) -> {
 			OptionalDouble result = Lists.newArrayList(p1.calculateFinalGrade(), p2.calculateFinalGrade()).stream().filter(opt -> opt.isPresent()).mapToDouble(OptionalDouble::getAsDouble).average();
-			return result.isPresent() ? String.valueOf(result.getAsDouble()) : "No grade available";
+			return result.isPresent() ? String.valueOf(round(result.getAsDouble())) : "No grade available";
 		});
+	}
+	
+	private static final double round(double number){
+		return Math.round(number*100.0)/100.0;
 	}
 
 }

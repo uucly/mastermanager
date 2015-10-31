@@ -18,6 +18,18 @@ public class NoteInfoProfPanel extends Panel{
 	public NoteInfoProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
 		
+		OptionalDouble pflichtGrade = profOfPanel.getObject().calculateFinalPflichtGrade();
+		OptionalDouble wahlGrade = profOfPanel.getObject().calculateFinalWahlGrade();
+		
+		add(new Label("wahlAverage", wahlGrade.isPresent() ? String.valueOf(wahlGrade.getAsDouble()) : ""));
+		add(new Label("pflichtAverage", pflichtGrade.isPresent() ? String.valueOf(pflichtGrade.getAsDouble()) : ""));
+		
+		add(createWahlListView(profOfPanel));
+		add(createPflichtListView(profOfPanel));
+	}
+
+	/* methods */
+	private ListView<ModulCourse> createPflichtListView(IModel<Prof> profOfPanel) {
 		ListView<ModulCourse> pflichtView = new ListView<ModulCourse>("pflichtList", profOfPanel.getObject().getSelectedPflichtModuls()) {
 
 			private static final long serialVersionUID = 1L;
@@ -26,12 +38,14 @@ public class NoteInfoProfPanel extends Panel{
 			protected void populateItem(ListItem<ModulCourse> item) {
 				ModulCourse course = item.getModelObject();
 				item.add(new Label("pflichtName", course.getName()));
-				item.add(new Label("pflichtNote", course.getNote().isPresent() ? course.getNote().get().toString() : ""));
+				item.add(createNoteLabel("pflichtNote", course));
+				
 			}
 		};
-		OptionalDouble pflichtGrade = profOfPanel.getObject().calculateFinalPflichtGrade();
-		add(new Label("pflichtAverage", pflichtGrade.isPresent() ? String.valueOf(pflichtGrade.getAsDouble()) : ""));
-		
+		return pflichtView;
+	}
+
+	private ListView<ModulCourse> createWahlListView(IModel<Prof> profOfPanel) {
 		ListView<ModulCourse> wahlListView = new ListView<ModulCourse>("wahlList", profOfPanel.getObject().getSelectedModuls()) {
 
 			private static final long serialVersionUID = 1L;
@@ -40,14 +54,13 @@ public class NoteInfoProfPanel extends Panel{
 			protected void populateItem(ListItem<ModulCourse> item) {
 				ModulCourse course = item.getModelObject();
 				item.add(new Label("wahlName", course.getName()));
-				item.add(new Label("wahlNote", course.getNote().isPresent() ? course.getNote().get().toString() : ""));
+				item.add(createNoteLabel("wahlNote", course));
 			}
 		};
-		OptionalDouble wahlGrade = profOfPanel.getObject().calculateFinalWahlGrade();
-		add(new Label("wahlAverage", wahlGrade.isPresent() ? String.valueOf(wahlGrade.getAsDouble()) : ""));
-		
-		add(wahlListView);
-		add(pflichtView);
+		return wahlListView;
 	}
 
+	private static final Label createNoteLabel(String id, ModulCourse course){
+		return new Label(id, course.getNote().isPresent() ? course.getNote().get().toString() : "");
+	}
 }
