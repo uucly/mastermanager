@@ -5,6 +5,7 @@ import java.util.OptionalDouble;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+
 import com.google.common.collect.Lists;
 
 import de.master.manager.model.TransformationModel2;
@@ -17,6 +18,10 @@ public class NoteInfoPanel extends Panel{
 	public NoteInfoPanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
 		super(id);
 		setOutputMarkupId(true);
+		
+		add(new NoteInfoProfPanel("infoProfPanel1", profOfPanel1));
+		add(new NoteInfoProfPanel("infoProfPanel2", profOfPanel2));
+		
 		add(new Label("finalGrade", calculateFinalGrade(profOfPanel1, profOfPanel2)));
 	}
 	

@@ -8,8 +8,14 @@
 </head>
 <body>
 	<wicket:panel>
-		<div> <strong>Pflicht</strong></div>
-		<div><strong>Insgesamt</strong></div>
+		<div class="row">
+			<div class="col-md-6" wicket:id="infoProfPanel1"></div>
+			<div class="col-md-6" wicket:id="infoProfPanel2"></div>
+		</div>
+		<hr style="border: double;"/>
+		<div>
+			<strong>Insgesamt</strong>
+		</div>
 		<div wicket:id="finalGrade"></div>
 	</wicket:panel>
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>Insert title here</title>
+</head>
+<body>
+	<wicket:panel>
+	<div><strong>Pflicht</strong></div>
+	<div wicket:id="pflichtList">
+		<span wicket:id="pflichtName"></span>
+		<span wicket:id="pflichtNote"></span>
+	</div>
+	Durchschnitt: <div wicket:id="pflichtAverage"></div>
+	<div><strong>Wahl</strong></div>
+		<div wicket:id="wahlList">
+			<span wicket:id="wahlName"></span>
+			<span wicket:id="wahlNote"></span>
+		</div>
+	Durchschnitt: <div wicket:id="wahlAverage"></div>
+	</wicket:panel>
+</body>
+</html>
