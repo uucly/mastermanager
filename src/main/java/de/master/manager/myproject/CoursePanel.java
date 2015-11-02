@@ -25,4 +25,5 @@ public class CoursePanel extends Panel{
 		add(panel1, panel2, infoPanel);
 	}
 
+	
 }

@@ -18,6 +18,8 @@ import org.apache.wicket.model.Model;
 
 import com.google.common.collect.Lists;
 
+import de.master.manager.aufbau.AufbauPanel;
+import de.master.manager.events.PanelChangedEvent;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.model.TransformationModel;
 import de.master.manager.myproject.CoursePanel;
@@ -43,6 +45,7 @@ public class NavsPanel extends Panel{
 		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
 		add(createLink("courses",  currentPanel));
 		add(createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2)));
+		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs)));
 		add(currentPanel);
 	}
 
@@ -70,6 +73,7 @@ public class NavsPanel extends Panel{
 				currentPanel.replaceWith(newPanel);
 				currentPanel = newPanel;
 				target.add(currentPanel);
+				send(getPage(), Broadcast.DEPTH, new PanelChangedEvent(target));
 			}
 		};
 	}
