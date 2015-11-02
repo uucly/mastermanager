@@ -19,9 +19,6 @@ public class DragAndDropPage extends BasePage{
 
 	private static final long serialVersionUID = 1L;
 	
-	@SpringBean
-	Test test;
-	
 	public DragAndDropPage(){
 		WahlPflichtModuleLoader courseLoader = new WahlPflichtModuleLoader(loadFilePath("WahlPflichtModule.txt"));
 		
