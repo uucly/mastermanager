@@ -12,6 +12,7 @@ import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -85,7 +86,10 @@ public class ModulButtonPanel extends Panel {
 			private static final long serialVersionUID = 1L;
 			@Override
 			protected void populateItem(ListItem<Course> item) {
-				item.add(new CoursePflichtButton("modulButton", item.getModelObject(), prof, allProfs));
+				Course currentCourse=item.getModelObject();
+				item.add(new CoursePflichtButton("modulButton", currentCourse, prof, allProfs));
+				String points=String.valueOf(currentCourse.getPoints());
+				item.add(new Button("modulPoints", new Model<String>(points)));
 			}
 			
 		};
@@ -96,7 +100,11 @@ public class ModulButtonPanel extends Panel {
 			private static final long serialVersionUID = 1L;
 			@Override
 			protected void populateItem(ListItem<Course> item) {
-				item.add(new CourseButton("modulButton", item.getModelObject(), profLeft, profRight, allProfs));
+				Course currentCourse=item.getModelObject();
+				item.add(new CourseButton("modulButton", currentCourse, profLeft, profRight, allProfs));
+				String points=String.valueOf(currentCourse.getPoints());
+				item.add(new Button("modulPoints", new Model<String>(points)));
+				
 			}
 			
 		};
