@@ -3,6 +3,7 @@ package de.master.manager.myproject;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.settings.BootstrapSettings;
@@ -34,7 +35,7 @@ public class WicketApplication extends WebApplication {
 	public void init() {
 		super.init();
 		configureBootstrap();
-		// mountPage("com/dragAndDrop", DragAndDropPage.class);
+		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
 	}
 
 	/**

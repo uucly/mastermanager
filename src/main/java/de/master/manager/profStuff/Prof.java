@@ -56,7 +56,7 @@ public class Prof implements Serializable{
 	}
 	
 	public OptionalDouble calculateFinalGrade(){
-		List<ModulCourse> jointCourseLists = new ArrayList<ModulCourse>(selectedModuls.size() + selectedPflichtModuls.size());
+		List<ModulCourse> jointCourseLists = new ArrayList<>(selectedModuls.size() + selectedPflichtModuls.size());
 		jointCourseLists.addAll(selectedPflichtModuls);
 		jointCourseLists.addAll(selectedModuls);
 		return jointCourseLists.stream().filter(m -> m.getNote().isPresent()).mapToDouble(m -> m.getNote().get()).average();
@@ -69,15 +69,7 @@ public class Prof implements Serializable{
 	public OptionalDouble calculateFinalPflichtGrade(){
 		return selectedPflichtModuls.stream().filter(course -> course.getNote().isPresent()).mapToDouble(course -> course.getNote().get()).average();
 	}
-	
-	
-	
-
-	public void clearAll(){
-		selectedModuls.clear();
-		selectedPflichtModuls.clear();
-	}
-	
+		
 	@Override
 	public String toString(){
 		return name;
