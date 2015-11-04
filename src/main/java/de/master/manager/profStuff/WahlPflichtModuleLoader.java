@@ -6,7 +6,10 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class WahlPflichtModuleLoader implements Serializable{
+import org.springframework.stereotype.Service;
+
+@Service
+public class WahlPflichtModuleLoader implements Serializable, IWahlPflichtModuleLoader{
 
 	private static final long serialVersionUID = 1L;
 	private final List<ModulCourse> allCourses;

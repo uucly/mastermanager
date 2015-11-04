@@ -29,12 +29,11 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>7.0.0</wicket.version>
-		<jetty9.version>9.2.11.v20150529</jetty9.version>
-		<log4j.version>2.3</log4j.version>
+		<wicket.version>7.1.0</wicket.version>
+		<jetty9.version>9.2.13.v20150730</jetty9.version>
+		<log4j.version>2.4</log4j.version>
 		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<bootstrap.version>0.8.0</bootstrap.version>
 		<spring.version>4.2.2.RELEASE</spring.version>
 		<version.bootstrap>0.10.3</version.bootstrap>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -73,11 +72,6 @@
 			<groupId>de.agilecoders.wicket</groupId>
 			<artifactId>wicket-bootstrap-themes</artifactId>
 			<version>${version.bootstrap}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-annotation</artifactId>
-			<version>7.0.0</version>
 		</dependency>
 
 		<!-- Integrate Wicket with Spring -->

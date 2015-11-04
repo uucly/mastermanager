@@ -25,12 +25,7 @@ public abstract class BasePage extends WebPage{
 	public BasePage() {
 		add(new HtmlTag("html"));
 
-        /*add(new OptimizedMobileViewportMetaTag("viewport"));
-        add(new IeEdgeMetaTag("ie-edge"));
-        add(new MetaTag("description", Model.of("description"), Model.of("Apache Wicket & Bootstrap Demo")));
-        add(new MetaTag("author", Model.of("author"), Model.of("Michael Haitz <michael.haitz@agile-coders.de>")));
-*/
-        add(newNavbar("navbar"));
+           add(newNavbar("navbar"));
         /*add(newNavigation("navigation"));
         add(new Footer("footer"));
 
@@ -101,37 +96,13 @@ public abstract class BasePage extends WebPage{
         return navbar;
     }
 	
-	/*private Component newAddonsDropDownButton() {
-        return new NavbarDropDownButton(Model.of("Addons")) {
-             private static final long serialVersionUID = 1L;
-
-            @Override
-            protected List<AbstractLink> newSubMenuButtons(String buttonMarkupId) {
-                final List<AbstractLink> subMenu = new ArrayList<AbstractLink>();
-
-                subMenu.add(new MenuBookmarkablePageLink<Void>(Javascript.class, Model.of("Javascript")).setIconType(GlyphIconType.refresh));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(DatePickerPage.class, Model.of("DatePicker")).setIconType(GlyphIconType.time));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(DatetimePickerPage.class, Model.of("DateTimePicker")).setIconType(GlyphIconType.time));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(SelectPage.class, Model.of("SelectPicker")).setIconType(GlyphIconType.search));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(IssuesPage.class, Model.of("Github Issues")).setIconType(GlyphIconType.book));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(ExtensionsPage.class, Model.of("Extensions")).setIconType(GlyphIconType.alignjustify));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(ExtensionsBootstrapFileInputPage.class, Model.of("Extensions - Bootstrap FileInput")).setIconType(GlyphIconType.alignjustify));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(FontAwesomePage.class, Model.of("Font Awesome")).setIconType(GlyphIconType.font));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(XEditablePage.class, Model.of("X-Editable")).setIconType(GlyphIconType.pencil));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(TooltipValidationPage.class, Model.of("Validation")).setIconType(GlyphIconType.okcircle));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(SummernotePage.class, Model.of("Summernote")).setIconType(GlyphIconType.edit));
-                subMenu.add(new MenuBookmarkablePageLink<Void>(CheckboxesPage.class, Model.of("Checkboxes and Toggles")).setIconType(GlyphIconType.check));
-                return subMenu;
-            }
-        }.setIconType(GlyphIconType.thlarge);
-    }*/
 	
-	@Override
+/*	@Override
     protected void onConfigure() {
         super.onConfigure();
 
         configureTheme(getPageParameters());
-    }
+    }*/
 
 	
 	private void configureTheme(PageParameters pageParameters) {

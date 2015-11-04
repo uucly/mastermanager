@@ -53,9 +53,9 @@ public class WicketApplication extends WebApplication {
 		BootstrapLess.install(this);
 	}
 	
-	@Override
+	/*@Override
 	public RuntimeConfigurationType getConfigurationType() {
 		return RuntimeConfigurationType.DEVELOPMENT;
-	}
+	}*/
 
 }
