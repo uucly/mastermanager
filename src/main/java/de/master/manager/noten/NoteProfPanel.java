@@ -17,9 +17,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
-
-
-
+import de.master.manager.events.GradeChangedEvent;
 import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;

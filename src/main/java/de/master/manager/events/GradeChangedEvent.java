@@ -1,4 +1,4 @@
-package de.master.manager.noten;
+package de.master.manager.events;
 
 import java.io.Serializable;
 
