@@ -6,7 +6,6 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.master.manager.menueBar.BasePage;
 import de.master.manager.noten.NavsPanel;
 import de.master.manager.profStuff.IWahlPflichtModuleLoader;
 import de.master.manager.profStuff.Prof;

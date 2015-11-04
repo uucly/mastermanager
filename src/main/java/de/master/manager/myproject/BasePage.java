@@ -1,4 +1,4 @@
-package de.master.manager.menueBar;
+package de.master.manager.myproject;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
@@ -13,7 +13,6 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.core.settings.ITheme;
-import de.master.manager.myproject.DragAndDropPage;
 
 public abstract class BasePage extends WebPage{
 
