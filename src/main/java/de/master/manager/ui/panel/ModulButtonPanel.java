@@ -1,4 +1,4 @@
-package de.master.manager.mastermanager;
+package de.master.manager.ui.panel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +24,8 @@ import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.ui.button.CourseButton;
+import de.master.manager.ui.button.CoursePflichtButton;
 
 
 public class ModulButtonPanel extends Panel {

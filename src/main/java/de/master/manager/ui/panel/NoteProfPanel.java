@@ -1,4 +1,4 @@
-package de.master.manager.noten;
+package de.master.manager.ui.panel;
 
 import java.util.Arrays;
 import java.util.List;

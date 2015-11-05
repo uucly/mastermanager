@@ -1,4 +1,4 @@
-package de.master.manager.noten;
+package de.master.manager.ui.panel;
 
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;

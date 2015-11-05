@@ -1,4 +1,4 @@
-package de.master.manager.mastermanager;
+package de.master.manager.ui;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;

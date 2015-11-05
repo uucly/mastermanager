@@ -1,4 +1,4 @@
-package de.master.manager.mastermanager;
+package de.master.manager.ui.button;
 
 import java.util.List;
 

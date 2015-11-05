@@ -1,4 +1,4 @@
-package de.master.manager.noten;
+package de.master.manager.ui.panel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +18,6 @@ import org.apache.wicket.model.Model;
 import com.google.common.collect.Lists;
 
 import de.master.manager.events.ProfChangedEvent;
-import de.master.manager.mastermanager.CoursePanel;
 import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;

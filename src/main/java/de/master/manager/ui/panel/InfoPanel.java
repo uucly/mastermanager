@@ -1,4 +1,4 @@
-package de.master.manager.mastermanager;
+package de.master.manager.ui.panel;
 
 import java.util.List;
 import java.util.function.Function;
