@@ -1,15 +1,16 @@
-package de.master.manager.events;
+package de.master.manager.ui.events;
 
 import java.io.Serializable;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
-public class GradeChangedEvent implements Serializable{
+public abstract class AbstractEvent implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	
 	private AjaxRequestTarget target;
 	
-	public GradeChangedEvent(AjaxRequestTarget target) {
+	public AbstractEvent(AjaxRequestTarget target){
 		this.target = target;
 	}
 
@@ -17,4 +18,8 @@ public class GradeChangedEvent implements Serializable{
 		return target;
 	}
 
+	public void setTarget(AjaxRequestTarget target) {
+		this.target = target;
+	}
+	
 }

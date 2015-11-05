@@ -17,10 +17,10 @@ import org.apache.wicket.model.Model;
 
 import com.google.common.collect.Lists;
 
-import de.master.manager.events.ProfChangedEvent;
-import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.ui.events.ProfChangedEvent;
+import de.master.manager.ui.model.TransformationModel;
 
 public class NavsPanel extends Panel{
 

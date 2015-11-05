@@ -18,14 +18,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
-import de.master.manager.events.ProfChangedEvent;
-import de.master.manager.events.RemoveCourseEvent;
-import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.button.CourseButton;
 import de.master.manager.ui.button.CoursePflichtButton;
+import de.master.manager.ui.events.ProfChangedEvent;
+import de.master.manager.ui.events.RemoveCourseEvent;
+import de.master.manager.ui.model.TransformationModel;
 
 
 public class ModulButtonPanel extends Panel {

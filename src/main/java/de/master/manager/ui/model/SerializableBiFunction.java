@@ -1,4 +1,4 @@
-package de.master.manager.model;
+package de.master.manager.ui.model;
 
 import java.io.Serializable;
 import java.util.function.BiFunction;

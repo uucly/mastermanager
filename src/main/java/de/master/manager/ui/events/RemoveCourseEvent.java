@@ -1,4 +1,4 @@
-package de.master.manager.events;
+package de.master.manager.ui.events;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 

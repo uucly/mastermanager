@@ -16,10 +16,10 @@ import org.apache.wicket.model.Model;
 
 import com.google.common.base.Optional;
 
-import de.master.manager.events.GradeChangedEvent;
-import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.ui.events.GradeChangedEvent;
+import de.master.manager.ui.model.TransformationModel;
 
 public class NoteProfPanel extends Panel {
 

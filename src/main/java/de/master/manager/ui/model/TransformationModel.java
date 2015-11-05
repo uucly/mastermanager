@@ -1,4 +1,4 @@
-package de.master.manager.model;
+package de.master.manager.ui.model;
 
 import java.util.Objects;
 import org.apache.wicket.model.IModel;

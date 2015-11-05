@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-import de.master.manager.model.TransformationModel2;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.ui.model.TransformationModel2;
 
 public class CoursePanel extends Panel{
 
