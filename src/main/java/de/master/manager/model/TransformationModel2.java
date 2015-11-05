@@ -1,7 +1,6 @@
 package de.master.manager.model;
 
 import java.util.Objects;
-import java.util.function.BiFunction;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;

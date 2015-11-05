@@ -21,8 +21,8 @@ import org.apache.wicket.model.Model;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.events.RemoveCourseEvent;
 import de.master.manager.model.TransformationModel;
+import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.ICourseLoader;
-import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 
 
@@ -44,7 +44,7 @@ public class ModulButtonPanel extends Panel {
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
 		
-		formPflicht.add(createPflichListView(new TransformationModel<Prof, List<ModulCourse>>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
+		formPflicht.add(createPflichListView(new TransformationModel<Prof, List<ICourse>>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
 		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
 		container.add(formPflicht);
 		container.add(formWahl);
@@ -76,12 +76,12 @@ public class ModulButtonPanel extends Panel {
 		return textField;
 	}
 	
-	private static ListView<ModulCourse> createPflichListView(IModel<List<ModulCourse>> pflichtCourses, final IModel<Prof> prof, final List<Prof> allProfs){
-		return new ListView<ModulCourse>("pflichtListView", pflichtCourses){
+	private static ListView<ICourse> createPflichListView(IModel<List<ICourse>> pflichtCourses, final IModel<Prof> prof, final List<Prof> allProfs){
+		return new ListView<ICourse>("pflichtListView", pflichtCourses){
 			private static final long serialVersionUID = 1L;
 			@Override
-			protected void populateItem(ListItem<ModulCourse> item) {
-				ModulCourse currentCourse=item.getModelObject();
+			protected void populateItem(ListItem<ICourse> item) {
+				ICourse currentCourse=item.getModelObject();
 				item.add(new CoursePflichtButton("modulButton", currentCourse, prof, allProfs));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
@@ -90,12 +90,12 @@ public class ModulButtonPanel extends Panel {
 		};
 	}
 	
-	private static ListView<ModulCourse> createWahlListView(IModel<List<ModulCourse>> selectedModuls, final IModel<Prof> profLeft, final IModel<Prof> profRight, final List<Prof> allProfs){
-		return new ListView<ModulCourse>("listView", selectedModuls){
+	private static ListView<ICourse> createWahlListView(IModel<List<ICourse>> selectedModuls, final IModel<Prof> profLeft, final IModel<Prof> profRight, final List<Prof> allProfs){
+		return new ListView<ICourse>("listView", selectedModuls){
 			private static final long serialVersionUID = 1L;
 			@Override
-			protected void populateItem(ListItem<ModulCourse> item) {
-				ModulCourse currentCourse=item.getModelObject();
+			protected void populateItem(ListItem<ICourse> item) {
+				ICourse currentCourse=item.getModelObject();
 				item.add(new CourseButton("modulButton", currentCourse, profLeft, profRight, allProfs));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
@@ -104,12 +104,12 @@ public class ModulButtonPanel extends Panel {
 		};
 	}
 	
-	private static IModel<List<ModulCourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final ICourseLoader courseLoader) {
-		return new LoadableDetachableModel<List<ModulCourse>>() {
+	private static IModel<List<ICourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final ICourseLoader courseLoader) {
+		return new LoadableDetachableModel<List<ICourse>>() {
 			private static final long serialVersionUID = 1L;
 			@Override
-			protected List<ModulCourse> load() {
-				List<ModulCourse> coursesOfProf = courseLoader.loadCourses(prof.getObject().getPath());
+			protected List<ICourse> load() {
+				List<ICourse> coursesOfProf = courseLoader.loadCourses(prof.getObject().getPath());
 				if (text.getObject() != null) {
 					return coursesOfProf.stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
 				} else {

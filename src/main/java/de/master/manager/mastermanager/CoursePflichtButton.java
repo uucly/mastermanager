@@ -13,17 +13,16 @@ import org.apache.wicket.model.Model;
 
 import de.master.manager.events.SelectedEvent;
 import de.master.manager.profStuff.ICourse;
-import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 
 public class CoursePflichtButton extends AjaxButton {
 
 	private static final long serialVersionUID = 1L;
 	private IModel<Prof> prof;
-	private ModulCourse modul;
+	private ICourse modul;
 	private List<Prof> allProfs;
 
-	public CoursePflichtButton(String id, ModulCourse modul, IModel<Prof> prof, List<Prof> allProfs) {
+	public CoursePflichtButton(String id, ICourse modul, IModel<Prof> prof, List<Prof> allProfs) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
 		this.modul = modul;

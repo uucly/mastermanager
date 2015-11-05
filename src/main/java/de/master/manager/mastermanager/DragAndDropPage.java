@@ -1,12 +1,6 @@
 package de.master.manager.mastermanager;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import de.master.manager.noten.NavsPanel;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;

@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface ICourseLoader extends Serializable{
 
-	List<ModulCourse> loadCourses(String fileName);
+	List<ICourse> loadCourses(String fileName);
 }

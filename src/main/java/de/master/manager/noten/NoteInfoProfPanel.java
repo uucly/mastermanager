@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-import de.master.manager.profStuff.ModulCourse;
+import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
 
 public class NoteInfoProfPanel extends Panel{
@@ -29,14 +29,14 @@ public class NoteInfoProfPanel extends Panel{
 	}
 
 	/* methods */
-	private ListView<ModulCourse> createPflichtListView(IModel<Prof> profOfPanel) {
-		ListView<ModulCourse> pflichtView = new ListView<ModulCourse>("pflichtList", profOfPanel.getObject().getSelectedPflichtModuls()) {
+	private ListView<ICourse> createPflichtListView(IModel<Prof> profOfPanel) {
+		ListView<ICourse> pflichtView = new ListView<ICourse>("pflichtList", profOfPanel.getObject().getSelectedPflichtModuls()) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<ModulCourse> item) {
-				ModulCourse course = item.getModelObject();
+			protected void populateItem(ListItem<ICourse> item) {
+				ICourse course = item.getModelObject();
 				item.add(new Label("pflichtName", course.getName()));
 				item.add(createNoteLabel("pflichtNote", course));
 				
@@ -45,14 +45,14 @@ public class NoteInfoProfPanel extends Panel{
 		return pflichtView;
 	}
 
-	private ListView<ModulCourse> createWahlListView(IModel<Prof> profOfPanel) {
-		ListView<ModulCourse> wahlListView = new ListView<ModulCourse>("wahlList", profOfPanel.getObject().getSelectedModuls()) {
+	private ListView<ICourse> createWahlListView(IModel<Prof> profOfPanel) {
+		ListView<ICourse> wahlListView = new ListView<ICourse>("wahlList", profOfPanel.getObject().getSelectedModuls()) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<ModulCourse> item) {
-				ModulCourse course = item.getModelObject();
+			protected void populateItem(ListItem<ICourse> item) {
+				ICourse course = item.getModelObject();
 				item.add(new Label("wahlName", course.getName()));
 				item.add(createNoteLabel("wahlNote", course));
 			}
@@ -60,7 +60,7 @@ public class NoteInfoProfPanel extends Panel{
 		return wahlListView;
 	}
 
-	private static final Label createNoteLabel(String id, ModulCourse course){
+	private static final Label createNoteLabel(String id, ICourse course){
 		return new Label(id, course.getGrade().isPresent() ? course.getGrade().get().toString() : "");
 	}
 }

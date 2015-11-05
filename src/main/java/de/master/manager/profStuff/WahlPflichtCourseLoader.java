@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,11 @@ import org.springframework.stereotype.Service;
 public class WahlPflichtCourseLoader implements ICourseLoader{
 
 	private static final long serialVersionUID = 1L;
-	private final List<ModulCourse> allCourses;
+	private final List<ICourse> allCourses;
 
 	public WahlPflichtCourseLoader(String pathToAllCourse){
 		
-		Function<String, ModulCourse> parseToModul = line -> {
+		Function<String, ICourse> parseToModul = line -> {
 			String[] split = line.split(",");
 			return new ModulCourse(split[0], Double.parseDouble(split[1]));
 		};
@@ -31,7 +30,7 @@ public class WahlPflichtCourseLoader implements ICourseLoader{
 	
 	/* methods */
 	
-	public List<ModulCourse> loadCourses(String fileName) {
+	public List<ICourse> loadCourses(String fileName) {
 		String fileInput = loadFileInput(fileName);
 		return Pattern.compile(",").splitAsStream(fileInput).map(s -> allCourses.get(Integer.parseInt(s)-1)).collect(Collectors.toList());
 	}

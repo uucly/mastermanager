@@ -96,6 +96,9 @@ public abstract class BasePage extends WebPage{
     }
 	
 	
+	/**
+	 * mal sehen ob man es noch brauch
+	 */
 /*	@Override
     protected void onConfigure() {
         super.onConfigure();

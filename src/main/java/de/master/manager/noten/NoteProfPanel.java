@@ -1,6 +1,5 @@
 package de.master.manager.noten;
 
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,10 +18,10 @@ import com.google.common.base.Optional;
 
 import de.master.manager.events.GradeChangedEvent;
 import de.master.manager.model.TransformationModel;
-import de.master.manager.profStuff.ModulCourse;
+import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
 
-public class NoteProfPanel extends Panel{
+public class NoteProfPanel extends Panel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -31,23 +30,25 @@ public class NoteProfPanel extends Panel{
 	public NoteProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
 		setOutputMarkupId(true);
-		IModel<List<ModulCourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedPflichtModuls);
-		IModel<List<ModulCourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ModulCourse>>(profOfPanel, Prof::getSelectedModuls);
-		
+		IModel<List<ICourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
+				Prof::getSelectedPflichtModuls);
+		IModel<List<ICourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
+				Prof::getSelectedModuls);
+
 		add(createWahlCourseListView(loadSelectedWahlCourses));
 		add(createPflichtCourseListView(loadSelectedPflichtCourses));
 	}
 
 	/* methods */
 
-	private static ListView<ModulCourse> createWahlCourseListView(IModel<List<ModulCourse>> loadSelectedWahlCourses) {
-		ListView<ModulCourse> wahlCourseListView = new ListView<ModulCourse>("wahlCourses", loadSelectedWahlCourses) {
+	private static ListView<ICourse> createWahlCourseListView(IModel<List<ICourse>> loadSelectedWahlCourses) {
+		ListView<ICourse> wahlCourseListView = new ListView<ICourse>("wahlCourses", loadSelectedWahlCourses) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<ModulCourse> item) {
-				ModulCourse currentCourse = item.getModelObject();
+			protected void populateItem(ListItem<ICourse> item) {
+				ICourse currentCourse = item.getModelObject();
 				item.add(new Label("wahlCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
 				item.add(createNotenDropDown("dropDownNotenWahl", item, currentCourse.getGrade()));
 			}
@@ -55,34 +56,28 @@ public class NoteProfPanel extends Panel{
 		return wahlCourseListView;
 	}
 
+	private static ListView<ICourse> createPflichtCourseListView(IModel<List<ICourse>> loadSelectedPflichtCourses) {
+		ListView<ICourse> pflichtCourseListView = new ListView<ICourse>("pflichtCourses", loadSelectedPflichtCourses) {
 
-	private static ListView<ModulCourse> createPflichtCourseListView(IModel<List<ModulCourse>> loadSelectedPflichtCourses) {
-		ListView<ModulCourse> pflichtCourseListView = new ListView<ModulCourse>("pflichtCourses", loadSelectedPflichtCourses) {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(ListItem<ModulCourse> item) {
-				ModulCourse currentCourse = item.getModelObject();
-				item.add(new Label("pflichtCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
+			protected void populateItem(ListItem<ICourse> item) {
+				ICourse currentCourse = item.getModelObject();
+				item.add(new Label("pflichtCourse",
+						currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
 				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getGrade()));
 			}
 		};
 		return pflichtCourseListView;
 	}
 
-	
-	private static DropDownChoice<Double> createNotenDropDown(String id, ListItem<ModulCourse> item, Optional<Double> note) {
-		IModel<Double> noteModel = note.isPresent() ? Model.of(note.get()) : Model.of(); 
+	private static DropDownChoice<Double> createNotenDropDown(String id, ListItem<ICourse> item,
+			Optional<Double> note) {
+		IModel<Double> noteModel = note.isPresent() ? Model.of(note.get()) : Model.of();
 		DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>(id, noteModel, NOTEN_LIST);
 		dropDownNoten.add(new OnChangeAjaxBehavior() {
-			
-			/**
-			 * 
-			 */
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
