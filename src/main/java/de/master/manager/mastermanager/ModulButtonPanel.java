@@ -1,19 +1,14 @@
 package de.master.manager.mastermanager;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -26,10 +21,9 @@ import org.apache.wicket.model.Model;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.events.RemoveCourseEvent;
 import de.master.manager.model.TransformationModel;
-import de.master.manager.profStuff.AbstractCourse;
 import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.WahlPflichtModuleLoader;
+import de.master.manager.profStuff.WahlPflichtCourseLoader;
 
 
 public class ModulButtonPanel extends Panel {
@@ -39,7 +33,7 @@ public class ModulButtonPanel extends Panel {
 	private Form<Object> formWahl;
 	private Form<?> formPflicht;
 	
-	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final WahlPflichtModuleLoader courseLoader) {
+	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final WahlPflichtCourseLoader courseLoader) {
 		super(id);
 		setOutputMarkupId(true);
 		IModel<String> text = Model.of("");
@@ -110,12 +104,12 @@ public class ModulButtonPanel extends Panel {
 		};
 	}
 	
-	private static IModel<List<ModulCourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final WahlPflichtModuleLoader courseLoader) {
+	private static IModel<List<ModulCourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final WahlPflichtCourseLoader courseLoader) {
 		return new LoadableDetachableModel<List<ModulCourse>>() {
 			private static final long serialVersionUID = 1L;
 			@Override
 			protected List<ModulCourse> load() {
-				List<ModulCourse> coursesOfProf = courseLoader.loadCourseOfProf(prof.getObject().getPath());
+				List<ModulCourse> coursesOfProf = courseLoader.loadCourses(prof.getObject().getPath());
 				if (text.getObject() != null) {
 					return coursesOfProf.stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
 				} else {

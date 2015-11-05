@@ -22,7 +22,7 @@ import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.mastermanager.CoursePanel;
 import de.master.manager.model.TransformationModel;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.WahlPflichtModuleLoader;
+import de.master.manager.profStuff.WahlPflichtCourseLoader;
 
 public class NavsPanel extends Panel{
 
@@ -31,7 +31,7 @@ public class NavsPanel extends Panel{
 	private MarkupContainer profDropDownContainer;
 	
 	/* constructor */
-	public NavsPanel(String id, WahlPflichtModuleLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes){
+	public NavsPanel(String id, WahlPflichtCourseLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes){
 		super(id);
 		List<Prof> allProfs = Lists.newArrayList(breunig, hinz, heck, hennes);
 		IModel<Prof> profOfPanel1 = Model.of(breunig);

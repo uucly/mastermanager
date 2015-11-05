@@ -2,26 +2,23 @@ package de.master.manager.profStuff;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WahlPflichtModuleLoader implements IWahlPflichtModuleLoader{
+public class WahlPflichtCourseLoader implements ICourseLoader{
 
 	private static final long serialVersionUID = 1L;
 	private final List<ModulCourse> allCourses;
 
-	public WahlPflichtModuleLoader(String pathToAllCourse){
+	public WahlPflichtCourseLoader(String pathToAllCourse){
 		
 		Function<String, ModulCourse> parseToModul = line -> {
 			String[] split = line.split(",");
@@ -33,7 +30,7 @@ public class WahlPflichtModuleLoader implements IWahlPflichtModuleLoader{
 	
 	/* methods */
 	
-	public List<ModulCourse> loadCourseOfProf(String fileName) {
+	public List<ModulCourse> loadCourses(String fileName) {
 		String fileInput = loadFileInput(fileName);
 		return Pattern.compile(",").splitAsStream(fileInput).map(s -> allCourses.get(Integer.parseInt(s)-1)).collect(Collectors.toList());
 	}

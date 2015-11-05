@@ -8,13 +8,13 @@ import org.apache.wicket.model.IModel;
 
 import de.master.manager.model.TransformationModel2;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.WahlPflichtModuleLoader;
+import de.master.manager.profStuff.WahlPflichtCourseLoader;
 
 public class CoursePanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
 
-	public CoursePanel(String id, WahlPflichtModuleLoader courseLoader, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2, List<Prof> allProfs){
+	public CoursePanel(String id, WahlPflichtCourseLoader courseLoader, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2, List<Prof> allProfs){
 		super(id);
 		
 		/* load the ui */
