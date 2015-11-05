@@ -19,7 +19,6 @@ public class WahlPflichtCourseLoader implements ICourseLoader{
 	private static final long serialVersionUID = 1L;
 	private final List<ModulCourse> allCourses;
 
-	@Autowired
 	public WahlPflichtCourseLoader(String pathToAllCourse){
 		
 		Function<String, ModulCourse> parseToModul = line -> {
