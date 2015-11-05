@@ -1,4 +1,4 @@
-package de.master.manager.myproject;
+package de.master.manager.mastermanager;
 
 import java.util.List;
 
@@ -16,20 +16,18 @@ import de.master.manager.profStuff.AbstractCourse;
 import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 
-public class CourseButton extends AjaxButton {
+public class CoursePflichtButton extends AjaxButton {
 
 	private static final long serialVersionUID = 1L;
-	private final IModel<Prof> prof;
-	private final ModulCourse modul;
-	private final List<Prof> allProfs;
-	private IModel<Prof> profRight;
+	private IModel<Prof> prof;
+	private ModulCourse modul;
+	private List<Prof> allProfs;
 
-	public CourseButton(String id, ModulCourse modul, IModel<Prof> prof, IModel<Prof> profRight, List<Prof> allProfs) {
+	public CoursePflichtButton(String id, ModulCourse modul, IModel<Prof> prof, List<Prof> allProfs) {
 		super(id, Model.of(modul.getName()));
 		setOutputMarkupId(true);
 		this.modul = modul;
 		this.prof = prof;
-		this.profRight = profRight;
 		this.allProfs = allProfs;
 	}
 
@@ -37,7 +35,7 @@ public class CourseButton extends AjaxButton {
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 		super.onSubmit(target, form);
 		setSelected();
-		prof.getObject().addSelectedModul(modul);
+		prof.getObject().addSelectedPflichtModul(modul);
 		target.add(this);
 		send(getPage(), Broadcast.DEPTH, new SelectedEvent(target, modul));
 	}
@@ -45,34 +43,28 @@ public class CourseButton extends AjaxButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(profRight.getObject().getPflichtCourse().contains(modul)){
-			prof.getObject().getSelectedModuls().remove(modul);
-			setEnabled(false);
-		} else if(isAlreadySelected(prof.getObject(), modul)){
+		if(prof.getObject().getSelectedPflichtModuls().contains(modul)){
 			setSelected();
-		} else if(isAlreadySelectedInOtherProf(prof.getObject(), modul, allProfs)) {
+		} else if(containsProf(prof.getObject(), modul, allProfs)) {
 			setEnabled(false);
 		}
-	}
-	
-	private static boolean isAlreadySelected(Prof prof, AbstractCourse course){
-		return prof.getSelectedModuls().contains(course);
 	}
 
 	@Override
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
 		if(event.getPayload() instanceof SelectedEvent){
-			SelectedEvent selectedEvent = ((SelectedEvent) event.getPayload());
-			if(selectedEvent.getCourse().equals(modul)){
+			if(containsProf(prof.getObject(), modul, allProfs)){
 				setEnabled(false);
-				selectedEvent.getTarget().add(this);
+				((SelectedEvent) event.getPayload()).getTarget().add(this);
 			}
+			
 		}
+		
 	}
 	
-	private static boolean isAlreadySelectedInOtherProf(Prof prof, AbstractCourse modul, List<Prof> allProfs){
-		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedModuls().contains(modul));
+	private static boolean containsProf(Prof prof, AbstractCourse modul, List<Prof> allProfs){
+		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedPflichtModuls().contains(modul));
 	}
 	
 	private void setSelected(){

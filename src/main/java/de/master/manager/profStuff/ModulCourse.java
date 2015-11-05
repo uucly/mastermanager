@@ -1,6 +1,6 @@
 package de.master.manager.profStuff;
 
-import java.util.Optional;
+import com.google.common.base.Optional;
 
 public class ModulCourse extends AbstractCourse{
 
@@ -9,7 +9,7 @@ public class ModulCourse extends AbstractCourse{
 	
 	public ModulCourse(String name, double points) {
 		super(name, points);
-		note = Optional.empty();
+		note = Optional.absent();
 	}
 
 	public Optional<Double> getNote() {

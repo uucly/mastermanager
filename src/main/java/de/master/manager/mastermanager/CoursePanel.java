@@ -1,4 +1,4 @@
-package de.master.manager.myproject;
+package de.master.manager.mastermanager;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,4 +1,4 @@
-package de.master.manager.myproject;
+package de.master.manager.mastermanager;
 
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.markup.html.WebPage;
@@ -17,7 +17,7 @@ import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvid
  * Application object for your web application. If you want to run this
  * application without deploying, run the Start class.
  * 
- * @see de.master.manager.myproject.Start#main(String[])
+ * @see de.master.manager.mastermanager.Start#main(String[])
  */
 public class WicketApplication extends WebApplication {
 	/**

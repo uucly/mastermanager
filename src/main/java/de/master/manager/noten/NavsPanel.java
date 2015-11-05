@@ -19,8 +19,8 @@ import org.apache.wicket.model.Model;
 import com.google.common.collect.Lists;
 
 import de.master.manager.events.ProfChangedEvent;
+import de.master.manager.mastermanager.CoursePanel;
 import de.master.manager.model.TransformationModel;
-import de.master.manager.myproject.CoursePanel;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.WahlPflichtModuleLoader;
 

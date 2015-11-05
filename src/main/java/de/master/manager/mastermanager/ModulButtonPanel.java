@@ -1,4 +1,4 @@
-package de.master.manager.myproject;
+package de.master.manager.mastermanager;
 
 import java.io.IOException;
 import java.io.InputStream;

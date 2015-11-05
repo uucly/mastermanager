@@ -3,8 +3,6 @@ package de.master.manager.noten;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalDouble;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
@@ -16,6 +14,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+
+import com.google.common.base.Optional;
 
 import de.master.manager.events.GradeChangedEvent;
 import de.master.manager.model.TransformationModel;
@@ -76,8 +76,8 @@ public class NoteProfPanel extends Panel{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				Double selectedGrade = noteModel.getObject();
-				Optional<Double> grade = selectedGrade == null ? Optional.empty() : Optional.of(selectedGrade);
-				item.getModelObject().setNote(grade);
+				Optional<Double> grade = selectedGrade == null ? Optional.absent() : Optional.of(selectedGrade);
+			//	item.getModelObject().setNote(grade);
 				getComponent().send(getComponent().getPage(), Broadcast.DEPTH, new GradeChangedEvent(target));
 			}
 		});

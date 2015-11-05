@@ -1,5 +1,7 @@
 package de.master.manager.profStuff;
 
-public interface IWahlPflichtModuleLoader {
+import java.io.Serializable;
+
+public interface IWahlPflichtModuleLoader extends Serializable{
 
 }

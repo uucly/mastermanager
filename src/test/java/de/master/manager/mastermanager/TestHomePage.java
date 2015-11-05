@@ -1,11 +1,11 @@
-package de.master.manager.myproject;
+package de.master.manager.mastermanager;
 
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.master.manager.myproject.HomePage;
-import de.master.manager.myproject.WicketApplication;
+import de.master.manager.mastermanager.HomePage;
+import de.master.manager.mastermanager.WicketApplication;
 
 /**
  * Simple test using the WicketTester
