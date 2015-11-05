@@ -43,6 +43,8 @@ public class NoteProfPanel extends Panel{
 	private static ListView<ModulCourse> createWahlCourseListView(IModel<List<ModulCourse>> loadSelectedWahlCourses) {
 		ListView<ModulCourse> wahlCourseListView = new ListView<ModulCourse>("wahlCourses", loadSelectedWahlCourses) {
 
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void populateItem(ListItem<ModulCourse> item) {
 				ModulCourse currentCourse = item.getModelObject();
@@ -56,6 +58,11 @@ public class NoteProfPanel extends Panel{
 
 	private static ListView<ModulCourse> createPflichtCourseListView(IModel<List<ModulCourse>> loadSelectedPflichtCourses) {
 		ListView<ModulCourse> pflichtCourseListView = new ListView<ModulCourse>("pflichtCourses", loadSelectedPflichtCourses) {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void populateItem(ListItem<ModulCourse> item) {
@@ -73,11 +80,16 @@ public class NoteProfPanel extends Panel{
 		DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>(id, noteModel, NOTEN_LIST);
 		dropDownNoten.add(new OnChangeAjaxBehavior() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				Double selectedGrade = noteModel.getObject();
 				Optional<Double> grade = selectedGrade == null ? Optional.absent() : Optional.of(selectedGrade);
-			//	item.getModelObject().setNote(grade);
+				item.getModelObject().setNote(grade);
 				getComponent().send(getComponent().getPage(), Broadcast.DEPTH, new GradeChangedEvent(target));
 			}
 		});

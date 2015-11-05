@@ -21,9 +21,9 @@ import org.apache.wicket.model.Model;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.events.RemoveCourseEvent;
 import de.master.manager.model.TransformationModel;
+import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.WahlPflichtCourseLoader;
 
 
 public class ModulButtonPanel extends Panel {
@@ -33,7 +33,7 @@ public class ModulButtonPanel extends Panel {
 	private Form<Object> formWahl;
 	private Form<?> formPflicht;
 	
-	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final WahlPflichtCourseLoader courseLoader) {
+	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final ICourseLoader courseLoader) {
 		super(id);
 		setOutputMarkupId(true);
 		IModel<String> text = Model.of("");
@@ -104,7 +104,7 @@ public class ModulButtonPanel extends Panel {
 		};
 	}
 	
-	private static IModel<List<ModulCourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final WahlPflichtCourseLoader courseLoader) {
+	private static IModel<List<ModulCourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final ICourseLoader courseLoader) {
 		return new LoadableDetachableModel<List<ModulCourse>>() {
 			private static final long serialVersionUID = 1L;
 			@Override

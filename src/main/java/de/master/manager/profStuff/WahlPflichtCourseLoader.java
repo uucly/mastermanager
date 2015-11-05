@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class WahlPflichtCourseLoader implements ICourseLoader{
 	private static final long serialVersionUID = 1L;
 	private final List<ModulCourse> allCourses;
 
+	@Autowired
 	public WahlPflichtCourseLoader(String pathToAllCourse){
 		
 		Function<String, ModulCourse> parseToModul = line -> {

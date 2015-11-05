@@ -1,6 +1,5 @@
 package de.master.manager.noten;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,8 +20,8 @@ import com.google.common.collect.Lists;
 import de.master.manager.events.ProfChangedEvent;
 import de.master.manager.mastermanager.CoursePanel;
 import de.master.manager.model.TransformationModel;
+import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.WahlPflichtCourseLoader;
 
 public class NavsPanel extends Panel{
 
@@ -31,7 +30,7 @@ public class NavsPanel extends Panel{
 	private MarkupContainer profDropDownContainer;
 	
 	/* constructor */
-	public NavsPanel(String id, WahlPflichtCourseLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes){
+	public NavsPanel(String id, ICourseLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes){
 		super(id);
 		List<Prof> allProfs = Lists.newArrayList(breunig, hinz, heck, hennes);
 		IModel<Prof> profOfPanel1 = Model.of(breunig);

@@ -1,19 +1,19 @@
 package de.master.manager.mastermanager;
 
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import de.master.manager.noten.NavsPanel;
+import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.WahlPflichtCourseLoader;
 
 public class DragAndDropPage extends BasePage{
 
 	private static final long serialVersionUID = 1L;
 	
-	//@SpringBean
-	//private WahlPflichtModuleLoader courseLoader;
+	@SpringBean
+	private ICourseLoader courseLoader;
 	
 	public DragAndDropPage(){
-		WahlPflichtCourseLoader courseLoader = new WahlPflichtCourseLoader("WahlPflichtModule.txt");
-		
 		Prof breunig = loadProf("BreunigPflicht.txt", "Breunig", courseLoader), 
 				hinz = loadProf("HinzPflicht.txt", "Hinz", courseLoader),
 				heck = loadProf("HeckPflicht.txt", "Heck", courseLoader), 
@@ -25,7 +25,7 @@ public class DragAndDropPage extends BasePage{
 	
 	/* methods */
 	
-	private Prof loadProf(String pflichtFileName, String profName, WahlPflichtCourseLoader courseLoader){
+	private Prof loadProf(String pflichtFileName, String profName, ICourseLoader courseLoader){
 		return new Prof(profName, courseLoader.loadCourses(pflichtFileName));
 	}
 	
