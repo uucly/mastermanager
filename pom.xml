@@ -13,7 +13,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.master.manager.myproject</groupId>
+	<groupId>de.master.manager.mastermanager</groupId>
 	<artifactId>mastermanager</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
@@ -29,13 +29,12 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>7.0.0</wicket.version>
-		<jetty9.version>9.2.11.v20150529</jetty9.version>
-		<log4j.version>2.3</log4j.version>
+		<wicket.version>7.1.0</wicket.version>
+		<jetty9.version>9.2.13.v20150730</jetty9.version>
+		<log4j.version>2.4</log4j.version>
 		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<bootstrap.version>0.8.0</bootstrap.version>
-		<wicket.spring>3.0.5.RELEASE</wicket.spring>
+		<spring.version>4.2.2.RELEASE</spring.version>
 		<version.bootstrap>0.10.3</version.bootstrap>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
 		<wtp.version>none</wtp.version>
@@ -74,37 +73,55 @@
 			<artifactId>wicket-bootstrap-themes</artifactId>
 			<version>${version.bootstrap}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.wicketstuff</groupId>
-			<artifactId>wicketstuff-annotation</artifactId>
-			<version>7.0.0</version>
-		</dependency>
-		
+
 		<!-- Integrate Wicket with Spring -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
 			<version>${wicket.version}</version>
 		</dependency>
-		
+
 		<!-- Spring framework -->
 		<dependency>
 			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>${wicket.spring}</version>
+			<version>${spring.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${wicket.spring}</version>
+			<version>${spring.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${wicket.spring}</version>
-		</dependency>
 		<!-- LOGGING DEPENDENCIES - LOG4J -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
