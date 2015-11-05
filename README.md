@@ -1,2 +1,2 @@
 # mastermanager
-Wicket-application for master student of the course "Geodesy and Geoinformtic" at Karlsruher Institute of Technology
+Wicket-application for master student of the course "geodesy and geoinformatics" at Karlsruher Institute of Technology
