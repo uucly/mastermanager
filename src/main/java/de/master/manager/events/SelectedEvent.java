@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
-import de.master.manager.profStuff.AbstractCourse;
+import de.master.manager.profStuff.ICourse;
 
 public class SelectedEvent implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private final AjaxRequestTarget target;
-	private AbstractCourse course;
+	private ICourse course;
 	
-	public SelectedEvent(AjaxRequestTarget target, AbstractCourse course) {
+	public SelectedEvent(AjaxRequestTarget target, ICourse course) {
 		this.target = target;
 		this.setCourse(course);
 	}
@@ -20,10 +20,10 @@ public class SelectedEvent implements Serializable {
 	public AjaxRequestTarget getTarget() {
 		return target;
 	}
-	public AbstractCourse getCourse() {
+	public ICourse getCourse() {
 		return course;
 	}
-	public void setCourse(AbstractCourse course) {
+	public void setCourse(ICourse course) {
 		this.course = course;
 	}
 

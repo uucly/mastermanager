@@ -12,7 +12,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.master.manager.events.SelectedEvent;
-import de.master.manager.profStuff.AbstractCourse;
+import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 
@@ -55,7 +55,7 @@ public class CourseButton extends AjaxButton {
 		}
 	}
 	
-	private static boolean isAlreadySelected(Prof prof, AbstractCourse course){
+	private static boolean isAlreadySelected(Prof prof, ICourse course){
 		return prof.getSelectedModuls().contains(course);
 	}
 
@@ -71,7 +71,7 @@ public class CourseButton extends AjaxButton {
 		}
 	}
 	
-	private static boolean isAlreadySelectedInOtherProf(Prof prof, AbstractCourse modul, List<Prof> allProfs){
+	private static boolean isAlreadySelectedInOtherProf(Prof prof, ICourse modul, List<Prof> allProfs){
 		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedModuls().contains(modul));
 	}
 	

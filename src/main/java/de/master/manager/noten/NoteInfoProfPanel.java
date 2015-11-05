@@ -61,6 +61,6 @@ public class NoteInfoProfPanel extends Panel{
 	}
 
 	private static final Label createNoteLabel(String id, ModulCourse course){
-		return new Label(id, course.getNote().isPresent() ? course.getNote().get().toString() : "");
+		return new Label(id, course.getGrade().isPresent() ? course.getGrade().get().toString() : "");
 	}
 }

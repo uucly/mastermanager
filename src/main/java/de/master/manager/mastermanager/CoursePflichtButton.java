@@ -12,7 +12,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.master.manager.events.SelectedEvent;
-import de.master.manager.profStuff.AbstractCourse;
+import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.ModulCourse;
 import de.master.manager.profStuff.Prof;
 
@@ -63,7 +63,7 @@ public class CoursePflichtButton extends AjaxButton {
 		
 	}
 	
-	private static boolean containsProf(Prof prof, AbstractCourse modul, List<Prof> allProfs){
+	private static boolean containsProf(Prof prof, ICourse modul, List<Prof> allProfs){
 		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedPflichtModuls().contains(modul));
 	}
 	

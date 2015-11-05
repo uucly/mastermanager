@@ -50,26 +50,26 @@ public class Prof implements Serializable{
 	}
 	
 	public double calculateWahlPoints(){
-		return selectedModuls.stream().mapToDouble(AbstractCourse::getPoints).sum();
+		return selectedModuls.stream().mapToDouble(ICourse::getPoints).sum();
 	}
 	
 	public double calculatePflichtPoints(){
-		return selectedPflichtModuls.stream().mapToDouble(AbstractCourse::getPoints).sum();
+		return selectedPflichtModuls.stream().mapToDouble(ICourse::getPoints).sum();
 	}
 	
 	public OptionalDouble calculateFinalGrade(){
 		List<ModulCourse> jointCourseLists = new ArrayList<>(selectedModuls.size() + selectedPflichtModuls.size());
 		jointCourseLists.addAll(selectedPflichtModuls);
 		jointCourseLists.addAll(selectedModuls);
-		return jointCourseLists.stream().filter(m -> m.getNote().isPresent()).mapToDouble(m -> m.getNote().get()).average();
+		return jointCourseLists.stream().filter(m -> m.getGrade().isPresent()).mapToDouble(m -> m.getGrade().get()).average();
 	}
 	
 	public OptionalDouble calculateFinalWahlGrade(){
-		return selectedModuls.stream().filter(course -> course.getNote().isPresent()).mapToDouble(course -> course.getNote().get()).average();
+		return selectedModuls.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
 	}
 	
 	public OptionalDouble calculateFinalPflichtGrade(){
-		return selectedPflichtModuls.stream().filter(course -> course.getNote().isPresent()).mapToDouble(course -> course.getNote().get()).average();
+		return selectedPflichtModuls.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
 	}
 		
 	@Override

@@ -49,7 +49,7 @@ public class NoteProfPanel extends Panel{
 			protected void populateItem(ListItem<ModulCourse> item) {
 				ModulCourse currentCourse = item.getModelObject();
 				item.add(new Label("wahlCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
-				item.add(createNotenDropDown("dropDownNotenWahl", item, currentCourse.getNote()));
+				item.add(createNotenDropDown("dropDownNotenWahl", item, currentCourse.getGrade()));
 			}
 		};
 		return wahlCourseListView;
@@ -68,7 +68,7 @@ public class NoteProfPanel extends Panel{
 			protected void populateItem(ListItem<ModulCourse> item) {
 				ModulCourse currentCourse = item.getModelObject();
 				item.add(new Label("pflichtCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
-				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getNote()));
+				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getGrade()));
 			}
 		};
 		return pflichtCourseListView;
@@ -87,9 +87,7 @@ public class NoteProfPanel extends Panel{
 
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
-				Double selectedGrade = noteModel.getObject();
-				Optional<Double> grade = selectedGrade == null ? Optional.absent() : Optional.of(selectedGrade);
-				item.getModelObject().setNote(grade);
+				item.getModelObject().setGrade(noteModel.getObject());
 				getComponent().send(getComponent().getPage(), Broadcast.DEPTH, new GradeChangedEvent(target));
 			}
 		});
