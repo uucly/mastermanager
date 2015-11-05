@@ -115,14 +115,7 @@ public class ModulButtonPanel extends Panel {
 			private static final long serialVersionUID = 1L;
 			@Override
 			protected List<ModulCourse> load() {
-				InputStream resource = getClass().getResourceAsStream(prof.getObject().getPath());
-				List<ModulCourse> coursesOfProf;
-				try {
-					coursesOfProf = courseLoader.loadCourseOfProf(IOUtils.toString(resource,"UTF-8"));
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-				
+				List<ModulCourse> coursesOfProf = courseLoader.loadCourseOfProf(prof.getObject().getPath());
 				if (text.getObject() != null) {
 					return coursesOfProf.stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
 				} else {

@@ -16,7 +16,7 @@ public class DragAndDropPage extends BasePage{
 	//private WahlPflichtModuleLoader courseLoader;
 	
 	public DragAndDropPage(){
-		WahlPflichtModuleLoader courseLoader = new WahlPflichtModuleLoader(loadFilePath("WahlPflichtModule.txt"));
+		WahlPflichtModuleLoader courseLoader = new WahlPflichtModuleLoader("WahlPflichtModule.txt");
 		
 		Prof breunig = loadProf("BreunigPflicht.txt", "Breunig", courseLoader), 
 				hinz = loadProf("HinzPflicht.txt", "Hinz", courseLoader),
@@ -30,8 +30,7 @@ public class DragAndDropPage extends BasePage{
 	/* methods */
 	
 	private Prof loadProf(String pflichtFileName, String profName, WahlPflichtModuleLoader courseLoader){
-		String filePath = loadFilePath(pflichtFileName);
-		return new Prof(profName, courseLoader.loadCourseOfProf(filePath));
+		return new Prof(profName, courseLoader.loadCourseOfProf(pflichtFileName));
 	}
 	
 	/**
