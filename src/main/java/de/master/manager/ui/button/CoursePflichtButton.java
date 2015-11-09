@@ -27,30 +27,22 @@ public class CoursePflichtButton extends AbstractCourseButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(isAlreadySelected(prof.getObject(), course)){
+		if(isAlreadySelected(Prof::getSelectedPflichtModuls)){
 			setSelected();
-		} else if(isAlreadySelectedInOtherProf(prof.getObject(), course, allProfs)) {
+		} else if(isAlreadySelectedInOtherProf(Prof::getSelectedPflichtModuls, allProfs)) {
 			setEnabled(false);
 		}
 	}
 
 	@Override
 	public void onEvent(IEvent<?> event) {
-		if(event.getPayload() instanceof SelectedEvent){
-			if(isAlreadySelectedInOtherProf(prof.getObject(), course, allProfs)){
+		Object payload = event.getPayload();
+		if(payload instanceof SelectedEvent){
+			if(isAlreadySelectedInOtherProf(Prof::getSelectedPflichtModuls, allProfs)){
 				setEnabled(false);
-				((SelectedEvent) event.getPayload()).getTarget().add(this);
+				((SelectedEvent) payload).getTarget().add(this);
 			}
 		}
 	}
-	
-	private static boolean isAlreadySelected(Prof prof, ICourse course){
-		return prof.getSelectedPflichtModuls().contains(course);
-	}
-	
-	private static boolean isAlreadySelectedInOtherProf(Prof prof, ICourse modul, List<Prof> allProfs){
-		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> p.getSelectedPflichtModuls().contains(modul));
-	}
-	
 	
 }

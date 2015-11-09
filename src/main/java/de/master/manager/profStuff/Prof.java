@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
-import com.google.common.collect.Lists;
-
 public class Prof implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -52,11 +50,11 @@ public class Prof implements Serializable{
 	
 	
 	public double calculateWahlPoints(){
-		return calculatePoints(selectedWahlCourses);//selectedWahlCourses.stream().mapToDouble(ICourse::getPoints).sum();
+		return calculatePoints(selectedWahlCourses);
 	}
 	
 	public double calculatePflichtPoints(){
-		return calculatePoints(selectedPflichtCourses);//selectedPflichtCourses.stream().mapToDouble(ICourse::getPoints).sum();
+		return calculatePoints(selectedPflichtCourses);
 	}
 	
 	public OptionalDouble calculateFinalGrade(){
