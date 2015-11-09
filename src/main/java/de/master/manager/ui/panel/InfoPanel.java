@@ -23,6 +23,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.Prog
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.AbstractEvent;
+import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.events.SelectedEvent;
 
@@ -115,6 +116,10 @@ public class InfoPanel extends Panel{
 			setPoints(summary, points);
 			setPoints(summaryPflicht, pflichtPoints);
 			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
+		} else if(event.getPayload() instanceof PanelChangedEvent){
+			setPoints(summary, points);
+			setPoints(summaryPflicht, pflichtPoints);
+			((PanelChangedEvent) event.getPayload()).getTarget().add(form);
 		}
 		
 	}
