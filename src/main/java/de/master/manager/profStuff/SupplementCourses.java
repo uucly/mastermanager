@@ -12,6 +12,14 @@ public class SupplementCourses implements Serializable{
 		courses = new ArrayList<>(10);
 	}
 	
+	public void addCourse(ICourse course){
+		courses.add(course);
+	}
+	
+	public List<ICourse> getAllCourses(){
+		return courses;
+	}
+	
 	public double calculatePoints(){
 		return courses.stream().mapToDouble(ICourse::getPoints).sum();
 	}

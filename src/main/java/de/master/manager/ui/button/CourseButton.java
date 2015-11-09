@@ -14,7 +14,7 @@ public class CourseButton extends AbstractCourseButton {
 	private IModel<Prof> profRight;
 
 	public CourseButton(String id, ICourse course, IModel<Prof> prof, IModel<Prof> profRight, List<Prof> allProfs) {
-		super(id, course, prof);
+		super(id, course, prof.getObject());
 		this.profRight = profRight;
 		this.allProfs = allProfs;
 	}
@@ -28,7 +28,7 @@ public class CourseButton extends AbstractCourseButton {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		if(profRight.getObject().getPflichtCourse().contains(course)){
-			prof.getObject().getSelectedModuls().remove(course);
+			prof.getSelectedModuls().remove(course);
 			setEnabled(false);
 		} else if(isAlreadySelected(Prof::getSelectedModuls)){
 			setSelected();

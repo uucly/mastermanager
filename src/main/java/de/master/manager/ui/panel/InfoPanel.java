@@ -70,7 +70,7 @@ public class InfoPanel extends Panel{
 				List<ICourse> list = Lists.newArrayList();
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedModuls()));
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
-				
+				list.addAll(supplementCourses.getAllCourses());
 				return list;
 			}
 		};
@@ -83,13 +83,14 @@ public class InfoPanel extends Panel{
 				List<ICourse> list = Lists.newArrayList();
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedModuls()));
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
+				list.addAll(supplementCourses.getAllCourses());
 				
 				return list;
 			}
 			
 		};
 		
-        ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
+        ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, supplementCourses, allProfs);
 		form.add(modulListView);
         form.add(wahlProgressBar);
         form.add(pflichtProgressBar);
@@ -103,6 +104,11 @@ public class InfoPanel extends Panel{
 		return (int)Math.round(profs.getObject().stream().mapToDouble(p -> calculate.apply(p)).sum());
 	}
 	
+	private static int calculatePoints(double points){
+		return (int)Math.round(points);
+	}
+	
+	
 	
 	@Override
 	public void onEvent(IEvent<?> event) {
@@ -112,18 +118,22 @@ public class InfoPanel extends Panel{
 		if(event.getPayload() instanceof SelectedEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
+			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
 			((SelectedEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof AbstractEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
+			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof RemoveCourseEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
+			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
 			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof PanelChangedEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
+			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
 			supplementPoints.setObject((int)Math.round(supplementCourses.calculatePoints()));
 			((PanelChangedEvent) event.getPayload()).getTarget().add(form);
 		}
@@ -144,7 +154,7 @@ public class InfoPanel extends Panel{
 		return progressBar;
 	}
 	
-	private static ListView<ICourse> createListView(IModel<List<ICourse>> allSelectedModuls, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, final List<Prof> allProfs){
+	private static ListView<ICourse> createListView(IModel<List<ICourse>> allSelectedModuls, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, SupplementCourses supplementCourses, final List<Prof> allProfs){
 		return new ListView<ICourse>("verticalButtonGroup", allSelectedModuls) {
 
 			private static final long serialVersionUID = 1L;
@@ -153,7 +163,7 @@ public class InfoPanel extends Panel{
 			protected void populateItem(ListItem<ICourse> item) {
 				AjaxButton button = createButton(item.getModelObject().getName());
 				if(allCurrentSelectedModuls.getObject().contains(item.getModel().getObject())){
-					button.add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));//new AttributeAppender("class", " btn-success"));
+					button.add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));
 				}
 				button.add(new Label("label", item.getModelObject().getName()));
 				item.add(button);
@@ -167,7 +177,7 @@ public class InfoPanel extends Panel{
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
 						allProfs.stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
 						allProfs.stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
-						
+						supplementCourses.getAllCourses().removeIf(c -> c.getName().equals(modulName));
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
 					};
 				};

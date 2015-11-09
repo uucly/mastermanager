@@ -17,10 +17,10 @@ import de.master.manager.ui.events.SelectedEvent;
 public abstract class AbstractCourseButton extends AjaxButton{
 
 	private static final long serialVersionUID = 1L;
-	protected IModel<Prof> prof;
+	protected Prof prof;
 	protected ICourse course;
 	
-	public AbstractCourseButton(String id, ICourse course, IModel<Prof> prof) {
+	public AbstractCourseButton(String id, ICourse course, Prof prof) {
 		super(id, Model.of(course.getName()));
 		setOutputMarkupId(true);
 		this.course = course;
@@ -31,7 +31,7 @@ public abstract class AbstractCourseButton extends AjaxButton{
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 		super.onSubmit(target, form);
 		setSelected();
-		addModulFunction(prof.getObject(), course);
+		addModulFunction(prof, course);
 		target.add(this);
 		send(getPage(), Broadcast.DEPTH, new SelectedEvent(target, course));
 	}
@@ -39,11 +39,11 @@ public abstract class AbstractCourseButton extends AjaxButton{
 	protected abstract void addModulFunction(Prof prof, ICourse course);
 	
 	protected boolean isAlreadySelected(Function<Prof, List<ICourse>> loadSelectedModuls){
-		return loadSelectedModuls.apply(prof.getObject()).contains(course);
+		return loadSelectedModuls.apply(prof).contains(course);
 	}
 	
 	protected boolean isAlreadySelectedInOtherProf(Function<Prof, List<ICourse>> loadSelectedModuls, List<Prof> allProfs){
-		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> loadSelectedModuls.apply(prof.getObject()).contains(course));
+		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> loadSelectedModuls.apply(prof).contains(course));
 	}
 	
 	protected void setSelected(){

@@ -39,8 +39,8 @@ public class NavsPanel extends Panel{
 		List<Prof> allProfs = Lists.newArrayList(breunig, hinz, heck, hennes);
 		IModel<Prof> profOfPanel1 = Model.of(breunig);
 		IModel<Prof> profOfPanel2 = Model.of(hinz);
-		SupplementCourses supplements = new SupplementCourses();
 		
+		SupplementCourses supplements = new SupplementCourses();
 		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, supplements, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);
 		

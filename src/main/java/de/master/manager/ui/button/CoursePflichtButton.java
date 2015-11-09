@@ -14,7 +14,7 @@ public class CoursePflichtButton extends AbstractCourseButton {
 	private List<Prof> allProfs;
 
 	public CoursePflichtButton(String id, ICourse course, IModel<Prof> prof, List<Prof> allProfs) {
-		super(id, course, prof);
+		super(id, course, prof.getObject());
 		this.allProfs = allProfs;
 	}
 
