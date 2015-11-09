@@ -12,15 +12,16 @@ public class Prof implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private final String name, wahlModulPath;
-	private final List<ICourse> selectedModuls;
-	private final List<ICourse> selectedPflichtModuls;
+	private final List<ICourse> selectedWahlCourses;
+	private final List<ICourse> selectedPflichtCourses;
 	private final List<ICourse> pflichtCourses;
+	
 	
 	public Prof(String name, List<ICourse> pflichtCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
-		selectedModuls = Lists.newArrayList();
-		selectedPflichtModuls = Lists.newArrayList();
+		this.selectedWahlCourses = new ArrayList<>(10);
+		this.selectedPflichtCourses = new ArrayList<>(10);
 		this.pflichtCourses = pflichtCourses;
 	}
 
@@ -34,42 +35,43 @@ public class Prof implements Serializable{
 	}
 
 	public List<ICourse> getSelectedModuls() {
-		return selectedModuls;
+		return selectedWahlCourses;
 	}
 	
 	public List<ICourse> getSelectedPflichtModuls() {
-		return selectedPflichtModuls;
+		return selectedPflichtCourses;
 	}
 	
-	public void addSelectedModul(ICourse modul){
-		selectedModuls.add(modul);
+	public void addSelectedModul(ICourse course){
+		selectedWahlCourses.add(course);
 	}
 	
-	public void addSelectedPflichtModul(ICourse modul){
-		selectedPflichtModuls.add(modul);
+	public void addSelectedPflichtModul(ICourse course){
+		selectedPflichtCourses.add(course);
 	}
+	
 	
 	public double calculateWahlPoints(){
-		return selectedModuls.stream().mapToDouble(ICourse::getPoints).sum();
+		return calculatePoints(selectedWahlCourses);//selectedWahlCourses.stream().mapToDouble(ICourse::getPoints).sum();
 	}
 	
 	public double calculatePflichtPoints(){
-		return selectedPflichtModuls.stream().mapToDouble(ICourse::getPoints).sum();
+		return calculatePoints(selectedPflichtCourses);//selectedPflichtCourses.stream().mapToDouble(ICourse::getPoints).sum();
 	}
 	
 	public OptionalDouble calculateFinalGrade(){
-		List<ICourse> jointCourseLists = new ArrayList<>(selectedModuls.size() + selectedPflichtModuls.size());
-		jointCourseLists.addAll(selectedPflichtModuls);
-		jointCourseLists.addAll(selectedModuls);
+		List<ICourse> jointCourseLists = new ArrayList<>(selectedWahlCourses.size() + selectedPflichtCourses.size());
+		jointCourseLists.addAll(selectedPflichtCourses);
+		jointCourseLists.addAll(selectedWahlCourses);
 		return jointCourseLists.stream().filter(m -> m.getGrade().isPresent()).mapToDouble(m -> m.getGrade().get()).average();
 	}
 	
 	public OptionalDouble calculateFinalWahlGrade(){
-		return selectedModuls.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
+		return selectedWahlCourses.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
 	}
 	
 	public OptionalDouble calculateFinalPflichtGrade(){
-		return selectedPflichtModuls.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
+		return selectedPflichtCourses.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
 	}
 		
 	@Override
@@ -80,5 +82,9 @@ public class Prof implements Serializable{
 
 	public List<ICourse> getPflichtCourse() {
 		return pflichtCourses;
+	}
+	
+	private final static double calculatePoints(List<ICourse> courses){
+		return courses.stream().mapToDouble(ICourse::getPoints).sum();
 	}
 }

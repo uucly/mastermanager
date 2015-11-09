@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import de.master.manager.aufbau.AufbauPanel;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.profStuff.SupplementCourses;
 import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.ProfChangedEvent;
 import de.master.manager.ui.model.TransformationModel;
@@ -38,15 +39,16 @@ public class NavsPanel extends Panel{
 		List<Prof> allProfs = Lists.newArrayList(breunig, hinz, heck, hennes);
 		IModel<Prof> profOfPanel1 = Model.of(breunig);
 		IModel<Prof> profOfPanel2 = Model.of(hinz);
+		SupplementCourses supplements = new SupplementCourses();
 		
-		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs);
+		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, supplements, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);
 		
 		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
 		add(createLink("courses",  currentPanel));
 		add(createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2)));
-		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs)));
-		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs)));
+		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, supplements, allProfs)));
+		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, supplements, allProfs)));
 		add(currentPanel);
 	}
 

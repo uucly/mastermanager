@@ -9,8 +9,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import com.google.common.collect.Lists;
-
 import de.master.manager.profStuff.ICourse;
 
 public class SupplementCourseButtonPanel extends Panel {
@@ -28,7 +26,7 @@ public class SupplementCourseButtonPanel extends Panel {
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse=item.getModelObject();
-				item.add(new Button("modulButton"));
+				item.add(new Button("modulButton", Model.of(item.getModelObject().getName())));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}

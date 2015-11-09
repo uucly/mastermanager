@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.profStuff.SupplementCourses;
 import de.master.manager.ui.events.AbstractEvent;
 import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
@@ -34,24 +35,32 @@ public class InfoPanel extends Panel{
 	private static final long serialVersionUID = 1L;
 	private static final double MAX_POINTS = 23;
 	
-	private final ProgressBar progressBar;
-	private final IModel<Integer> points = Model.of(0);
+	private final IModel<Integer> wahlPoints = Model.of(0);
 	private final IModel<Integer> pflichtPoints = Model.of(0);
-	private IModel<List<Prof>> profs;
-	private Form<Object> form;
-	private IModel<List<ICourse>> allCurrentSelectedModuls;
-	private IModel<List<ICourse>> allSelectedModuls;
-	private ProgressBar pflichtProgressBar;
+	private final IModel<Integer> aufbauPoints = Model.of(0);
+	private final IModel<Integer> supplementPoints = Model.of(0);
 	
-	public InfoPanel(String id, final IModel<List<Prof>> profs, final List<Prof> allProfs) {
+	private final IModel<List<Prof>> profs;
+	private final Form<Object> form;
+	private final IModel<List<ICourse>> allCurrentSelectedModuls;
+	private final IModel<List<ICourse>> allSelectedModuls;
+	private final SupplementCourses supplementCourses;
+	
+	public InfoPanel(String id, final IModel<List<Prof>> profs, final SupplementCourses supplementCourses, final List<Prof> allProfs) {
 		super(id);
 		setOutputMarkupId(true);
 		this.profs = profs;
+		this.supplementCourses = supplementCourses;
 		form = new Form<Object>("form");
-		points.setObject(calculatePoints(profs, Prof::calculateWahlPoints));
+		wahlPoints.setObject(calculatePoints(profs, Prof::calculateWahlPoints));
 		pflichtPoints.setObject(calculatePoints(profs, Prof::calculatePflichtPoints));
-		this.progressBar = createWahlProgressBar(points, profs);
-		this.pflichtProgressBar = createPflichtProgressBar(pflichtPoints, profs);
+		supplementPoints.setObject((int)Math.round(supplementCourses.calculatePoints()));
+		
+		ProgressBar wahlProgressBar = createProgressBar("wahlProgress", wahlPoints);
+		ProgressBar pflichtProgressBar = createProgressBar("pflichtProgress", pflichtPoints);
+		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", aufbauPoints);
+		ProgressBar supplementProgressBar = createProgressBar("supplementProgress", supplementPoints);
+		
 		allSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
 
 			private static final long serialVersionUID = 1L;
@@ -82,16 +91,12 @@ public class InfoPanel extends Panel{
 		
         ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
 		form.add(modulListView);
-        form.add(progressBar);
+        form.add(wahlProgressBar);
         form.add(pflichtProgressBar);
+        form.add(aufbauProgressBar);
+        form.add(supplementProgressBar);
 		add(form);
 			
-	}
-		
-	private static ProgressBar createPflichtProgressBar(IModel<Integer> pflichtPoints, final IModel<List<Prof>> profs) {
-		ProgressBar progressBar = new ProgressBar("pflichtProgress", pflichtPoints, ProgressBar.Type.SUCCESS); 
-		progressBar.setOutputMarkupId(true);
-		return progressBar;
 	}
 
 	private static int calculatePoints(IModel<List<Prof>> profs, Function<Prof, Double> calculate){
@@ -105,20 +110,21 @@ public class InfoPanel extends Panel{
 		int summary = calculatePoints(profs, Prof::calculateWahlPoints);
 		int summaryPflicht = calculatePoints(profs, Prof::calculatePflichtPoints);
 		if(event.getPayload() instanceof SelectedEvent){
-			setPoints(summary, points);
+			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
 			((SelectedEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof AbstractEvent){
-			setPoints(summary, points);
+			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof RemoveCourseEvent){
-			setPoints(summary, points);
+			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
 			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof PanelChangedEvent){
-			setPoints(summary, points);
+			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
+			supplementPoints.setObject((int)Math.round(supplementCourses.calculatePoints()));
 			((PanelChangedEvent) event.getPayload()).getTarget().add(form);
 		}
 		
@@ -132,8 +138,8 @@ public class InfoPanel extends Panel{
 		}
 	}
 
-	private static ProgressBar createWahlProgressBar(IModel<Integer> points, final IModel<List<Prof>> profs2){
-		ProgressBar progressBar = new ProgressBar("progress", points, ProgressBar.Type.SUCCESS); 
+	private static ProgressBar createProgressBar(String id, IModel<Integer> points){
+		ProgressBar progressBar = new ProgressBar(id, points, ProgressBar.Type.SUCCESS); 
 		progressBar.setOutputMarkupId(true);
 		return progressBar;
 	}

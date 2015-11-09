@@ -8,6 +8,15 @@
 <body>
 	<wicket:panel wicket:id="pflicht" class="form-inline">
 		<form wicket:id="form" class="form-group">
+			Aufbau:
+			<table>
+				<tr>
+					<td width="240" colspan="2">
+						<div wicket:id="aufbauProgress"></div>
+					</td>
+				</tr>
+			</table>
+			
 			Pflicht:
 			<table>
 				<tr>
@@ -21,10 +30,19 @@
 			<table>
 				<tr>
 					<td width="240" colspan="2">
-						<div wicket:id="progress"></div>
+						<div wicket:id="wahlProgress"></div>
 					</td>
 				</tr>
 			</table>
+			Ergaenzung:
+			<table>
+				<tr>
+					<td width="240" colspan="2">
+						<div wicket:id="supplementProgress"></div>
+					</td>
+				</tr>
+			</table>
+			
 			<br /> <b>Ausgew&auml;hlte Kurse: </b><br />
 			<div class="btn-group-vertical" role="group">
 				<div wicket:id="verticalButtonGroup">
