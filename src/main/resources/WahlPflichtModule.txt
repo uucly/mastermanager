@@ -56,3 +56,20 @@ Ausgewaehlte Kapitel zu GNSS,2
 Struktur- und Objektextraktion in 2D und 3D,4
 Bildsequenzanalyse,2
 Statistische Mustererkennung und Wissensbasierte Bildanalyse,5
+Geschichte der Geodaesie,4
+Geodaetische Astronomie,4
+Katasterrecht,1
+Neuordnung der laendlichen Raeume II,4
+Immobilienwertermittlung II,4
+Bodenordnung II,2
+Kartographie II,1
+Umweltkommunikation,4
+Meeresgeodaesie,1
+Strassenwesen fuer Geodaeten,1
+Geodaetische Weltraumverfahen,5
+Geoinformatik,5
+Geodaetische Sensorik und Messtechnik,5
+2D/3D Computer Vision,3
+Sensorik und Datenanalyse in Computer Vision,2
+Numerische Mathematik,6
+Schaetztheorie und projektbezogenen Datenanalyse,6

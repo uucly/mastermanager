@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.google.common.collect.Lists;
 
@@ -25,6 +26,7 @@ import de.master.manager.ui.model.TransformationModel;
 public class NavsPanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
+	
 	private Panel currentPanel;
 	private MarkupContainer profDropDownContainer;
 	
@@ -41,6 +43,7 @@ public class NavsPanel extends Panel{
 		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
 		add(createLink("courses",  currentPanel));
 		add(createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2)));
+		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs)));
 		add(currentPanel);
 	}
 

@@ -13,12 +13,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WahlPflichtCourseLoader implements ICourseLoader{
+public class CourseLoader implements ICourseLoader{
 
 	private static final long serialVersionUID = 1L;
 	private final List<ICourse> allCourses;
 
-	public WahlPflichtCourseLoader(String pathToAllCourse){
+	public CourseLoader(String pathToAllCourse){
 		
 		Function<String, ICourse> parseToModul = line -> {
 			String[] split = line.split(",");
