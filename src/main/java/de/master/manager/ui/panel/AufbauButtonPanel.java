@@ -2,6 +2,7 @@ package de.master.manager.ui.panel;
 
 import java.util.List;
 
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -13,6 +14,7 @@ import org.apache.wicket.model.Model;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.button.AufbauButton;
+import de.master.manager.ui.events.RemoveCourseEvent;
 
 public class AufbauButtonPanel extends Panel {
 
@@ -37,6 +39,15 @@ public class AufbauButtonPanel extends Panel {
 		};
 		form.add(buttonListView);
 		add(form);
+	}
+	
+	
+	@Override
+	public void onEvent(IEvent<?> event) {
+		Object payload = event.getPayload();
+		if(payload instanceof RemoveCourseEvent){
+			((RemoveCourseEvent) payload).getTarget().add(form);
+		}
 	}
 
 }

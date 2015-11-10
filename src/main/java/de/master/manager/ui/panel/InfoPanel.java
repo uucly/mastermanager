@@ -38,18 +38,25 @@ import de.master.manager.ui.model.TransformationModel;
 public class InfoPanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
-	private static final double MAX_POINTS = 23;
+	private static final int MAX_POINTS = 23;
+	private static final int MAX_PFLICHT_POINTS = 24;
+	private static final int MAX_BASIC_POINTS = 32;
+	private static final int MAX_SUPPLEMENT_POINTS = 8;
+	
+	
 	
 	private final IModel<Integer> wahlPoints = Model.of(0);
 	private final IModel<Integer> pflichtPoints = Model.of(0);
-	private final IModel<Integer> aufbauPoints = Model.of(0);
 	private final IModel<Integer> supplementPoints = Model.of(0);
+	private final IModel<Integer> basicPoints = Model.of(0);
 	
 	private final IModel<List<Prof>> profs;
 	private final Form<Object> form;
 	private final IModel<List<ICourse>> allCurrentSelectedModuls;
 	private final IModel<List<ICourse>> allSelectedModuls;
 	private final IModel<List<ICourse>> loadSupplementCourses;
+	private final IModel<List<ICourse>> loadBasicCourses;
+	
 	
 	public InfoPanel(String id, final IModel<List<Prof>> profs,  final List<Prof> allProfs) {
 		super(id);
@@ -60,6 +67,11 @@ public class InfoPanel extends Panel{
 			Optional<Prof> optionalProf = list.stream().findFirst();
 			return optionalProf.isPresent() ? optionalProf.get().getSupplementCourses().getAllCourses() : Collections.emptyList();
 		});
+		
+		loadBasicCourses = new TransformationModel<List<Prof>, List<ICourse>>(profs, list -> {
+			Optional<Prof> optionalProf = list.stream().findFirst();
+			return optionalProf.isPresent() ? optionalProf.get().getBasicCourses().getCourses() : Collections.emptyList();
+		});
 
 		form = new Form<Object>("form");
 		wahlPoints.setObject(calculatePoints(profs, Prof::calculateWahlPoints));
@@ -69,7 +81,7 @@ public class InfoPanel extends Panel{
 		
 		ProgressBar wahlProgressBar = createProgressBar("wahlProgress", wahlPoints);
 		ProgressBar pflichtProgressBar = createProgressBar("pflichtProgress", pflichtPoints);
-		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", aufbauPoints);
+		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", basicPoints);
 		ProgressBar supplementProgressBar = createProgressBar("supplementProgress", supplementPoints);
 		
 		allSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
@@ -82,6 +94,8 @@ public class InfoPanel extends Panel{
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedModuls()));
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
 				list.addAll(loadSupplementCourses.getObject());
+				list.addAll(loadBasicCourses.getObject());
+				
 				return list;
 			}
 		};
@@ -95,6 +109,7 @@ public class InfoPanel extends Panel{
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedModuls()));
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
 				list.addAll(loadSupplementCourses.getObject());
+				list.addAll(loadBasicCourses.getObject());
 				
 				return list;
 			}
@@ -133,33 +148,33 @@ public class InfoPanel extends Panel{
 		int summary = calculatePoints(profs, Prof::calculateWahlPoints);
 		int summaryPflicht = calculatePoints(profs, Prof::calculatePflichtPoints);
 		int summarySupplement = calculatePoints(loadSupplementCourses.getObject().stream().mapToDouble(ICourse::getPoints).sum());
+		int summaryBasic = calculatePoints(loadBasicCourses.getObject().stream().mapToDouble(ICourse::getPoints).sum());
 		if(event.getPayload() instanceof SelectedEvent){
-			setPoints(summary, wahlPoints);
-			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(summarySupplement, supplementPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((SelectedEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof AbstractEvent){
-			setPoints(summary, wahlPoints);
-			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(summarySupplement, supplementPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof RemoveCourseEvent){
-			setPoints(summary, wahlPoints);
-			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(summarySupplement, supplementPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof PanelChangedEvent){
-			setPoints(summary, wahlPoints);
-			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(summarySupplement, supplementPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((PanelChangedEvent) event.getPayload()).getTarget().add(form);
 		}
 		
 	}
+
+	private void setAllPoints(int summary, int summaryPflicht, int summarySupplement, int summaryBasic) {
+		setPoints(summary, wahlPoints, MAX_POINTS);
+		setPoints(summaryPflicht, pflichtPoints, MAX_PFLICHT_POINTS);
+		setPoints(summarySupplement, supplementPoints,MAX_SUPPLEMENT_POINTS);
+		setPoints(summaryBasic, basicPoints,MAX_BASIC_POINTS);
+	}
 	
-	private static void setPoints(int summary, IModel<Integer> points){
-		if(summary < MAX_POINTS){
-			points.setObject((int) Math.round(summary*(100/MAX_POINTS)));
+	private static void setPoints(int summary, IModel<Integer> points, int maxPoints){
+		if(summary < maxPoints){
+			points.setObject((int) Math.round(summary*(100/maxPoints)));
 		} else {
 			points.setObject(100);
 		}
@@ -195,6 +210,7 @@ public class InfoPanel extends Panel{
 						allProfs.stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
 						allProfs.stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
 						allProfs.stream().findFirst().ifPresent(p -> p.getSupplementCourses().getAllCourses().removeIf(c -> c.getName().equals(modulName)));
+						allProfs.stream().findFirst().ifPresent(p -> p.getBasicCourses().getCourses().removeIf(c -> c.getName().equals(modulName)));
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
 					};
 				};
