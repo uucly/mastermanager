@@ -1,15 +1,14 @@
 package de.master.manager.ui.button;
 
 import org.apache.wicket.model.IModel;
+
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.SupplementCourses;
 
-public class SupplementButton extends AbstractCourseButton{
-
+public class AufbauButton extends AbstractCourseButton{
 	private static final long serialVersionUID = 1L;
 
-	public SupplementButton(String id, ICourse course, IModel<Prof> prof) {
+	public AufbauButton(String id, ICourse course, IModel<Prof> prof) {
 		super(id, course, prof.getObject());
 		
 	}
@@ -17,14 +16,13 @@ public class SupplementButton extends AbstractCourseButton{
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(isAlreadySelected((prof) -> prof.getSupplementCourses().getAllCourses())){
+		if(isAlreadySelected((prof) -> prof.getBasicCourses().getCourses())){
 			setSelected();
 		}
 	}
 	
 	@Override
 	protected void addModulFunction(Prof prof, ICourse course) {
-		prof.getSupplementCourses().addCourse(course);
+		prof.getBasicCourses().addCourse(course);
 	}
-
 }

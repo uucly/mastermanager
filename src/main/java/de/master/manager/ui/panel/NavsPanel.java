@@ -18,7 +18,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.google.common.collect.Lists;
 
-import de.master.manager.aufbau.AufbauPanel;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.SupplementCourses;
@@ -47,8 +46,8 @@ public class NavsPanel extends Panel{
 		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
 		add(createLink("courses",  currentPanel));
 		add(createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2)));
-		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, supplements, allProfs)));
-		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, supplements, allProfs)));
+		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs)));
+		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2,  allProfs)));
 		add(currentPanel);
 	}
 

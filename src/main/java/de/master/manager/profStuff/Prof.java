@@ -13,14 +13,20 @@ public class Prof implements Serializable{
 	private final List<ICourse> selectedWahlCourses;
 	private final List<ICourse> selectedPflichtCourses;
 	private final List<ICourse> pflichtCourses;
+
+	private final SupplementCourses supplementCourses;
+
+	private final BasicCourses basicCourses;
 	
 	
-	public Prof(String name, List<ICourse> pflichtCourses) {
+	public Prof(String name, List<ICourse> pflichtCourses, SupplementCourses supplementCourses, BasicCourses basicCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
 		this.selectedWahlCourses = new ArrayList<>(10);
 		this.selectedPflichtCourses = new ArrayList<>(10);
 		this.pflichtCourses = pflichtCourses;
+		this.supplementCourses = supplementCourses;
+		this.basicCourses = basicCourses;
 	}
 
 
@@ -48,6 +54,15 @@ public class Prof implements Serializable{
 		selectedPflichtCourses.add(course);
 	}
 	
+	public double calculateSupplementPoints(){
+		return supplementCourses.calculatePoints();
+		
+	}
+	
+	public double calculateBasicPoints(){
+		return basicCourses.calculatePoints();
+		
+	}
 	
 	public double calculateWahlPoints(){
 		return calculatePoints(selectedWahlCourses);
@@ -85,4 +100,14 @@ public class Prof implements Serializable{
 	private final static double calculatePoints(List<ICourse> courses){
 		return courses.stream().mapToDouble(ICourse::getPoints).sum();
 	}
+
+
+	public SupplementCourses getSupplementCourses() {
+		return supplementCourses;
+	}
+	
+	public BasicCourses getBasicCourses(){
+		return basicCourses;
+	}
+	
 }

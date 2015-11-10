@@ -22,7 +22,7 @@ public class CoursePanel extends Panel{
 		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", profOfPanel1, profOfPanel2,  allProfs, courseLoader);
 		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", profOfPanel2, profOfPanel1, allProfs, courseLoader);
 		
-		InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profOfPanel1, profOfPanel2, Arrays::asList), supplements, allProfs);
+		InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profOfPanel1, profOfPanel2, Arrays::asList), allProfs);
 		add(panel1, panel2, infoPanel);
 	}
 

@@ -7,24 +7,24 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SupplementCourses implements Serializable{
-
-	private final List<ICourse> courses;
+public class BasicCourses implements Serializable{
 	
-	public SupplementCourses(){
-		courses = new ArrayList<>(10);
+	private final List<ICourse> courses;
+
+	public BasicCourses() {
+		this.courses = new ArrayList<>(10);
+	}
+
+	public List<ICourse> getCourses() {
+		return courses;
 	}
 	
 	public void addCourse(ICourse course){
 		courses.add(course);
 	}
 	
-	public List<ICourse> getAllCourses(){
-		return courses;
-	}
-	
 	public double calculatePoints(){
 		return courses.stream().mapToDouble(ICourse::getPoints).sum();
 	}
-	
+
 }

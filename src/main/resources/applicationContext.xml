@@ -7,5 +7,10 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	<bean id="wahlPflicht" class="de.master.manager.profStuff.CourseLoader">
 		<constructor-arg value="WahlPflichtModule.txt" />
 	</bean>
+
+	<bean id="supplement" class="de.master.manager.profStuff.SupplementCourses">
+	</bean>
 	
+	<bean id="basic" class="de.master.manager.profStuff.BasicCourses"></bean>
+
 </beans>

@@ -1,6 +1,10 @@
 package de.master.manager.ui.panel;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.apache.wicket.AttributeModifier;
@@ -27,6 +31,7 @@ import de.master.manager.ui.events.AbstractEvent;
 import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.events.SelectedEvent;
+import de.master.manager.ui.model.TransformationModel;
 
 
 
@@ -44,17 +49,23 @@ public class InfoPanel extends Panel{
 	private final Form<Object> form;
 	private final IModel<List<ICourse>> allCurrentSelectedModuls;
 	private final IModel<List<ICourse>> allSelectedModuls;
-	private final SupplementCourses supplementCourses;
+	private final IModel<List<ICourse>> loadSupplementCourses;
 	
-	public InfoPanel(String id, final IModel<List<Prof>> profs, final SupplementCourses supplementCourses, final List<Prof> allProfs) {
+	public InfoPanel(String id, final IModel<List<Prof>> profs,  final List<Prof> allProfs) {
 		super(id);
 		setOutputMarkupId(true);
 		this.profs = profs;
-		this.supplementCourses = supplementCourses;
+		
+		loadSupplementCourses = new TransformationModel<List<Prof>, List<ICourse>>(profs, list -> {
+			Optional<Prof> optionalProf = list.stream().findFirst();
+			return optionalProf.isPresent() ? optionalProf.get().getSupplementCourses().getAllCourses() : Collections.emptyList();
+		});
+
 		form = new Form<Object>("form");
 		wahlPoints.setObject(calculatePoints(profs, Prof::calculateWahlPoints));
 		pflichtPoints.setObject(calculatePoints(profs, Prof::calculatePflichtPoints));
-		supplementPoints.setObject((int)Math.round(supplementCourses.calculatePoints()));
+		
+		supplementPoints.setObject((int)Math.round(loadSupplementPoints(profs)));
 		
 		ProgressBar wahlProgressBar = createProgressBar("wahlProgress", wahlPoints);
 		ProgressBar pflichtProgressBar = createProgressBar("pflichtProgress", pflichtPoints);
@@ -70,7 +81,7 @@ public class InfoPanel extends Panel{
 				List<ICourse> list = Lists.newArrayList();
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedModuls()));
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
-				list.addAll(supplementCourses.getAllCourses());
+				list.addAll(loadSupplementCourses.getObject());
 				return list;
 			}
 		};
@@ -83,14 +94,14 @@ public class InfoPanel extends Panel{
 				List<ICourse> list = Lists.newArrayList();
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedModuls()));
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
-				list.addAll(supplementCourses.getAllCourses());
+				list.addAll(loadSupplementCourses.getObject());
 				
 				return list;
 			}
 			
 		};
 		
-        ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, supplementCourses, allProfs);
+        ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
 		form.add(modulListView);
         form.add(wahlProgressBar);
         form.add(pflichtProgressBar);
@@ -98,6 +109,12 @@ public class InfoPanel extends Panel{
         form.add(supplementProgressBar);
 		add(form);
 			
+	}
+
+	private double loadSupplementPoints(final IModel<List<Prof>> profs) {
+		Optional<Double> optionalSupplementPoints = profs.getObject().stream().findFirst().map(p -> p.calculateSupplementPoints());
+		double points = optionalSupplementPoints.isPresent() ? optionalSupplementPoints.get() : 0;
+		return points;
 	}
 
 	private static int calculatePoints(IModel<List<Prof>> profs, Function<Prof, Double> calculate){
@@ -115,26 +132,26 @@ public class InfoPanel extends Panel{
 		super.onEvent(event);
 		int summary = calculatePoints(profs, Prof::calculateWahlPoints);
 		int summaryPflicht = calculatePoints(profs, Prof::calculatePflichtPoints);
+		int summarySupplement = calculatePoints(loadSupplementCourses.getObject().stream().mapToDouble(ICourse::getPoints).sum());
 		if(event.getPayload() instanceof SelectedEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
+			setPoints(summarySupplement, supplementPoints);
 			((SelectedEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof AbstractEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
+			setPoints(summarySupplement, supplementPoints);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof RemoveCourseEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
+			setPoints(summarySupplement, supplementPoints);
 			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof PanelChangedEvent){
 			setPoints(summary, wahlPoints);
 			setPoints(summaryPflicht, pflichtPoints);
-			setPoints(calculatePoints(supplementCourses.calculatePoints()), supplementPoints);
-			supplementPoints.setObject((int)Math.round(supplementCourses.calculatePoints()));
+			setPoints(summarySupplement, supplementPoints);
 			((PanelChangedEvent) event.getPayload()).getTarget().add(form);
 		}
 		
@@ -154,7 +171,7 @@ public class InfoPanel extends Panel{
 		return progressBar;
 	}
 	
-	private static ListView<ICourse> createListView(IModel<List<ICourse>> allSelectedModuls, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, SupplementCourses supplementCourses, final List<Prof> allProfs){
+	private static ListView<ICourse> createListView(IModel<List<ICourse>> allSelectedModuls, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, final List<Prof> allProfs){
 		return new ListView<ICourse>("verticalButtonGroup", allSelectedModuls) {
 
 			private static final long serialVersionUID = 1L;
@@ -177,7 +194,7 @@ public class InfoPanel extends Panel{
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
 						allProfs.stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
 						allProfs.stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
-						supplementCourses.getAllCourses().removeIf(c -> c.getName().equals(modulName));
+						allProfs.stream().findFirst().ifPresent(p -> p.getSupplementCourses().getAllCourses().removeIf(c -> c.getName().equals(modulName)));
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
 					};
 				};
