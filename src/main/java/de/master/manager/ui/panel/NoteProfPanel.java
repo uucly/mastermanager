@@ -33,7 +33,7 @@ public class NoteProfPanel extends Panel {
 		IModel<List<ICourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
 				Prof::getSelectedPflichtModuls);
 		IModel<List<ICourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
-				Prof::getSelectedModuls);
+				Prof::getSelectedWahlModuls);
 
 		add(createWahlCourseListView(loadSelectedWahlCourses));
 		add(createPflichtCourseListView(loadSelectedPflichtCourses));

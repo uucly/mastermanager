@@ -28,11 +28,11 @@ public class CourseButton extends AbstractCourseButton {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 		if(profRight.getObject().getPflichtCourse().contains(course)){
-			prof.getSelectedModuls().remove(course);
+			prof.getSelectedWahlModuls().remove(course);
 			setEnabled(false);
-		} else if(isAlreadySelected(Prof::getSelectedModuls)){
+		} else if(isAlreadySelected(Prof::getSelectedWahlModuls)){
 			setSelected();
-		} else if(isAlreadySelectedInOtherProf(Prof::getSelectedModuls, allProfs)) {
+		} else if(isAlreadySelectedInOtherProf(Prof::getSelectedWahlModuls, allProfs)) {
 			setEnabled(false);
 		}
 	}

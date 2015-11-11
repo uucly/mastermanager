@@ -16,13 +16,13 @@ public class AufbauButton extends AbstractCourseButton{
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(isAlreadySelected((prof) -> prof.getBasicCourses().getCourses())){
+		if(isAlreadySelected((prof) -> prof.getSelectedBasicCourses().getCourses())){
 			setSelected();
 		}
 	}
 	
 	@Override
 	protected void addModulFunction(Prof prof, ICourse course) {
-		prof.getBasicCourses().addCourse(course);
+		prof.getSelectedBasicCourses().addCourse(course);
 	}
 }

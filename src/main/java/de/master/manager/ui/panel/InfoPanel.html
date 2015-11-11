@@ -16,7 +16,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			Pflicht:
 			<table>
 				<tr>
@@ -25,7 +25,7 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			Wahlpflicht:
 			<table>
 				<tr>
@@ -42,17 +42,47 @@
 					</td>
 				</tr>
 			</table>
+
+			<br /> <b>Ausgew&auml;hlte Kurse: </b><br /> 
 			
-			<br /> <b>Ausgew&auml;hlte Kurse: </b><br />
 			<div class="btn-group-vertical" role="group">
-				<div wicket:id="verticalButtonGroup">
-					<button wicket:id="selectedModulButton" style="float: left; margin-bottom: 3px;" type="submit" class="btn btn-info btn-xs btn-block">
-						<i class="glyphicon glyphicon-trash"></i>
-						<span wicket:id="label"></span>
+			Pflicht
+				<div wicket:id="verticalPflichtButtonGroup">
+					<button wicket:id="selectedPflichtModulButton"
+						style="float: left; margin-bottom: 3px;" type="submit"
+						class="btn btn-info btn-xs btn-block">
+						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
 					</button>
-					
 				</div>
+				<br />Wahl
+				<div wicket:id="verticalWahlButtonGroup">
+					<button wicket:id="selectedWahlModulButton"
+						style="float: left; margin-bottom: 3px;" type="submit"
+						class="btn btn-info btn-xs btn-block">
+						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
+					</button>
+				</div>
+				<br />Basic
+				<div wicket:id="verticalBasicButtonGroup">
+					<button wicket:id="selectedBasicModulButton"
+						style="float: left; margin-bottom: 3px;" type="submit"
+						class="btn btn-info btn-xs btn-block">
+						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
+					</button>
+				</div>
+				<br />Supplement
+				<div wicket:id="verticalSupplementButtonGroup">
+					<button wicket:id="selectedSupplementModulButton"
+						style="float: left; margin-bottom: 3px;" type="submit"
+						class="btn btn-info btn-xs btn-block">
+						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
+					</button>
+				</div>
+
 			</div>
+
+
+
 		</form>
 	</wicket:panel>
 </body>

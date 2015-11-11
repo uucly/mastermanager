@@ -46,7 +46,7 @@ public class NoteInfoProfPanel extends Panel{
 	}
 
 	private ListView<ICourse> createWahlListView(IModel<Prof> profOfPanel) {
-		ListView<ICourse> wahlListView = new ListView<ICourse>("wahlList", profOfPanel.getObject().getSelectedModuls()) {
+		ListView<ICourse> wahlListView = new ListView<ICourse>("wahlList", profOfPanel.getObject().getSelectedWahlModuls()) {
 
 			private static final long serialVersionUID = 1L;
 

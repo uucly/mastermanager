@@ -53,7 +53,10 @@ public class InfoPanel extends Panel{
 	private final IModel<List<Prof>> profs;
 	private final Form<Object> form;
 	private final IModel<List<ICourse>> allCurrentSelectedModuls;
-	private final IModel<List<ICourse>> allSelectedModuls;
+	private final IModel<List<ICourse>> allSelectedPflichtModuls;
+	private final IModel<List<ICourse>> allSelectedWahlModuls;
+	private final IModel<List<ICourse>> allSelectedSupplementModuls;
+	private final IModel<List<ICourse>> allSelectedBasicModuls;
 	private final IModel<List<ICourse>> loadSupplementCourses;
 	private final IModel<List<ICourse>> loadBasicCourses;
 	
@@ -65,12 +68,12 @@ public class InfoPanel extends Panel{
 		
 		loadSupplementCourses = new TransformationModel<List<Prof>, List<ICourse>>(profs, list -> {
 			Optional<Prof> optionalProf = list.stream().findFirst();
-			return optionalProf.isPresent() ? optionalProf.get().getSupplementCourses().getAllCourses() : Collections.emptyList();
+			return optionalProf.isPresent() ? optionalProf.get().getSelectedSupplementCourses().getAllCourses() : Collections.emptyList();
 		});
 		
 		loadBasicCourses = new TransformationModel<List<Prof>, List<ICourse>>(profs, list -> {
 			Optional<Prof> optionalProf = list.stream().findFirst();
-			return optionalProf.isPresent() ? optionalProf.get().getBasicCourses().getCourses() : Collections.emptyList();
+			return optionalProf.isPresent() ? optionalProf.get().getSelectedBasicCourses().getCourses() : Collections.emptyList();
 		});
 
 		form = new Form<Object>("form");
@@ -84,21 +87,74 @@ public class InfoPanel extends Panel{
 		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", basicPoints);
 		ProgressBar supplementProgressBar = createProgressBar("supplementProgress", supplementPoints);
 		
-		allSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
+		/*allSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
-				allProfs.stream().forEach(p->list.addAll(p.getSelectedModuls()));
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedWahlModuls()));
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
 				list.addAll(loadSupplementCourses.getObject());
 				list.addAll(loadBasicCourses.getObject());
 				
 				return list;
 			}
+		};*/
+		
+		allSelectedPflichtModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
+				return list;
+			}
 		};
+		
+		allSelectedWahlModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedWahlModuls()));
+				
+				return list;
+			}
+		};
+		
+		allSelectedBasicModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+				list.addAll(loadBasicCourses.getObject());
+				
+				return list;
+			}
+		};
+		
+		allSelectedSupplementModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+				list.addAll(loadSupplementCourses.getObject());
+				
+				return list;
+			}
+		};
+		
+		
 		allCurrentSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
 			
 			private static final long serialVersionUID = 1L;
@@ -106,7 +162,7 @@ public class InfoPanel extends Panel{
 			@Override
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
-				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedModuls()));
+				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedWahlModuls()));
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
 				list.addAll(loadSupplementCourses.getObject());
 				list.addAll(loadBasicCourses.getObject());
@@ -116,8 +172,36 @@ public class InfoPanel extends Panel{
 			
 		};
 		
-        ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
-		form.add(modulListView);
+		IModel loadSelectedWahlCourses = new TransformationModel<>(profs, list -> {
+			List<ICourse> result = Lists.newArrayList();
+			list.stream().forEach(m -> result.addAll(m.getSelectedWahlModuls()));
+			return list;
+		});
+		
+		IModel loadSelectedPflichtCourses = new TransformationModel<>(profs, list -> {
+			List<ICourse> result = Lists.newArrayList();
+			list.stream().forEach(m -> result.addAll(m.getSelectedPflichtModuls()));
+			return list;
+		});
+		
+		IModel loadSelectedBasicCourses = new TransformationModel<>(profs, list -> {
+			List<ICourse> result = Lists.newArrayList();
+			list.stream().forEach(m -> result.addAll(m.getSelectedBasicCourses().getCourses()));
+			return list;
+		});
+		
+		IModel loadSelectedSupplementCourses = new TransformationModel<>(profs, list -> {
+			List<ICourse> result = Lists.newArrayList();
+			list.stream().forEach(m -> result.addAll(m.getSelectedSupplementCourses().getAllCourses()));
+			return list;
+		});
+				
+        //ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
+		ListView<ICourse> modulPflichtListView = createListView("verticalPflichtButtonGroup","selectedPflichtModulButton",allSelectedPflichtModuls, loadSelectedPflichtCourses, profs, allProfs);
+		ListView<ICourse> modulWahlListView = createListView("verticalWahlButtonGroup","selectedWahlModulButton",allSelectedWahlModuls, loadSelectedWahlCourses, profs, allProfs);
+		ListView<ICourse> modulSupplementListView = createListView("verticalSupplementButtonGroup","selectedSupplementModulButton",allSelectedSupplementModuls, loadSelectedSupplementCourses, profs, allProfs);
+		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, loadSelectedBasicCourses, profs, allProfs);
+		form.add(modulPflichtListView, modulWahlListView, modulSupplementListView, modulBasicListView);
         form.add(wahlProgressBar);
         form.add(pflichtProgressBar);
         form.add(aufbauProgressBar);
@@ -186,8 +270,8 @@ public class InfoPanel extends Panel{
 		return progressBar;
 	}
 	
-	private static ListView<ICourse> createListView(IModel<List<ICourse>> allSelectedModuls, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, final List<Prof> allProfs){
-		return new ListView<ICourse>("verticalButtonGroup", allSelectedModuls) {
+	private static ListView<ICourse> createListView(String ListViewID, String ButtonID, IModel<List<ICourse>> allSelectedCourses, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, final List<Prof> allProfs){
+		return new ListView<ICourse>(ListViewID, allSelectedCourses) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -203,14 +287,14 @@ public class InfoPanel extends Panel{
 			
 			/* local private method*/
 			private AjaxButton createButton(String modulName){
-				return new AjaxButton("selectedModulButton") {
+				return new AjaxButton(ButtonID) {
 					private static final long serialVersionUID = 1L;
 
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
-						allProfs.stream().forEach(prof -> prof.getSelectedModuls().removeIf(m -> m.getName().equals(modulName)));
+						allProfs.stream().forEach(prof -> prof.getSelectedWahlModuls().removeIf(m -> m.getName().equals(modulName)));
 						allProfs.stream().forEach(prof -> prof.getSelectedPflichtModuls().removeIf(m -> m.getName().equals(modulName)));
-						allProfs.stream().findFirst().ifPresent(p -> p.getSupplementCourses().getAllCourses().removeIf(c -> c.getName().equals(modulName)));
-						allProfs.stream().findFirst().ifPresent(p -> p.getBasicCourses().getCourses().removeIf(c -> c.getName().equals(modulName)));
+						allProfs.stream().findFirst().ifPresent(p -> p.getSelectedSupplementCourses().getAllCourses().removeIf(c -> c.getName().equals(modulName)));
+						allProfs.stream().findFirst().ifPresent(p -> p.getSelectedBasicCourses().getCourses().removeIf(c -> c.getName().equals(modulName)));
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
 					};
 				};
@@ -223,7 +307,10 @@ public class InfoPanel extends Panel{
 	protected void onDetach() {
 		super.onDetach();
 		allCurrentSelectedModuls.detach();
-		allSelectedModuls.detach();
+		allSelectedPflichtModuls.detach();
+		allSelectedWahlModuls.detach();
+		allSelectedSupplementModuls.detach();
+		allSelectedBasicModuls.detach();
 		profs.detach();
 	}
 }

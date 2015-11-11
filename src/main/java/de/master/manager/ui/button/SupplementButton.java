@@ -17,14 +17,14 @@ public class SupplementButton extends AbstractCourseButton{
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		if(isAlreadySelected((prof) -> prof.getSupplementCourses().getAllCourses())){
+		if(isAlreadySelected((prof) -> prof.getSelectedSupplementCourses().getAllCourses())){
 			setSelected();
 		}
 	}
 	
 	@Override
 	protected void addModulFunction(Prof prof, ICourse course) {
-		prof.getSupplementCourses().addCourse(course);
+		prof.getSelectedSupplementCourses().addCourse(course);
 	}
 
 }

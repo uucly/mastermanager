@@ -38,7 +38,7 @@ public class Prof implements Serializable{
 		return wahlModulPath;
 	}
 
-	public List<ICourse> getSelectedModuls() {
+	public List<ICourse> getSelectedWahlModuls() {
 		return selectedWahlCourses;
 	}
 	
@@ -102,11 +102,11 @@ public class Prof implements Serializable{
 	}
 
 
-	public SupplementCourses getSupplementCourses() {
+	public SupplementCourses getSelectedSupplementCourses() {
 		return supplementCourses;
 	}
 	
-	public BasicCourses getBasicCourses(){
+	public BasicCourses getSelectedBasicCourses(){
 		return basicCourses;
 	}
 	
