@@ -45,14 +45,13 @@ public class NavsPanel extends Panel{
 		
 		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
 		add(createLink("courses",  currentPanel));
-		add(createLink("noten",  new NotePanel("panel", profOfPanel1, profOfPanel2)));
+		add(createLink("noten",  new GradePanel("panel", profOfPanel1, profOfPanel2)));
 		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs)));
 		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2,  allProfs)));
 		add(currentPanel);
 	}
 
 	/* methods */
-	
 	private static MarkupContainer createProfDropDownContainer(List<Prof> allProfs, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
 		WebMarkupContainer profDropDownContainer = new WebMarkupContainer("container");
 		profDropDownContainer.setOutputMarkupId(true);

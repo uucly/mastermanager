@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<meta charset="ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>Insert title here</title>
+</head>
+<body>
+	<wicket:panel>
+		<div>
+			<strong>Pflichtkurse</strong>
+		</div>
+		<div wicket:id="pflichtCourses">
+			<form class="form-horizontal">
+				<div class="form-group" style="margin-left: 0px; margin-right: 0px;">
+					<span wicket:id="pflichtCourse"></span> <select
+						wicket:id="dropDownNotenPflicht" style="float: right;"></select>
+				</div>
+			</form>
+
+		</div>
+		<div wicket:id="averagePflicht"></div>
+
+		<div>
+			<strong>WahlKurse</strong>
+		</div>
+		<div wicket:id="wahlCourses">
+			<form class="form-horizontal">
+				<div class="form-group" style="margin-left: 0px; margin-right: 0px;">
+
+					<span wicket:id="wahlCourse"></span> <select
+						wicket:id="dropDownNotenWahl" style="float: right;"></select>
+				</div>
+			</form>
+		</div>
+		<div wicket:id="averageWahl"></div>
+
+	</wicket:panel>
+</body>
+</html>

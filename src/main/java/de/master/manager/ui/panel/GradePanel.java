@@ -8,17 +8,22 @@ import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
 import de.master.manager.ui.events.ProfChangedEvent;
 
-public class NotePanel extends Panel{
+public class GradePanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
 	private final NoteInfoPanel noteInfoPanel;
 
-	public NotePanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
+	public GradePanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
 		super(id);
-		NoteProfPanel noteProfPanel1 = new NoteProfPanel("noteProfPanel1", profOfPanel1);
-		NoteProfPanel noteProfPanel2 = new NoteProfPanel("noteProfPanel2", profOfPanel2);
+		GradeProfPanel noteProfPanel1 = new GradeProfPanel("noteProfPanel1", profOfPanel1);
+		GradeProfPanel noteProfPanel2 = new GradeProfPanel("noteProfPanel2", profOfPanel2);
+		SingleGradePanel basicGradePanel = new SingleGradePanel("gradeBasicPanel", profOfPanel1.getObject().getBasicCourses().getCourses());
+		SingleGradePanel supplementGradePanel = new SingleGradePanel("supplementGrade", profOfPanel1.getObject().getSupplementCourses().getAllCourses());
+		
 		noteInfoPanel = new NoteInfoPanel("noteInfoPanel", profOfPanel1, profOfPanel2);
 		add(noteProfPanel1, noteProfPanel2);
+		add(basicGradePanel);
+		add(supplementGradePanel);
 		add(noteInfoPanel);
 	}
 
@@ -30,7 +35,7 @@ public class NotePanel extends Panel{
 		}
 		
 		if(payload instanceof GradeChangedEvent){
-			((GradeChangedEvent) payload).getTarget().add(noteInfoPanel);
+			((GradeChangedEvent) payload).getTarget().add(this);
 		}
 	}
 }

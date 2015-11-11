@@ -2,10 +2,12 @@ package de.master.manager.ui.panel;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalDouble;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -21,25 +23,35 @@ import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
 import de.master.manager.ui.model.TransformationModel;
 
-public class NoteProfPanel extends Panel {
+public class GradeProfPanel extends Panel {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final List<Double> NOTEN_LIST = Arrays.asList(1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0);
 
-	public NoteProfPanel(String id, IModel<Prof> profOfPanel) {
+	private final IModel<Prof> profOfPanel;
+
+	public GradeProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
 		setOutputMarkupId(true);
+		this.profOfPanel = profOfPanel;
 		IModel<List<ICourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
 				Prof::getSelectedPflichtModuls);
 		IModel<List<ICourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
 				Prof::getSelectedModuls);
 
+		add(new Label("averagePflicht", Model.of(loadAverageGrade(profOfPanel.getObject().calculateFinalPflichtGrade()))));
 		add(createWahlCourseListView(loadSelectedWahlCourses));
 		add(createPflichtCourseListView(loadSelectedPflichtCourses));
+		add(new Label("averageWahl", Model.of(loadAverageGrade(profOfPanel.getObject().calculateFinalWahlGrade()))));
 	}
 
 	/* methods */
+	private double loadAverageGrade(OptionalDouble averageGradeOptional) {
+		double averageGradePflicht = averageGradeOptional.isPresent() ? averageGradeOptional.getAsDouble() : Float.NaN;
+		return averageGradePflicht;
+	}
+
 
 	private static ListView<ICourse> createWahlCourseListView(IModel<List<ICourse>> loadSelectedWahlCourses) {
 		ListView<ICourse> wahlCourseListView = new ListView<ICourse>("wahlCourses", loadSelectedWahlCourses) {
@@ -88,4 +100,14 @@ public class NoteProfPanel extends Panel {
 		});
 		return dropDownNoten;
 	}
+	
+	@Override
+	protected void onComponentTag(ComponentTag tag) {
+		super.onComponentTag(tag);
+		Prof prof = profOfPanel.getObject();
+		if(prof.getSelectedModuls().isEmpty() && prof.getSelectedPflichtModuls().isEmpty()){
+			tag.append("style" , "display:none", " ");
+		}
+	}
+
 }

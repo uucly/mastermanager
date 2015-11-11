@@ -19,8 +19,8 @@ public class NoteInfoPanel extends Panel{
 		super(id);
 		setOutputMarkupId(true);
 		
-		add(new NoteInfoProfPanel("infoProfPanel1", profOfPanel1));
-		add(new NoteInfoProfPanel("infoProfPanel2", profOfPanel2));
+		//add(new NoteInfoProfPanel("infoProfPanel1", profOfPanel1));
+	//	add(new NoteInfoProfPanel("infoProfPanel2", profOfPanel2));
 		
 		add(new Label("finalGrade", calculateFinalGrade(profOfPanel1, profOfPanel2)));
 	}

@@ -76,6 +76,9 @@ public class Prof implements Serializable{
 		List<ICourse> jointCourseLists = new ArrayList<>(selectedWahlCourses.size() + selectedPflichtCourses.size());
 		jointCourseLists.addAll(selectedPflichtCourses);
 		jointCourseLists.addAll(selectedWahlCourses);
+		jointCourseLists.addAll(basicCourses.getCourses());
+		jointCourseLists.addAll(supplementCourses.getAllCourses());
+		
 		return jointCourseLists.stream().filter(m -> m.getGrade().isPresent()).mapToDouble(m -> m.getGrade().get()).average();
 	}
 	
