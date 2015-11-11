@@ -3,8 +3,12 @@ package de.master.manager.ui.panel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 import org.apache.wicket.AttributeModifier;
@@ -53,7 +57,7 @@ public class InfoPanel extends Panel{
 	private final IModel<List<Prof>> profs;
 	private final Form<Object> form;
 	private final IModel<List<ICourse>> allCurrentSelectedModuls;
-	private final IModel<List<ICourse>> allSelectedPflichtModuls;
+	private final IModel<Map<ICourse, String>> allSelectedPflichtModuls;
 	private final IModel<List<ICourse>> allSelectedWahlModuls;
 	private final IModel<List<ICourse>> allSelectedSupplementModuls;
 	private final IModel<List<ICourse>> allSelectedBasicModuls;
@@ -103,15 +107,20 @@ public class InfoPanel extends Panel{
 			}
 		};*/
 		
-		allSelectedPflichtModuls = new LoadableDetachableModel<List<ICourse>>() {
+		allSelectedPflichtModuls = new LoadableDetachableModel<Map<ICourse, String>>() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected List<ICourse> load() {
-				List<ICourse> list = Lists.newArrayList();
-				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
-				return list;
+			protected Map<ICourse, String> load() {
+				
+				Map<ICourse,String> map = new TreeMap<>();
+				allProfs.stream().forEach(p->{
+					p.getSelectedPflichtModuls().stream().forEach(c -> map.put(c, p.getName()));
+				});
+				
+				//list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
+				return map;
 			}
 		};
 		
@@ -123,7 +132,8 @@ public class InfoPanel extends Panel{
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedWahlModuls()));
-				
+
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
 				return list;
 			}
 		};
@@ -136,7 +146,8 @@ public class InfoPanel extends Panel{
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
 				list.addAll(loadBasicCourses.getObject());
-				
+
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
 				return list;
 			}
 		};
@@ -149,7 +160,7 @@ public class InfoPanel extends Panel{
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
 				list.addAll(loadSupplementCourses.getObject());
-				
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
 				return list;
 			}
 		};
@@ -166,41 +177,19 @@ public class InfoPanel extends Panel{
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtModuls()));
 				list.addAll(loadSupplementCourses.getObject());
 				list.addAll(loadBasicCourses.getObject());
-				
+
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
 				return list;
 			}
 			
 		};
 		
-		IModel loadSelectedWahlCourses = new TransformationModel<>(profs, list -> {
-			List<ICourse> result = Lists.newArrayList();
-			list.stream().forEach(m -> result.addAll(m.getSelectedWahlModuls()));
-			return list;
-		});
 		
-		IModel loadSelectedPflichtCourses = new TransformationModel<>(profs, list -> {
-			List<ICourse> result = Lists.newArrayList();
-			list.stream().forEach(m -> result.addAll(m.getSelectedPflichtModuls()));
-			return list;
-		});
-		
-		IModel loadSelectedBasicCourses = new TransformationModel<>(profs, list -> {
-			List<ICourse> result = Lists.newArrayList();
-			list.stream().forEach(m -> result.addAll(m.getSelectedBasicCourses().getCourses()));
-			return list;
-		});
-		
-		IModel loadSelectedSupplementCourses = new TransformationModel<>(profs, list -> {
-			List<ICourse> result = Lists.newArrayList();
-			list.stream().forEach(m -> result.addAll(m.getSelectedSupplementCourses().getAllCourses()));
-			return list;
-		});
-				
         //ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
-		ListView<ICourse> modulPflichtListView = createListView("verticalPflichtButtonGroup","selectedPflichtModulButton",allSelectedPflichtModuls, loadSelectedPflichtCourses, profs, allProfs);
-		ListView<ICourse> modulWahlListView = createListView("verticalWahlButtonGroup","selectedWahlModulButton",allSelectedWahlModuls, loadSelectedWahlCourses, profs, allProfs);
-		ListView<ICourse> modulSupplementListView = createListView("verticalSupplementButtonGroup","selectedSupplementModulButton",allSelectedSupplementModuls, loadSelectedSupplementCourses, profs, allProfs);
-		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, loadSelectedBasicCourses, profs, allProfs);
+		ListView<ICourse> modulPflichtListView = createListView("verticalPflichtButtonGroup","selectedPflichtModulButton",allSelectedPflichtModuls, allCurrentSelectedModuls, profs, allProfs);
+		ListView<ICourse> modulWahlListView = createListView("verticalWahlButtonGroup","selectedWahlModulButton",allSelectedWahlModuls, allCurrentSelectedModuls, profs, allProfs);
+		ListView<ICourse> modulSupplementListView = createListView("verticalSupplementButtonGroup","selectedSupplementModulButton",allSelectedSupplementModuls, allCurrentSelectedModuls, profs, allProfs);
+		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, allCurrentSelectedModuls, profs, allProfs);
 		form.add(modulPflichtListView, modulWahlListView, modulSupplementListView, modulBasicListView);
         form.add(wahlProgressBar);
         form.add(pflichtProgressBar);
@@ -277,7 +266,7 @@ public class InfoPanel extends Panel{
 
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
-				AjaxButton button = createButton(item.getModelObject().getName());
+				AjaxButton button = createButton(item.getModelObject().getName()+"("++")");
 				if(allCurrentSelectedModuls.getObject().contains(item.getModel().getObject())){
 					button.add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));
 				}
