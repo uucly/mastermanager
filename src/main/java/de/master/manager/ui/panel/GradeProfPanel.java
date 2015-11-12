@@ -3,6 +3,7 @@ package de.master.manager.ui.panel;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.function.Function;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
@@ -14,13 +15,16 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
 
 import com.google.common.base.Optional;
 
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
+import de.master.manager.ui.model.SerializableFunction;
 import de.master.manager.ui.model.TransformationModel;
 
 public class GradeProfPanel extends Panel {
@@ -35,26 +39,20 @@ public class GradeProfPanel extends Panel {
 		super(id);
 		setOutputMarkupId(true);
 		this.profOfPanel = profOfPanel;
-		IModel<List<ICourse>> loadSelectedPflichtCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
-				Prof::getSelectedPflichtModuls);
-		IModel<List<ICourse>> loadSelectedWahlCourses = new TransformationModel<Prof, List<ICourse>>(profOfPanel,
-				Prof::getSelectedModuls);
-
-		add(new Label("averagePflicht", Model.of(loadAverageGrade(profOfPanel.getObject().calculateFinalPflichtGrade()))));
-		add(createWahlCourseListView(loadSelectedWahlCourses));
-		add(createPflichtCourseListView(loadSelectedPflichtCourses));
-		add(new Label("averageWahl", Model.of(loadAverageGrade(profOfPanel.getObject().calculateFinalWahlGrade()))));
+		add(new Label("averagePflicht", loadAverageGrade(profOfPanel, Prof::calculateFinalPflichtGrade)));
+		add(createWahlCourseListView(profOfPanel.getObject().getSelectedModuls()));
+		add(createPflichtCourseListView(profOfPanel.getObject().getSelectedPflichtModuls()));
+		add(new Label("averageWahl", loadAverageGrade(profOfPanel, Prof::calculateFinalWahlGrade)));
 	}
 
 	/* methods */
-	private double loadAverageGrade(OptionalDouble averageGradeOptional) {
-		double averageGradePflicht = averageGradeOptional.isPresent() ? averageGradeOptional.getAsDouble() : Float.NaN;
-		return averageGradePflicht;
+	private IModel<String> loadAverageGrade(IModel<Prof> prof, SerializableFunction<Prof, OptionalDouble> calcualteGrade) {
+		return new TransformationModel<Prof, String>(prof, p -> calcualteGrade.apply(p).isPresent()? String.valueOf(Math.round(calcualteGrade.apply(p).getAsDouble()*100.)/100.) : "no grade selected");
 	}
 
 
-	private static ListView<ICourse> createWahlCourseListView(IModel<List<ICourse>> loadSelectedWahlCourses) {
-		ListView<ICourse> wahlCourseListView = new ListView<ICourse>("wahlCourses", loadSelectedWahlCourses) {
+	private static ListView<ICourse> createWahlCourseListView(List<ICourse> selectedWahlCourses) {
+		ListView<ICourse> wahlCourseListView = new ListView<ICourse>("wahlCourses", selectedWahlCourses) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -68,16 +66,15 @@ public class GradeProfPanel extends Panel {
 		return wahlCourseListView;
 	}
 
-	private static ListView<ICourse> createPflichtCourseListView(IModel<List<ICourse>> loadSelectedPflichtCourses) {
-		ListView<ICourse> pflichtCourseListView = new ListView<ICourse>("pflichtCourses", loadSelectedPflichtCourses) {
+	private static ListView<ICourse> createPflichtCourseListView(List<ICourse> pflichtCourses) {
+		ListView<ICourse> pflichtCourseListView = new ListView<ICourse>("pflichtCourses", pflichtCourses) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse = item.getModelObject();
-				item.add(new Label("pflichtCourse",
-						currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
+				item.add(new Label("pflichtCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
 				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getGrade()));
 			}
 		};
