@@ -11,11 +11,11 @@ import com.google.common.collect.Lists;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.model.TransformationModel2;
 
-public class NoteInfoPanel extends Panel{
+public class GradeInfoPanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
 
-	public NoteInfoPanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
+	public GradeInfoPanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2) {
 		super(id);
 		setOutputMarkupId(true);
 		

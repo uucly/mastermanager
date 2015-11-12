@@ -13,15 +13,14 @@
 		<div wicket:id="pflichtCourses">
 			<form class="form-horizontal">
 				<div class="form-group" style="margin-left: 0px; margin-right: 0px;">
-					<span wicket:id="pflichtCourse"></span> <select
-						wicket:id="dropDownNotenPflicht" style="float: right;"></select>
+					<span wicket:id="pflichtCourse"></span> 
+					<select wicket:id="pflichtDropDownGrade" class="btn btn-default btn-xs dropdown-toggle" style="float: right; margin-left: 50px"></select>
 				</div>
 			</form>
 
 		</div>
-		<strong>Durchschnitt:</strong> <span wicket:id="averagePflicht"></span>
-
-		<hr/>
+			<strong>Durchschnitt:</strong> <span wicket:id="averagePflicht" style="float:right; margin-right: 21px"></span>
+		<hr style="border-color: black;">
 		<div>
 			<strong>WahlKurse</strong>
 		</div>
@@ -29,12 +28,13 @@
 			<form class="form-horizontal">
 				<div class="form-group" style="margin-left: 0px; margin-right: 0px;">
 
-					<span wicket:id="wahlCourse"></span> <select
-						wicket:id="dropDownNotenWahl" style="float: right;"></select>
+					<span wicket:id="wahlCourse"></span> 
+					<select wicket:id="wahlDropDownGrade" class="btn btn-default btn-xs dropdown-toggle" style="float: right; margin-left: 50px"></select>
 				</div>
 			</form>
 		</div>
-		<strong>Durchschnitt:</strong><span wicket:id="averageWahl"></span>
+		<strong>Durchschnitt:</strong>
+		<span wicket:id="averageWahl" style="float:right; margin-right: 21px"></span>
 
 	</wicket:panel>
 </body>

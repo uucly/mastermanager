@@ -8,17 +8,19 @@
 <body>
 	<wicket:panel>
 		<div>
-			<strong>Pflichtkurse</strong>
+			<strong><span wicket:id="panelName"></span></strong>
 		</div>
 		<div wicket:id="courses">
 			<form class="form-horizontal">
 				<div class="form-group" style="margin-left: 0px; margin-right: 0px;">
-					<span wicket:id="course"></span> <select wicket:id="dropDownGrade"
-						style="float: right;"></select>
+					<span wicket:id="course"></span> 
+					<select wicket:id="dropDownGrade" class="btn btn-default btn-xs dropdown-toggle" 
+					style="float: right; margin-left: 50px"></select>
 				</div>
 			</form>
-
 		</div>
+		<strong>Durchschnitt:</strong> <span wicket:id="average" style="float:right; margin-right: 21px"></span>
+		
 	</wicket:panel>
 </body>
 </html>

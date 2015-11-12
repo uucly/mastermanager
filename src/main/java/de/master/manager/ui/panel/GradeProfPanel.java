@@ -3,8 +3,6 @@ package de.master.manager.ui.panel;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalDouble;
-import java.util.function.Function;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.Broadcast;
@@ -15,10 +13,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.ListModel;
-
 import com.google.common.base.Optional;
 
 import de.master.manager.profStuff.ICourse;
@@ -40,9 +35,9 @@ public class GradeProfPanel extends Panel {
 		setOutputMarkupId(true);
 		this.profOfPanel = profOfPanel;
 		add(new Label("averagePflicht", loadAverageGrade(profOfPanel, Prof::calculateFinalPflichtGrade)));
-		add(createWahlCourseListView(profOfPanel.getObject().getSelectedModuls()));
-		add(createPflichtCourseListView(profOfPanel.getObject().getSelectedPflichtModuls()));
 		add(new Label("averageWahl", loadAverageGrade(profOfPanel, Prof::calculateFinalWahlGrade)));
+		add(createCourseListView("wahl", profOfPanel.getObject().getSelectedModuls()));
+		add(createCourseListView("pflicht", profOfPanel.getObject().getSelectedPflichtModuls()));
 	}
 
 	/* methods */
@@ -50,39 +45,22 @@ public class GradeProfPanel extends Panel {
 		return new TransformationModel<Prof, String>(prof, p -> calcualteGrade.apply(p).isPresent()? String.valueOf(Math.round(calcualteGrade.apply(p).getAsDouble()*100.)/100.) : "no grade selected");
 	}
 
-
-	private static ListView<ICourse> createWahlCourseListView(List<ICourse> selectedWahlCourses) {
-		ListView<ICourse> wahlCourseListView = new ListView<ICourse>("wahlCourses", selectedWahlCourses) {
+	private static ListView<ICourse> createCourseListView(String courseType, List<ICourse> selectedWahlCourses) {
+		ListView<ICourse> wahlCourseListView = new ListView<ICourse>(courseType + "Courses", selectedWahlCourses) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse = item.getModelObject();
-				item.add(new Label("wahlCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
-				item.add(createNotenDropDown("dropDownNotenWahl", item, currentCourse.getGrade()));
+				item.add(new Label(courseType + "Course", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
+				item.add(createNotenDropDown(courseType + "DropDownGrade", item, currentCourse.getGrade()));
 			}
 		};
 		return wahlCourseListView;
 	}
 
-	private static ListView<ICourse> createPflichtCourseListView(List<ICourse> pflichtCourses) {
-		ListView<ICourse> pflichtCourseListView = new ListView<ICourse>("pflichtCourses", pflichtCourses) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void populateItem(ListItem<ICourse> item) {
-				ICourse currentCourse = item.getModelObject();
-				item.add(new Label("pflichtCourse", currentCourse.getName() + " (CP: " + currentCourse.getPoints() + ")"));
-				item.add(createNotenDropDown("dropDownNotenPflicht", item, currentCourse.getGrade()));
-			}
-		};
-		return pflichtCourseListView;
-	}
-
-	private static DropDownChoice<Double> createNotenDropDown(String id, ListItem<ICourse> item,
-			Optional<Double> note) {
+	private static DropDownChoice<Double> createNotenDropDown(String id, ListItem<ICourse> item, Optional<Double> note) {
 		IModel<Double> noteModel = note.isPresent() ? Model.of(note.get()) : Model.of();
 		DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>(id, noteModel, NOTEN_LIST);
 		dropDownNoten.add(new OnChangeAjaxBehavior() {

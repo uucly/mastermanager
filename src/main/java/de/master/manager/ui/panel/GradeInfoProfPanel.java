@@ -11,11 +11,11 @@ import org.apache.wicket.model.IModel;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
 
-public class NoteInfoProfPanel extends Panel{
+public class GradeInfoProfPanel extends Panel{
 
 	private static final long serialVersionUID = 1L;
 
-	public NoteInfoProfPanel(String id, IModel<Prof> profOfPanel) {
+	public GradeInfoProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
 		
 		OptionalDouble pflichtGrade = profOfPanel.getObject().calculateFinalPflichtGrade();
