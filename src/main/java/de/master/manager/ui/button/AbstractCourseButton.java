@@ -2,12 +2,12 @@ package de.master.manager.ui.button;
 
 import java.util.List;
 import java.util.function.Function;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.master.manager.profStuff.ICourse;
