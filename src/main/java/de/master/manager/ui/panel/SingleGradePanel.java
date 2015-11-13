@@ -25,7 +25,7 @@ import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
 import de.master.manager.ui.model.TransformationModel2;
 
-public class SingleGradePanel extends Panel{
+public abstract class SingleGradePanel extends Panel{
 
 	private static final List<Double> NOTEN_LIST = Arrays.asList(1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0);
 	private final List<ICourse> courses;

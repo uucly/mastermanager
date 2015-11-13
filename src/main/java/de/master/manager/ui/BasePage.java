@@ -1,26 +1,27 @@
 package de.master.manager.ui;
 
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.ContextRelativeResource;
-import org.apache.wicket.request.resource.ContextRelativeResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.util.string.StringValue;
 
 import de.agilecoders.wicket.core.Bootstrap;
 import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapExternalLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.DropDownButton;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuBookmarkablePageLink;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuDivider;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.dropdown.MenuHeader;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.GlyphIconType;
+import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.ImmutableNavbarComponent;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
-import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
+import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarDropDownButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarExternalLink;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.core.settings.ITheme;
@@ -76,7 +77,7 @@ public abstract class BasePage extends WebPage{
                                 .setTarget(BootstrapExternalLink.Target.blank)
                                 .setIconType(GlyphIconType.export))
         );
-     /*   navbar.addComponents(new NavbarText(navbar.newExtraItemId(), "Plain text").position(Navbar.ComponentPosition.RIGHT));
+     //   navbar.addComponents(new NavbarText(navbar.newExtraItemId(), "Plain text").position(Navbar.ComponentPosition.RIGHT));
 
         DropDownButton dropdown = new NavbarDropDownButton(Model.of("Themes")) {
             @Override
@@ -104,7 +105,7 @@ public abstract class BasePage extends WebPage{
             }
         }.setIconType(GlyphIconType.book);
 
-        navbar.addComponents(new ImmutableNavbarComponent(dropdown, Navbar.ComponentPosition.RIGHT));*/
+        navbar.addComponents(new ImmutableNavbarComponent(dropdown));
 
         return navbar;
     }

@@ -17,8 +17,8 @@ public class GradePanel extends Panel{
 		super(id);
 		GradeProfPanel noteProfPanel1 = new GradeProfPanel("noteProfPanel1", profOfPanel1);
 		GradeProfPanel noteProfPanel2 = new GradeProfPanel("noteProfPanel2", profOfPanel2);
-		SingleGradePanel basicGradePanel = new SingleGradePanel("gradeBasicPanel", "Aufbau", profOfPanel1.getObject().getBasicCourses().getCourses());
-		SingleGradePanel supplementGradePanel = new SingleGradePanel("supplementGrade", "Ergänzung", profOfPanel1.getObject().getSupplementCourses().getAllCourses());
+		SingleGradePanel basicGradePanel = new BasicGradePanel("gradeBasicPanel", "Aufbau", profOfPanel1.getObject().getBasicCourses().getCourses());
+		SingleGradePanel supplementGradePanel = new SupplementGradePanel("supplementGrade", "Ergänzung", profOfPanel1.getObject().getSupplementCourses().getAllCourses());
 		
 		noteInfoPanel = new GradeInfoPanel("noteInfoPanel", profOfPanel1, profOfPanel2);
 		add(noteProfPanel1, noteProfPanel2);
