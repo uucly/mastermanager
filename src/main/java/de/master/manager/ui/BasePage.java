@@ -1,16 +1,27 @@
 package de.master.manager.ui;
 
+import java.net.URL;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ContextRelativeResource;
+import org.apache.wicket.request.resource.ContextRelativeResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.util.string.StringValue;
 
 import de.agilecoders.wicket.core.Bootstrap;
+import de.agilecoders.wicket.core.markup.html.bootstrap.button.BootstrapExternalLink;
 import de.agilecoders.wicket.core.markup.html.bootstrap.html.HtmlTag;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.GlyphIconType;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.Navbar;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarButton;
 import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarComponents;
+import de.agilecoders.wicket.core.markup.html.bootstrap.navbar.NavbarExternalLink;
 import de.agilecoders.wicket.core.settings.IBootstrapSettings;
 import de.agilecoders.wicket.core.settings.ITheme;
 
@@ -49,18 +60,21 @@ public abstract class BasePage extends WebPage{
 
         navbar.setPosition(Navbar.Position.TOP);
         navbar.setInverted(true);
-
-        // show brand name
+        
+        //ResourceReference resource = new PackageResourceReference(getClass(), "gik_logo.png");
+       // navbar.setBrandImage(resource, Model.of("Master Manager"));
         navbar.setBrandName(Model.of("Master Manager"));
+        // show brand name
+       // navbar.setBrandName(Model.of("Master Manager"));
 
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                        new NavbarButton<Void>(DragAndDropPage.class, Model.of("Overview")).setIconType(GlyphIconType.home)
+                       // new NavbarButton<Void>(DragAndDropPage.class, Model.of("Overview")).setIconType(GlyphIconType.home),
                         //,new NavbarButton<Void>(NotenPage.class, Model.of("Notenspiegel"))
                        // new NavbarButton<Void>(ComponentsPage.class, Model.of("Components")),
-                      /*  new NavbarExternalLink(Model.of("https://github.com/l0rdn1kk0n/wicket-bootstrap"))
-                                .setLabel(Model.of("Github"))
+                        new NavbarExternalLink(Model.of("http://gug.bgu.kit.edu/downloads/Master_Modulhandbuch_GuG_Oktober_2015.pdf"))
+                                .setLabel(Model.of("Modulhandbuch"))
                                 .setTarget(BootstrapExternalLink.Target.blank)
-                                .setIconType(GlyphIconType.export)*/)
+                                .setIconType(GlyphIconType.export))
         );
      /*   navbar.addComponents(new NavbarText(navbar.newExtraItemId(), "Plain text").position(Navbar.ComponentPosition.RIGHT));
 
