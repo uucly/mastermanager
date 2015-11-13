@@ -15,4 +15,6 @@ public interface IModul extends Serializable{
 	double calculatePoints();
 	
 	List<ICourse> getCourses();
+	
+	boolean contains(ICourse course);
 }

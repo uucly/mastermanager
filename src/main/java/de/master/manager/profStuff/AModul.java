@@ -37,4 +37,9 @@ public abstract class AModul implements IModul{
 	public void removeCourse(ICourse course) {
 		courses.remove(course);
 	}
+	
+	@Override
+	public boolean contains(ICourse course) {
+		return courses.contains(course);
+	}
 }

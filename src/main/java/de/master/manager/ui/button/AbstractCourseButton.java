@@ -41,8 +41,8 @@ public abstract class AbstractCourseButton extends AjaxButton{
 		return modul.getCourses().contains(course);
 	}
 	
-	protected boolean isAlreadySelectedInOtherProf(Prof prof, List<Prof> allProfs){
-		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> modul.getCourses().contains(course));
+	protected boolean isAlreadySelectedInOtherProf(Prof prof, List<Prof> allProfs, Function<Prof, IModul> loadModul){
+		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> loadModul.apply(p).contains(course));
 	}
 	
 	protected void setSelected(){

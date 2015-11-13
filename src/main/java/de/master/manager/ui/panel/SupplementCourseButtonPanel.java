@@ -26,7 +26,7 @@ public class SupplementCourseButtonPanel extends Panel {
 		super(id);
 		
 		form = new Form("form");
-		ListView<ICourse> buttonListView = new ListView<ICourse>("buttonListView", modul.getCourses()) {
+		ListView<ICourse> buttonListView = new ListView<ICourse>("buttonListView", list) {
 
 			private static final long serialVersionUID = 1L;
 

@@ -30,7 +30,7 @@ public class CourseButton extends AbstractCourseButton {
 			setEnabled(false);
 		} else if(isAlreadySelected()){
 			setSelected();
-		} else if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs)) {
+		} else if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs, Prof::getWahlModul)) {
 			setEnabled(false);
 		}
 	}
