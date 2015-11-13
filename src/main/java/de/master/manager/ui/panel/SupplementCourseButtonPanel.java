@@ -13,6 +13,7 @@ import org.apache.wicket.model.Model;
 
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.profStuff.SupplementModul;
 import de.master.manager.ui.button.SupplementButton;
 import de.master.manager.ui.events.RemoveCourseEvent;
 
@@ -21,18 +22,18 @@ public class SupplementCourseButtonPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	private final Form form;
 
-	public SupplementCourseButtonPanel(String id, IModel<Prof> prof, List<ICourse> list) {
+	public SupplementCourseButtonPanel(String id, SupplementModul modul, List<ICourse> list) {
 		super(id);
 		
 		form = new Form("form");
-		ListView<ICourse> buttonListView = new ListView<ICourse>("buttonListView", list) {
+		ListView<ICourse> buttonListView = new ListView<ICourse>("buttonListView", modul.getCourses()) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse=item.getModelObject();
-				item.add(new SupplementButton("modulButton", item.getModelObject(), prof));
+				item.add(new SupplementButton("modulButton", item.getModelObject(), modul));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}

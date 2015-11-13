@@ -8,11 +8,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourse;
-import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.button.AufbauButton;
 import de.master.manager.ui.events.RemoveCourseEvent;
 
@@ -21,7 +20,7 @@ public class AufbauButtonPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	private final Form form;
 
-	public AufbauButtonPanel(String id, List<ICourse> list, IModel<Prof> prof) {
+	public AufbauButtonPanel(String id, List<ICourse> list, BasicModul modul) {
 		super(id);
 
 		form = new Form("form");
@@ -32,7 +31,7 @@ public class AufbauButtonPanel extends Panel {
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse=item.getModelObject();
-				item.add(new AufbauButton("modulButton", currentCourse, prof));
+				item.add(new AufbauButton("modulButton", currentCourse, modul));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}

@@ -1,5 +1,6 @@
 package de.master.manager.ui.panel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,11 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.google.common.collect.Lists;
 
+import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.SupplementCourses;
+import de.master.manager.profStuff.SupplementModul;
 import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.ProfChangedEvent;
 import de.master.manager.ui.model.TransformationModel;
@@ -39,15 +42,16 @@ public class NavsPanel extends Panel{
 		IModel<Prof> profOfPanel1 = Model.of(breunig);
 		IModel<Prof> profOfPanel2 = Model.of(hinz);
 		
-		SupplementCourses supplements = new SupplementCourses();
-		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, supplements, allProfs);
+		BasicModul basicModul = new BasicModul(new ArrayList<>());
+		SupplementModul supplementModul = new SupplementModul(new ArrayList<>());
+		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);
 		
 		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
 		add(createLink("courses",  currentPanel));
-		add(createLink("noten",  new GradePanel("panel", profOfPanel1, profOfPanel2)));
-		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, allProfs)));
-		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2,  allProfs)));
+		add(createLink("noten",  new GradePanel("panel", profOfPanel1, profOfPanel2, basicModul, supplementModul)));
+		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs)));
+		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs)));
 		add(currentPanel);
 	}
 

@@ -84,7 +84,7 @@ public class ModulButtonPanel extends Panel {
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse=item.getModelObject();
-				item.add(new CoursePflichtButton("modulButton", currentCourse, prof, allProfs));
+				item.add(new CoursePflichtButton("modulButton", currentCourse, prof.getObject().getPflichtModul(), prof, allProfs));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}
@@ -98,7 +98,7 @@ public class ModulButtonPanel extends Panel {
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse=item.getModelObject();
-				item.add(new CourseButton("modulButton", currentCourse, profLeft, profRight, allProfs));
+				item.add(new CourseButton("modulButton", currentCourse, profLeft.getObject().getWahlModul(), profLeft, profRight, allProfs));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}

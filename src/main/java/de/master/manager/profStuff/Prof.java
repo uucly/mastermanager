@@ -10,23 +10,16 @@ public class Prof implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private final String name, wahlModulPath;
-	private final List<ICourse> selectedWahlCourses;
-	private final List<ICourse> selectedPflichtCourses;
-	private final List<ICourse> pflichtCourses;
-
-	private final SupplementCourses supplementCourses;
-
-	private final BasicCourses basicCourses;
+	private final IModul wahlModul;
+	private final IModul pflichtModul;
+	private final List<ICourse> pflichtCourses;	
 	
-	
-	public Prof(String name, List<ICourse> pflichtCourses, SupplementCourses supplementCourses, BasicCourses basicCourses) {
+	public Prof(String name, List<ICourse> pflichtCourses, SupplementModul supplementCourses, BasicModul basicCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
-		this.selectedWahlCourses = new ArrayList<>(10);
-		this.selectedPflichtCourses = new ArrayList<>(10);
+		this.wahlModul = new WahlModul(new ArrayList<>(10));
+		this.pflichtModul = new PflichtModul(new ArrayList<>(10));
 		this.pflichtCourses = pflichtCourses;
-		this.supplementCourses = supplementCourses;
-		this.basicCourses = basicCourses;
 	}
 
 
@@ -38,56 +31,52 @@ public class Prof implements Serializable{
 		return wahlModulPath;
 	}
 
-	public List<ICourse> getSelectedModuls() {
-		return selectedWahlCourses;
+	public IModul getWahlModul(){
+		return wahlModul;
 	}
 	
-	public List<ICourse> getSelectedPflichtModuls() {
-		return selectedPflichtCourses;
+	public IModul getPflichtModul(){
+		return pflichtModul;
+	}
+	
+	public List<ICourse> getSelectedCourses() {
+		return wahlModul.getCourses();
+	}
+	
+	public List<ICourse> getSelectedPflichtCourses() {
+		return pflichtModul.getCourses();
 	}
 	
 	public void addSelectedModul(ICourse course){
-		selectedWahlCourses.add(course);
+		wahlModul.addCourse(course);
 	}
 	
 	public void addSelectedPflichtModul(ICourse course){
-		selectedPflichtCourses.add(course);
-	}
-	
-	public double calculateSupplementPoints(){
-		return supplementCourses.calculatePoints();
-		
-	}
-	
-	public double calculateBasicPoints(){
-		return basicCourses.calculatePoints();
-		
+		pflichtModul.addCourse(course);
 	}
 	
 	public double calculateWahlPoints(){
-		return calculatePoints(selectedWahlCourses);
+		return wahlModul.calculatePoints();
 	}
 	
 	public double calculatePflichtPoints(){
-		return calculatePoints(selectedPflichtCourses);
+		return pflichtModul.calculatePoints();
 	}
 	
 	public OptionalDouble calculateFinalGrade(){
-		List<ICourse> jointCourseLists = new ArrayList<>(selectedWahlCourses.size() + selectedPflichtCourses.size());
-		jointCourseLists.addAll(selectedPflichtCourses);
-		jointCourseLists.addAll(selectedWahlCourses);
-		jointCourseLists.addAll(basicCourses.getCourses());
-		jointCourseLists.addAll(supplementCourses.getAllCourses());
-		
+		List<ICourse> jointCourseLists = new ArrayList<>(getSelectedCourses().size() + getSelectedPflichtCourses().size());
+		jointCourseLists.addAll(getSelectedPflichtCourses());
+		jointCourseLists.addAll(getSelectedCourses());
+
 		return jointCourseLists.stream().filter(m -> m.getGrade().isPresent()).mapToDouble(m -> m.getGrade().get()).average();
 	}
 	
 	public OptionalDouble calculateFinalWahlGrade(){
-		return selectedWahlCourses.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
+		return wahlModul.calculateGrade();
 	}
 	
 	public OptionalDouble calculateFinalPflichtGrade(){
-		return selectedPflichtCourses.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
+		return pflichtModul.calculateGrade();
 	}
 		
 	@Override
@@ -100,17 +89,5 @@ public class Prof implements Serializable{
 		return pflichtCourses;
 	}
 	
-	private final static double calculatePoints(List<ICourse> courses){
-		return courses.stream().mapToDouble(ICourse::getPoints).sum();
-	}
-
-
-	public SupplementCourses getSupplementCourses() {
-		return supplementCourses;
-	}
-	
-	public BasicCourses getBasicCourses(){
-		return basicCourses;
-	}
 	
 }

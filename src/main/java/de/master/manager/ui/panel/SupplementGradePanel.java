@@ -1,13 +1,11 @@
 package de.master.manager.ui.panel;
 
-import java.util.List;
-
-import de.master.manager.profStuff.ICourse;
+import de.master.manager.profStuff.SupplementModul;
 
 public class SupplementGradePanel extends SingleGradePanel{
 
-	public SupplementGradePanel(String id, String name, List<ICourse> courses) {
-		super(id, name, courses);
+	public SupplementGradePanel(String id, String name, SupplementModul modul) {
+		super(id, name, modul.getCourses());
 	}
 
 }

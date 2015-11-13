@@ -30,7 +30,7 @@ public class GradeInfoProfPanel extends Panel{
 
 	/* methods */
 	private ListView<ICourse> createPflichtListView(IModel<Prof> profOfPanel) {
-		ListView<ICourse> pflichtView = new ListView<ICourse>("pflichtList", profOfPanel.getObject().getSelectedPflichtModuls()) {
+		ListView<ICourse> pflichtView = new ListView<ICourse>("pflichtList", profOfPanel.getObject().getSelectedPflichtCourses()) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -46,7 +46,7 @@ public class GradeInfoProfPanel extends Panel{
 	}
 
 	private ListView<ICourse> createWahlListView(IModel<Prof> profOfPanel) {
-		ListView<ICourse> wahlListView = new ListView<ICourse>("wahlList", profOfPanel.getObject().getSelectedModuls()) {
+		ListView<ICourse> wahlListView = new ListView<ICourse>("wahlList", profOfPanel.getObject().getSelectedCourses()) {
 
 			private static final long serialVersionUID = 1L;
 

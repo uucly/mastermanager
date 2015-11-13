@@ -36,8 +36,8 @@ public class GradeProfPanel extends Panel {
 		this.profOfPanel = profOfPanel;
 		add(new Label("averagePflicht", loadAverageGrade(profOfPanel, Prof::calculateFinalPflichtGrade)));
 		add(new Label("averageWahl", loadAverageGrade(profOfPanel, Prof::calculateFinalWahlGrade)));
-		add(createCourseListView("wahl", profOfPanel.getObject().getSelectedModuls()));
-		add(createCourseListView("pflicht", profOfPanel.getObject().getSelectedPflichtModuls()));
+		add(createCourseListView("wahl", profOfPanel.getObject().getSelectedCourses()));
+		add(createCourseListView("pflicht", profOfPanel.getObject().getSelectedPflichtCourses()));
 	}
 
 	/* methods */
@@ -80,7 +80,7 @@ public class GradeProfPanel extends Panel {
 	protected void onComponentTag(ComponentTag tag) {
 		super.onComponentTag(tag);
 		Prof prof = profOfPanel.getObject();
-		if(prof.getSelectedModuls().isEmpty() && prof.getSelectedPflichtModuls().isEmpty()){
+		if(prof.getSelectedCourses().isEmpty() && prof.getSelectedPflichtCourses().isEmpty()){
 			tag.append("style" , "display:none", " ");
 		}
 	}

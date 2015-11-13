@@ -1,13 +1,11 @@
 package de.master.manager.ui.panel;
 
-import java.util.List;
-
-import de.master.manager.profStuff.ICourse;
+import de.master.manager.profStuff.BasicModul;
 
 public class BasicGradePanel extends SingleGradePanel {
 
-	public BasicGradePanel(String id, String name, List<ICourse> courses) {
-		super(id, name, courses);
+	public BasicGradePanel(String id, String name, BasicModul modul) {
+		super(id, name, modul.getCourses());
 	}
 
 }
