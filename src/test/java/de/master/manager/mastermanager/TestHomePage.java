@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.master.manager.mastermanager.WicketApplication;
-import de.master.manager.ui.HomePage;
 
 /**
  * Simple test using the WicketTester
