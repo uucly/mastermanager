@@ -1,6 +1,5 @@
 package de.master.manager.ui;
 
-import java.awt.Image;
 import java.util.ArrayList;
 
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -8,7 +7,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import de.master.manager.profStuff.BasicCourses;
 import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourseLoader;
-import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.SupplementCourses;
 import de.master.manager.profStuff.SupplementModul;
@@ -21,21 +19,12 @@ public class DragAndDropPage extends BasePage{
 	@SpringBean(name="wahlPflicht")
 	private ICourseLoader courseLoader;
 	
-	@SpringBean
-	private SupplementCourses supplementCourses;
-	
-	@SpringBean
-	private BasicCourses basicCourses;
-	
 	public DragAndDropPage(){
 		
-		SupplementModul supplementModul = new SupplementModul(new ArrayList<>());
-		BasicModul basicModul = new BasicModul(new ArrayList<>());
-		
-		Prof breunig = loadProf("BreunigPflicht.txt", "Breunig", courseLoader, supplementModul, basicModul), 
-				hinz = loadProf("HinzPflicht.txt", "Hinz", courseLoader, supplementModul, basicModul),
-				heck = loadProf("HeckPflicht.txt", "Heck", courseLoader, supplementModul, basicModul), 
-				hennes = loadProf("HennesPflicht.txt", "Hennes", courseLoader, supplementModul, basicModul);
+		Prof breunig = loadProf("BreunigPflicht.txt", "Breunig", courseLoader), 
+				hinz = loadProf("HinzPflicht.txt", "Hinz", courseLoader),
+				heck = loadProf("HeckPflicht.txt", "Heck", courseLoader), 
+				hennes = loadProf("HennesPflicht.txt", "Hennes", courseLoader);
 		NavsPanel panel = new NavsPanel("navPanel", courseLoader, breunig, hinz, heck, hennes);
 		add(panel);
 	}
@@ -43,8 +32,8 @@ public class DragAndDropPage extends BasePage{
 	
 	/* methods */
 	
-	private Prof loadProf(String pflichtFileName, String profName, ICourseLoader courseLoader, SupplementModul supplementCourses, BasicModul basicCourses){
-		return new Prof(profName, courseLoader.loadCourses(pflichtFileName), supplementCourses, basicCourses);
+	private Prof loadProf(String pflichtFileName, String profName, ICourseLoader courseLoader){
+		return new Prof(profName, courseLoader.loadCourses(pflichtFileName));
 	}
 	
 }

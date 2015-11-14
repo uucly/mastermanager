@@ -14,7 +14,7 @@ public class Prof implements Serializable{
 	private final IModul pflichtModul;
 	private final List<ICourse> pflichtCourses;	
 	
-	public Prof(String name, List<ICourse> pflichtCourses, SupplementModul supplementCourses, BasicModul basicCourses) {
+	public Prof(String name, List<ICourse> pflichtCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
 		this.wahlModul = new WahlModul(new ArrayList<>(10));
