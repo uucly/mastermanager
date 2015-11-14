@@ -1,6 +1,15 @@
 package de.master.manager.ui.panel;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Function;
 
 import org.apache.wicket.AttributeModifier;
@@ -49,9 +58,15 @@ public class InfoPanel extends Panel{
 	private final IModel<List<Prof>> profs;
 	private final Form<Object> form;
 	private final IModel<List<ICourse>> allCurrentSelectedModuls;
-	private final IModel<List<ICourse>> allSelectedModuls;
+
+	//private final IModel<List<ICourse>> allSelectedModuls;
 	private final BasicModul basicModul;
 	private final SupplementModul supplementModul;
+
+	private final IModel<List<ICourse>> allSelectedPflichtModuls;
+	private final IModel<List<ICourse>> allSelectedWahlModuls;
+	private final IModel<List<ICourse>> allSelectedSupplementModuls;
+	private final IModel<List<ICourse>> allSelectedBasicModuls;
 	
 	
 	public InfoPanel(String id, final IModel<List<Prof>> profs, BasicModul basicModul, SupplementModul supplementModul, final List<Prof> allProfs) {
@@ -60,8 +75,7 @@ public class InfoPanel extends Panel{
 		this.profs = profs;
 		this.basicModul = basicModul;
 		this.supplementModul = supplementModul;
-		
-		
+				
 		form = new Form<Object>("form");
 		wahlPoints.setObject(calculatePoints(profs, Prof::calculateWahlPoints));
 		pflichtPoints.setObject(calculatePoints(profs, Prof::calculatePflichtPoints));
@@ -73,7 +87,45 @@ public class InfoPanel extends Panel{
 		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", basicPoints);
 		ProgressBar supplementProgressBar = createProgressBar("supplementProgress", supplementPoints);
 		
-		allSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
+		/*allSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+<<<<<<< HEAD
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedCourses()));
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtCourses()));
+				list.addAll(supplementModul.getCourses());
+				list.addAll(basicModul.getCourses());
+=======
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedWahlModuls()));
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtModuls()));
+				list.addAll(loadSupplementCourses.getObject());
+				list.addAll(loadBasicCourses.getObject());
+>>>>>>> AuflistungGewaehlteFaecher
+				
+				return list;
+			}
+		};*/
+		
+		allSelectedPflichtModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				
+				List<ICourse> list = Lists.newArrayList();
+				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtCourses()));
+
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
+				return list;
+			}
+		};
+		
+		allSelectedWahlModuls = new LoadableDetachableModel<List<ICourse>>() {
 
 			private static final long serialVersionUID = 1L;
 
@@ -81,13 +133,40 @@ public class InfoPanel extends Panel{
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
 				allProfs.stream().forEach(p->list.addAll(p.getSelectedCourses()));
-				allProfs.stream().forEach(p->list.addAll(p.getSelectedPflichtCourses()));
-				list.addAll(supplementModul.getCourses());
-				list.addAll(basicModul.getCourses());
-				
+
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
 				return list;
 			}
 		};
+		
+		allSelectedBasicModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+				list.addAll(basicModul.getCourses());
+
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
+				return list;
+			}
+		};
+		
+		allSelectedSupplementModuls = new LoadableDetachableModel<List<ICourse>>() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+				list.addAll(supplementModul.getCourses());
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
+				return list;
+			}
+		};
+		
+		
 		allCurrentSelectedModuls = new LoadableDetachableModel<List<ICourse>>() {
 			
 			private static final long serialVersionUID = 1L;
@@ -100,13 +179,19 @@ public class InfoPanel extends Panel{
 				list.addAll(supplementModul.getCourses());
 				list.addAll(basicModul.getCourses());
 				
+				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
 				return list;
 			}
 			
 		};
 		
-        ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
-		form.add(modulListView);
+		
+        //ListView<ICourse> modulListView = createListView(allSelectedModuls, allCurrentSelectedModuls, profs, allProfs);
+		ListView<ICourse> modulPflichtListView = createListView("verticalPflichtButtonGroup","selectedPflichtModulButton",allSelectedPflichtModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
+		ListView<ICourse> modulWahlListView = createListView("verticalWahlButtonGroup","selectedWahlModulButton",allSelectedWahlModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
+		ListView<ICourse> modulSupplementListView = createListView("verticalSupplementButtonGroup","selectedSupplementModulButton",allSelectedSupplementModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
+		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
+		form.add(modulPflichtListView, modulWahlListView, modulSupplementListView, modulBasicListView);
         form.add(wahlProgressBar);
         form.add(pflichtProgressBar);
         form.add(aufbauProgressBar);
@@ -169,14 +254,14 @@ public class InfoPanel extends Panel{
 		return progressBar;
 	}
 	
-	private static ListView<ICourse> createListView(IModel<List<ICourse>> allSelectedModuls, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, BasicModul basicModul, SupplementModul supplementModul, final List<Prof> allProfs){
-		return new ListView<ICourse>("verticalButtonGroup", allSelectedModuls) {
+	private static ListView<ICourse> createListView(String ListViewID, String ButtonID, IModel<List<ICourse>> allSelectedCourses, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, BasicModul basicModul, SupplementModul supplementModul, final List<Prof> allProfs){
+		return new ListView<ICourse>(ListViewID, allSelectedCourses.getObject()) {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
-				AjaxButton button = createButton(item.getModelObject());
+				AjaxButton button = createButton(ButtonID, item.getModelObject());
 				if(allCurrentSelectedModuls.getObject().contains(item.getModel().getObject())){
 					button.add(new AttributeModifier("class", Model.of("btn btn-xs btn-success btn-block")));
 				}
@@ -185,8 +270,8 @@ public class InfoPanel extends Panel{
 			}
 			
 			/* local private method*/
-			private AjaxButton createButton(ICourse course){
-				return new AjaxButton("selectedModulButton") {
+			private AjaxButton createButton(String buttonId, ICourse course){
+				return new AjaxButton(buttonId) {
 					private static final long serialVersionUID = 1L;
 
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -206,7 +291,10 @@ public class InfoPanel extends Panel{
 	protected void onDetach() {
 		super.onDetach();
 		allCurrentSelectedModuls.detach();
-		allSelectedModuls.detach();
+		allSelectedPflichtModuls.detach();
+		allSelectedWahlModuls.detach();
+		allSelectedSupplementModuls.detach();
+		allSelectedBasicModuls.detach();
 		profs.detach();
 	}
 }

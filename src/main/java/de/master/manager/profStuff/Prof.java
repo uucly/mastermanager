@@ -88,6 +88,5 @@ public class Prof implements Serializable{
 	public List<ICourse> getPflichtCourse() {
 		return pflichtCourses;
 	}
-	
-	
+		
 }
