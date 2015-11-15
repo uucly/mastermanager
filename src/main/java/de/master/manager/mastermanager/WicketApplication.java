@@ -12,6 +12,7 @@ import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
 import de.master.manager.ui.DragAndDropPage;
+import de.master.manager.ui.HomePage;
 
 /**
  * Application object for your web application. If you want to run this
@@ -25,7 +26,7 @@ public class WicketApplication extends WebApplication {
 	 */
 	@Override
 	public Class<? extends WebPage> getHomePage() {
-		return DragAndDropPage.class;
+		return HomePage.class;
 	}
 	
 	/**
