@@ -70,7 +70,7 @@ public abstract class BasePage extends WebPage{
        
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
                         new NavbarButton<Void>(HomePage.class, Model.of("Overview")).setIconType(GlyphIconType.home),
-                        new NavbarButton<Void>(DragAndDropPage.class, Model.of("Moduls")),
+                        new NavbarButton<Void>(DragAndDropPage.class, Model.of("Moduls")).setIconType(GlyphIconType.list),
                        // new NavbarButton<Void>(ComponentsPage.class, Model.of("Components")),
                         new NavbarExternalLink(Model.of("http://gug.bgu.kit.edu/downloads/Master_Modulhandbuch_GuG_Oktober_2015.pdf"))
                                 .setLabel(Model.of("Modulhandbuch"))
