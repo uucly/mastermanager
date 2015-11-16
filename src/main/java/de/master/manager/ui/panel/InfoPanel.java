@@ -28,14 +28,16 @@ import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.events.SelectedEvent;
 import de.master.manager.ui.model.SerializableFunction;
+import de.master.manager.ui.model.TransformationModel;
 
 
 
 public class InfoPanel extends Panel{
 
+	private static final int MODUL_POINTS_TO_REECH = 46;
 	private static final long serialVersionUID = 1L;
-	private static final int MAX_WAHL_POINTS = 23;
-	private static final int MAX_PFLICHT_POINTS = 24;
+	private IModel<Integer> maxWahlPoints = Model.of(0);
+	private IModel<Integer> maxPflichtPoints = Model.of(0);
 	private static final int MAX_BASIC_POINTS = 32;
 	private static final int MAX_SUPPLEMENT_POINTS = 8;
 	
@@ -68,7 +70,9 @@ public class InfoPanel extends Panel{
 		this.basicModul = basicModul;
 		this.supplementModul = supplementModul;
 				
-		
+		maxPflichtPoints = new TransformationModel<List<Prof>, Integer>(profs, l -> (int)l.stream().mapToDouble(p -> p.calculatePflichtPointsToReach()).sum());
+		maxWahlPoints = new TransformationModel<>(maxPflichtPoints, point -> MODUL_POINTS_TO_REECH - point);
+			
 		ProgressBar wahlProgressBar = createProgressBar("wahlProgress", wahlPoints);
 		ProgressBar pflichtProgressBar = createProgressBar("pflichtProgress", pflichtPoints);
 		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", basicPoints);
@@ -86,8 +90,8 @@ public class InfoPanel extends Panel{
 		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
 		
 		loadPointInfoBasicForLabel = createLoadableModel(basicModul,  MAX_BASIC_POINTS);
-		loadPointInfoPflichtForLabel = createLoadableModel(profs, Prof::calculatePflichtPoints, MAX_PFLICHT_POINTS, false);
-		loadPointInfoWahlForLabel = createLoadableModel(profs, Prof::calculateWahlPoints, MAX_WAHL_POINTS, false);
+		loadPointInfoPflichtForLabel = createLoadableModel(profs, Prof::calculatePflichtPoints, maxPflichtPoints);
+		loadPointInfoWahlForLabel = createLoadableModel(profs, Prof::calculateWahlPoints, maxWahlPoints);
 		loadPointInfoSupplementForLabel = createLoadableModel(supplementModul, MAX_SUPPLEMENT_POINTS);
 		
 		
@@ -104,22 +108,22 @@ public class InfoPanel extends Panel{
 			
 	}
 
-	private IModel<String> createLoadableModel(IModul basicModul, int maxPoints) {
+	private IModel<String> createLoadableModel(IModul modul, int maxPoints) {
 		return new LoadableDetachableModel<String>() {
 
 			@Override
 			protected String load() {
-				return basicModul.calculatePoints() + " von " + maxPoints;
+				return modul.calculatePoints() + " von " + maxPoints;
 			}
 		};
 	}
 
-	private static IModel<String> createLoadableModel(IModel<List<Prof>> profs, SerializableFunction<Prof, Double> calculate, int maxPoints, boolean reducePoints) {
+	private static IModel<String> createLoadableModel(IModel<List<Prof>> profs, SerializableFunction<Prof, Double> calculate, IModel<Integer> maxPoints) {
 		return new LoadableDetachableModel<String>() {
 
 			@Override
 			protected String load() {
-				return calculatePoints(profs, calculate) + " von " + (reducePoints ? maxPoints-1 : maxPoints);
+				return calculatePoints(profs, calculate) + " von " + maxPoints.getObject();
 			}
 		};
 	}
@@ -191,35 +195,35 @@ public class InfoPanel extends Panel{
 		int summaryPflicht = calculatePoints(profs, Prof::calculatePflichtPoints);
 		int summarySupplement = calculatePoints(supplementModul.calculatePoints());
 		int summaryBasic = calculatePoints(basicModul.calculatePoints());
-		boolean reduceMaxPoints = profs.getObject().stream().anyMatch(p -> p.getName().equals("Hennes") || p.getName().equals("Heck"));
+		
+		
 		
 		if(event.getPayload() instanceof SelectedEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic, reduceMaxPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((SelectedEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof AbstractEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic, reduceMaxPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof RemoveCourseEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic, reduceMaxPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof PanelChangedEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic, reduceMaxPoints);
+			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
 			((PanelChangedEvent) event.getPayload()).getTarget().add(form);
 		}
 		
 	}
 
-	private void setAllPoints(int summary, int summaryPflicht, int summarySupplement, int summaryBasic, boolean reduceMaxPoints) {
-		setPoints(summary, wahlPoints, MAX_WAHL_POINTS, reduceMaxPoints);
-		setPoints(summaryPflicht, pflichtPoints, MAX_PFLICHT_POINTS, !reduceMaxPoints);
-		setPoints(summarySupplement, supplementPoints,MAX_SUPPLEMENT_POINTS, false);
-		setPoints(summaryBasic, basicPoints,MAX_BASIC_POINTS, false);
+	private void setAllPoints(int summary, int summaryPflicht, int summarySupplement, int summaryBasic) {
+		setPoints(summary, wahlPoints, maxWahlPoints.getObject());
+		setPoints(summaryPflicht, pflichtPoints, maxPflichtPoints.getObject());
+		setPoints(summarySupplement, supplementPoints,MAX_SUPPLEMENT_POINTS);
+		setPoints(summaryBasic, basicPoints,MAX_BASIC_POINTS);
 	}
 	
-	private static void setPoints(int summary, IModel<Integer> points, int maxPoints, boolean reduceMaxPoints){
-		int tempMaxPoints = reduceMaxPoints ? maxPoints - 1 : maxPoints;
-		if(summary < tempMaxPoints){
-			points.setObject((int) Math.round(summary*(100/tempMaxPoints)));
+	private static void setPoints(int summary, IModel<Integer> points, int maxPoints){
+		if(summary < maxPoints){
+			points.setObject((int) Math.round(summary*(100/maxPoints)));
 		} else {
 			points.setObject(100);
 		}
@@ -267,6 +271,9 @@ public class InfoPanel extends Panel{
 	@Override
 	protected void onDetach() {
 		super.onDetach();
+		profs.detach();
+		maxPflichtPoints.detach();
+		maxWahlPoints.detach();
 		allCurrentSelectedModuls.detach();
 		allSelectedPflichtModuls.detach();
 		allSelectedWahlModuls.detach();
@@ -284,6 +291,5 @@ public class InfoPanel extends Panel{
 		supplementPoints.detach();
 		
 		
-		profs.detach();
 	}
 }

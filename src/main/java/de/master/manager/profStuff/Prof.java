@@ -55,6 +55,10 @@ public class Prof implements Serializable{
 		pflichtModul.addCourse(course);
 	}
 	
+	public double calculatePflichtPointsToReach(){
+		return pflichtCourses.stream().mapToDouble(ICourse::getPoints).sum();
+	}
+	
 	public double calculateWahlPoints(){
 		return wahlModul.calculatePoints();
 	}
