@@ -22,7 +22,7 @@ public class GradePanel extends Panel{
 		SingleGradePanel basicGradePanel = new BasicGradePanel("gradeBasicPanel", "Aufbau", basicModul);
 		SingleGradePanel supplementGradePanel = new SupplementGradePanel("supplementGrade", "Ergänzung", supplementModul);
 		
-		noteInfoPanel = new GradeInfoPanel("noteInfoPanel", profOfPanel1, profOfPanel2);
+		noteInfoPanel = new GradeInfoPanel("noteInfoPanel", profOfPanel1, profOfPanel2, basicModul, supplementModul);
 		add(noteProfPanel1, noteProfPanel2);
 		add(basicGradePanel);
 		add(supplementGradePanel);

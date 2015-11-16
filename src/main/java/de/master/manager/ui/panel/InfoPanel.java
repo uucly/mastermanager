@@ -123,7 +123,7 @@ public class InfoPanel extends Panel{
 
 			@Override
 			protected String load() {
-				return calculatePoints(profs, calculate) + " von " + maxPoints.getObject();
+				return profs.getObject().stream().mapToDouble(p -> calculate.apply(p)).sum() + " von " + maxPoints.getObject();
 			}
 		};
 	}
