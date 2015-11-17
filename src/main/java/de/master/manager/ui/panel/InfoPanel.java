@@ -31,7 +31,11 @@ import de.master.manager.ui.model.SerializableFunction;
 import de.master.manager.ui.model.TransformationModel;
 
 
-
+/**
+ * 
+ * @author je-ke
+ *
+ */
 public class InfoPanel extends Panel{
 
 	private static final int MODUL_POINTS_TO_REECH = 46;

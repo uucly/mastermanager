@@ -5,7 +5,7 @@ import de.master.manager.profStuff.BasicModul;
 public class BasicGradePanel extends SingleGradePanel {
 
 	public BasicGradePanel(String id, String name, BasicModul modul) {
-		super(id, name, modul.getCourses());
+		super(id, name, modul);
 	}
 
 }

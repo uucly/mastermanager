@@ -15,7 +15,10 @@ public abstract class AModul implements IModul{
 
 	@Override
 	public OptionalDouble calculateGrade() {
-		return courses.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()).average();
+		double sumWeightedGrades = courses.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()*course.getPoints()).sum();
+		double sumPoints = courses.stream().filter(c -> c.getGrade().isPresent()).mapToDouble(c -> c.getPoints()).sum();
+		double grade = sumWeightedGrades/sumPoints;
+		return grade == 0 || Double.isNaN(grade)? OptionalDouble.empty() : OptionalDouble.of(grade);
 	}
 
 	@Override

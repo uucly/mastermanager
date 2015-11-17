@@ -1,26 +1,26 @@
-3D-Tools fuer geowissenschaftliche Anwendungen,3
+3D-Tools für geowissenschaftliche Anwendungen,3
 3D/4D GIS,4
-Aktive Sensorik fuer Computer Vision,3
+Aktive Sensorik für Computer Vision,3
 Allgemeine Meteorologie,7
 Analyse und Entwurf multisensorieller Systeme,3
 Antennen und Antennensysteme,4.5
 Augmented Reality,4
-Ausgewaehlte Kapitel zu GNSS,4
-Ausgewaehlte Themen zur Schaetztheorie,3
+Ausgewählte Kapitel zu GNSS,4
+Ausgewählte Themen zur Schätztheorie,3
 Deformationsanalyse,4
-Einfuehrung in die Geophysik I,4
-Einfuehrung in die Geophysik II,4
-Einfuehrung in die Kontinuumsmechanik,3
-Fernerkundung atmosphaerischer Zustandsgroessen,4
-Flaechenerfassung,3
+Einführung in die Geophysik I,4
+Einführung in die Geophysik II,4
+Einführung in die Kontinuumsmechanik,3
+Fernerkundung atmosphärischer Zustandsgrössen,4
+Flächenerfassung,3
 GIS-Analysen,3
 Geodateninfrastruktur und Web-Dienste,4
 Geodetic Application of SAR Interferometry,4
 Geodetic Reference Frames and Systems,1
-Geodaetische Astronomie,4
+Geodätische Astronomie,4
 Geometrische Objektmodellierung in 2D/3D/4D,3
-Geophysikalische Gelaendeuebung,3
-Geophysikalische Laboruebungen,5
+Geophysikalische Geländeübung,3
+Geophysikalische Laborübungen,5
 Geosensornetworks/Sensor DB,3
 Globale Schwerefeldmodellierung,3
 Industrielle Bildverarbeitung und Machine Vision,3
@@ -40,8 +40,8 @@ SAR und InSAR-Fernerkundung,3
 Scientific GNSS Data Processing,3
 Spaceborne SAR Remote Sensing,4.5
 Spezielle Funktionen und Anwendungen in der Potentialtheorie,4
-Steuerungstechnik fuer Roboter,3
-Strassenwesen fuer Geodaeten,1
+Steürungstechnik für Roboter,3
+Strassenwesen für Geodäten,1
 Struktur- und Objektextraktion in 2D und 3D,4
 Text- and Data Mining in der Geoinformatik,3
 Visualisierung von Geodaten in 2D/3D/4D,3
@@ -51,25 +51,34 @@ Rezente Geodynamik,4
 Seminar Erdsystembeobachtung,1
 SAR und InSAR-Fernerkundung,3
 Regionale Schwerefeldmodellierung,3
-Dimensionelle Vermessungsverfahren,8
-Ausgewaehlte Kapitel zu GNSS,4
+Verfahren der Objektvermessung,8
+Ausgewählte Kapitel zu GNSS,4
 Struktur- und Objektextraktion in 2D und 3D,4
 Bildsequenzanalyse,2
 Statistische Mustererkennung und Wissensbasierte Bildanalyse,5
-Geschichte der Geodaesie,4
-Geodaetische Astronomie,4
+Geschichte der Geodäsie,4
+Geodätische Astronomie,4
 Katasterrecht,1
-Neuordnung der laendlichen Raeume II,4
+Neuordnung der ländlichen Räume II,4
 Immobilienwertermittlung II,4
 Bodenordnung II,2
 Kartographie II,1
 Umweltkommunikation,4
-Meeresgeodaesie,1
-Strassenwesen fuer Geodaeten,1
-Geodaetische Weltraumverfahen,5
+Meeresgeodäsie,1
+Strassenwesen für Geodäten,1
+Geodätische Weltraumverfahen,5
 Geoinformatik,5
-Geodaetische Sensorik und Messtechnik,5
+Geodätische Sensorik und Messtechnik,5
 2D/3D Computer Vision,3
 Sensorik und Datenanalyse in Computer Vision,2
 Numerische Mathematik,6
-Schaetztheorie und projektbezogenen Datenanalyse,6
+Schätztheorie und projektbezogenen Datenanalyse,6
+Bildanalyse,9
+Recent Earth Observation programs and systems,2
+Tomographic Laser- and Radar Sensing,3
+Seminar Topics of Image Analysis,2
+Geo-Project Management,3
+Missions and Methods of Remote Sensing,5
+Hyperspectral Remote Sensing,3
+Modelle und Analysen in der Geoinformatik,9
+Seminar Topics of Remote Sensing,2

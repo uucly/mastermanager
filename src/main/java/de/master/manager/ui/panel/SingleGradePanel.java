@@ -20,7 +20,9 @@ import org.apache.wicket.model.Model;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
+import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourse;
+import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
 import de.master.manager.ui.model.TransformationModel2;
@@ -28,20 +30,20 @@ import de.master.manager.ui.model.TransformationModel2;
 public abstract class SingleGradePanel extends Panel{
 
 	private static final List<Double> NOTEN_LIST = Arrays.asList(1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0);
-	private final List<ICourse> courses;
+	private final IModul modul;
 
-	public SingleGradePanel(String id, String name, List<ICourse> courses) {
+	public SingleGradePanel(String id, String name, IModul modul) {
 		super(id);
-		this.courses = courses;
+		this.modul = modul;
 		setOutputMarkupId(true);
 		
 		add(new Label("panelName", Model.of(name)));
-		add(createBasicGradeListView(courses));
+		add(createBasicGradeListView(modul));
 		
 		IModel<String> loadGrade = new LoadableDetachableModel<String>() {
 			@Override
 			protected String load() {
-				return calculateFinalGrade(courses);
+				return calculateFinalGrade(modul);
 			}
 		};
 		add(new Label("average", loadGrade));
@@ -49,8 +51,8 @@ public abstract class SingleGradePanel extends Panel{
 	
 	
 	/* methods */
-	private ListView<ICourse> createBasicGradeListView(List<ICourse> basicCourseList) {
-		ListView<ICourse> basicCourses = new ListView<ICourse>("courses", basicCourseList) {
+	private ListView<ICourse> createBasicGradeListView(IModul modul) {
+		ListView<ICourse> basicCourses = new ListView<ICourse>("courses", modul.getCourses()) {
 			
 			private static final long serialVersionUID = 1L;
 
@@ -82,9 +84,9 @@ public abstract class SingleGradePanel extends Panel{
 		return dropDownNoten;
 	}
 
-	private static final String calculateFinalGrade(List<ICourse> courses){
-		OptionalDouble grade = courses.stream().mapToDouble(c -> c.getGrade().isPresent() ? round(c.getGrade().get()) : 0).average();
-		return grade.isPresent() ? String.valueOf(round(grade.getAsDouble())) : "no grade selected";
+	private static final String calculateFinalGrade(IModul modul){
+		OptionalDouble grade = modul.calculateGrade();
+		return grade.isPresent() ? String.valueOf(round(grade.getAsDouble())) : "keine Note eingetragen";
 	}
 	
 	private static final double round(double number){
@@ -94,7 +96,7 @@ public abstract class SingleGradePanel extends Panel{
 	@Override
 	protected void onComponentTag(ComponentTag tag) {
 		super.onComponentTag(tag);
-		if(courses.isEmpty()){
+		if(modul.getCourses().isEmpty()){
 			tag.append("style", "display:none", " ");
 		}
 	}

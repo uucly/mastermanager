@@ -69,8 +69,8 @@ public abstract class BasePage extends WebPage{
         // show brand name
        
         navbar.addComponents(NavbarComponents.transform(Navbar.ComponentPosition.LEFT,
-                        new NavbarButton<Void>(HomePage.class, Model.of("Overview")).setIconType(GlyphIconType.home),
-                        new NavbarButton<Void>(DragAndDropPage.class, Model.of("Moduls")).setIconType(GlyphIconType.list),
+                   //     new NavbarButton<Void>(HomePage.class, Model.of("Overview")).setIconType(GlyphIconType.home),
+                        new NavbarButton<Void>(DragAndDropPage.class, Model.of("Modulübersicht")).setIconType(GlyphIconType.list),
                        // new NavbarButton<Void>(ComponentsPage.class, Model.of("Components")),
                         new NavbarExternalLink(Model.of("http://gug.bgu.kit.edu/downloads/Master_Modulhandbuch_GuG_Oktober_2015.pdf"))
                                 .setLabel(Model.of("Modulhandbuch"))
@@ -79,12 +79,11 @@ public abstract class BasePage extends WebPage{
         );
      //   navbar.addComponents(new NavbarText(navbar.newExtraItemId(), "Plain text").position(Navbar.ComponentPosition.RIGHT));
 
-        DropDownButton dropdown = new NavbarDropDownButton(Model.of("Themes")) {
+        /*DropDownButton dropdown = new NavbarDropDownButton(Model.of("Themes")) {
             @Override
             public boolean isActive(Component item) {
                 return false;
             }
-
             @Override
             protected List<AbstractLink> newSubMenuButtons(final String buttonMarkupId) {
                 final List<AbstractLink> subMenu = new ArrayList<AbstractLink>();
@@ -106,7 +105,7 @@ public abstract class BasePage extends WebPage{
         }.setIconType(GlyphIconType.book);
 
         navbar.addComponents(new ImmutableNavbarComponent(dropdown));
-
+*/
         return navbar;
     }
 	

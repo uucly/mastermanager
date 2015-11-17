@@ -27,7 +27,7 @@ public class GradeInfoPanel extends Panel{
 		return new TransformationModel2<Prof, Prof, String>(profOfPanel1, profOfPanel2,(p1, p2) -> {
 			OptionalDouble result = Lists.newArrayList(p1.calculateFinalGrade(), p2.calculateFinalGrade(), basicModul.calculateGrade(), supplementModul.calculateGrade()).stream().filter(opt -> opt.isPresent()).mapToDouble(OptionalDouble::getAsDouble).average();
 			
-			return result.isPresent() ? String.valueOf(round(result.getAsDouble())) : "No grade available";
+			return result.isPresent() ? String.valueOf(round(result.getAsDouble())) : "keine Note eingetragen";
 		});
 	}
 	

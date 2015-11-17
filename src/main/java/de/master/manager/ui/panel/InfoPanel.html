@@ -2,14 +2,13 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <link rel="stylesheet" type="text/css" href="style.css" />
-<meta charset="ISO-8859-1">
+<meta charset="utf-8" />
 <title>Insert title here</title>
 </head>
 <body>
 	<wicket:panel wicket:id="pflicht" class="form-inline">
 		<form wicket:id="form" class="form-group">
-			Aufbau:
-			<label wicket:id="pointBasicInfo"></label>
+			Aufbau: <label wicket:id="pointBasicInfo"></label>
 			<table>
 				<tr>
 					<td width="240" colspan="2">
@@ -17,8 +16,7 @@
 					</td>
 				</tr>
 			</table>
-			Pflicht:
-			<label wicket:id="pointPflichtInfo"></label>
+			Pflicht: <label wicket:id="pointPflichtInfo"></label>
 			<table>
 				<tr>
 					<td width="240" colspan="2">
@@ -26,9 +24,8 @@
 					</td>
 				</tr>
 			</table>
-			
-			Wahlpflicht:
-			<label wicket:id="pointWahlInfo"></label>
+
+			Wahlpflicht *: <label wicket:id="pointWahlInfo"></label>
 			<table>
 				<tr>
 					<td width="240" colspan="2">
@@ -36,9 +33,8 @@
 					</td>
 				</tr>
 			</table>
-			
-			Erg&auml;nzung:
-			<label wicket:id="pointSupplementInfo"></label>
+
+			Erg&auml;nzung: <label wicket:id="pointSupplementInfo"></label>
 			<table>
 				<tr>
 					<td width="240" colspan="2">
@@ -46,11 +42,11 @@
 					</td>
 				</tr>
 			</table>
-			
+
 			<br /> <b>Ausgew&auml;hlte Kurse: </b><br />
 
 			<div class="btn-group-vertical" role="group">
-				Pflicht
+				Pflichtmodule
 				<div wicket:id="verticalPflichtButtonGroup">
 					<button wicket:id="selectedPflichtModulButton"
 						style="float: left; margin-bottom: 3px;" type="submit"
@@ -58,7 +54,7 @@
 						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
 					</button>
 				</div>
-				<br />Wahl
+				<br />Wahlmodule
 				<div wicket:id="verticalWahlButtonGroup">
 					<button wicket:id="selectedWahlModulButton"
 						style="float: left; margin-bottom: 3px;" type="submit"
@@ -66,7 +62,7 @@
 						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
 					</button>
 				</div>
-				<br />Basic
+				<br />Aufbaumodule
 				<div wicket:id="verticalBasicButtonGroup">
 					<button wicket:id="selectedBasicModulButton"
 						style="float: left; margin-bottom: 3px;" type="submit"
@@ -74,7 +70,7 @@
 						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
 					</button>
 				</div>
-				<br />Supplement
+				<br />Ergänzungsmodule
 				<div wicket:id="verticalSupplementButtonGroup">
 					<button wicket:id="selectedSupplementModulButton"
 						style="float: left; margin-bottom: 3px;" type="submit"
@@ -82,7 +78,9 @@
 						<i class="glyphicon glyphicon-trash"></i> <span wicket:id="label"></span>
 					</button>
 				</div>
-
+				<br>
+				<br>
+				<label class="label label-warning" style = "display:block">* Achten Sie auf die geforderten Leistungspunkte<br> in den Wahlbereichen der gewählten Profile</label>
 			</div>
 
 

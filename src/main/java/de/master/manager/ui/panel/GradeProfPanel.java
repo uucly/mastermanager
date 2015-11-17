@@ -46,7 +46,7 @@ public class GradeProfPanel extends Panel {
 
 	/* methods */
 	private IModel<String> loadAverageGrade(IModel<Prof> prof, SerializableFunction<Prof, OptionalDouble> calcualteGrade) {
-		return new TransformationModel<Prof, String>(prof, p -> calcualteGrade.apply(p).isPresent()? String.valueOf(Math.round(calcualteGrade.apply(p).getAsDouble()*100.)/100.) : "no grade selected");
+		return new TransformationModel<Prof, String>(prof, p -> calcualteGrade.apply(p).isPresent()? String.valueOf(Math.round(calcualteGrade.apply(p).getAsDouble()*100.)/100.) : "keine Note eingetragen");
 	}
 
 	private static ListView<ICourse> createCourseListView(String courseType, IModel<List<ICourse>> selectedWahlCourses) {

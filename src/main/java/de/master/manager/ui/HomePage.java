@@ -8,9 +8,7 @@ public class HomePage extends BasePage{
 
 	public HomePage() {
 		
-		add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
-
-		// TODO Add your page's components here
+		
 
     }
 }
