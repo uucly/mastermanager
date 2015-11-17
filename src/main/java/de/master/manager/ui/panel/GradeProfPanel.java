@@ -6,6 +6,7 @@ import java.util.OptionalDouble;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -14,11 +15,14 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
+
 import com.google.common.base.Optional;
 
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
+import de.master.manager.ui.events.ProfChangedEvent;
 import de.master.manager.ui.model.SerializableFunction;
 import de.master.manager.ui.model.TransformationModel;
 
@@ -36,8 +40,8 @@ public class GradeProfPanel extends Panel {
 		this.profOfPanel = profOfPanel;
 		add(new Label("averagePflicht", loadAverageGrade(profOfPanel, Prof::calculateFinalPflichtGrade)));
 		add(new Label("averageWahl", loadAverageGrade(profOfPanel, Prof::calculateFinalWahlGrade)));
-		add(createCourseListView("wahl", profOfPanel.getObject().getSelectedCourses()));
-		add(createCourseListView("pflicht", profOfPanel.getObject().getSelectedPflichtCourses()));
+		add(createCourseListView("wahl", new TransformationModel<Prof, List<ICourse>>(profOfPanel, Prof::getSelectedCourses)));
+		add(createCourseListView("pflicht", new TransformationModel<Prof, List<ICourse>>(profOfPanel, Prof::getSelectedPflichtCourses)));
 	}
 
 	/* methods */
@@ -45,7 +49,7 @@ public class GradeProfPanel extends Panel {
 		return new TransformationModel<Prof, String>(prof, p -> calcualteGrade.apply(p).isPresent()? String.valueOf(Math.round(calcualteGrade.apply(p).getAsDouble()*100.)/100.) : "no grade selected");
 	}
 
-	private static ListView<ICourse> createCourseListView(String courseType, List<ICourse> selectedWahlCourses) {
+	private static ListView<ICourse> createCourseListView(String courseType, IModel<List<ICourse>> selectedWahlCourses) {
 		ListView<ICourse> wahlCourseListView = new ListView<ICourse>(courseType + "Courses", selectedWahlCourses) {
 
 			private static final long serialVersionUID = 1L;
@@ -82,6 +86,14 @@ public class GradeProfPanel extends Panel {
 		Prof prof = profOfPanel.getObject();
 		if(prof.getSelectedCourses().isEmpty() && prof.getSelectedPflichtCourses().isEmpty()){
 			tag.append("style" , "display:none", " ");
+		}
+	}
+	
+	@Override
+	public void onEvent(IEvent<?> event) {
+		Object payload = event.getPayload();
+		if(payload instanceof ProfChangedEvent){
+			((ProfChangedEvent) payload).getTarget().add(this);
 		}
 	}
 

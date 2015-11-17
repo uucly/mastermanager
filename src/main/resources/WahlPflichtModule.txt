@@ -52,7 +52,7 @@ Seminar Erdsystembeobachtung,1
 SAR und InSAR-Fernerkundung,3
 Regionale Schwerefeldmodellierung,3
 Dimensionelle Vermessungsverfahren,8
-Ausgewaehlte Kapitel zu GNSS,2
+Ausgewaehlte Kapitel zu GNSS,4
 Struktur- und Objektextraktion in 2D und 3D,4
 Bildsequenzanalyse,2
 Statistische Mustererkennung und Wissensbasierte Bildanalyse,5
