@@ -1,6 +1,5 @@
 package de.master.manager.ui.panel;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.markup.html.panel.Panel;
@@ -10,7 +9,6 @@ import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.profStuff.SupplementModul;
-import de.master.manager.ui.model.TransformationModel2;
 
 public class SupplementPanel extends Panel {
 
@@ -18,7 +16,7 @@ public class SupplementPanel extends Panel {
 		super(id);
 		
 		add(new SupplementCourseButtonPanel("supplementButtonPanel", supplementModul, courseLoader.loadCourses("Supplement.txt")));
-		add(new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profOfPanel1, profOfPanel2, Arrays::asList), basicModul, supplementModul, allProfs));
+		add(new InfoPanel("infoPanel", profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs));
 	}
 
 

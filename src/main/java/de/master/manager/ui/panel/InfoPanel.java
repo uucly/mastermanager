@@ -1,5 +1,7 @@
 package de.master.manager.ui.panel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import org.apache.wicket.AttributeModifier;
@@ -29,6 +31,7 @@ import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.events.SelectedEvent;
 import de.master.manager.ui.model.SerializableFunction;
 import de.master.manager.ui.model.TransformationModel;
+import de.master.manager.ui.model.TransformationModel2;
 
 
 /**
@@ -45,12 +48,15 @@ public class InfoPanel extends Panel{
 	private static final int MAX_BASIC_POINTS = 32;
 	private static final int MAX_SUPPLEMENT_POINTS = 8;
 	
-	private final IModel<Integer> wahlPoints = Model.of(0);
+	private final IModel<Integer> wahlPoints1 = Model.of(0);
+	private final IModel<Integer> wahlPoints2 = Model.of(0);
 	private final IModel<Integer> pflichtPoints = Model.of(0);
 	private final IModel<Integer> supplementPoints = Model.of(0);
 	private final IModel<Integer> basicPoints = Model.of(0);
 	
-	private final IModel<List<Prof>> profs;
+	private final IModel<Prof> prof1;
+	private final IModel<Prof> prof2;
+	
 	private final Form<Object> form;
 	
 	private final BasicModul basicModul;
@@ -63,21 +69,26 @@ public class InfoPanel extends Panel{
 	private final IModel<List<ICourse>> allSelectedBasicModuls;
 	private final IModel<String> loadPointInfoBasicForLabel;
 	private final IModel<String> loadPointInfoPflichtForLabel;
-	private final IModel<String> loadPointInfoWahlForLabel;
+	private final IModel<String> loadPointInfoWahlForLabel1;
+	private final IModel<String> loadPointInfoWahlForLabel2;
 	private final IModel<String> loadPointInfoSupplementForLabel;
 	
 	
-	public InfoPanel(String id, final IModel<List<Prof>> profs, BasicModul basicModul, SupplementModul supplementModul, final List<Prof> allProfs) {
+	public InfoPanel(String id, final IModel<Prof> prof1, final IModel<Prof> prof2, BasicModul basicModul, SupplementModul supplementModul, final List<Prof> allProfs) {
 		super(id);
 		setOutputMarkupId(true);
-		this.profs = profs;
+		this.prof1 = prof1;
+		this.prof2 = prof2;
 		this.basicModul = basicModul;
 		this.supplementModul = supplementModul;
-				
-		maxPflichtPoints = new TransformationModel<List<Prof>, Integer>(profs, l -> (int)l.stream().mapToDouble(p -> p.calculatePflichtPointsToReach()).sum());
+		
+		IModel<List<Prof>> loadSelectedProfs = new TransformationModel2<>(prof1, prof2, Arrays::asList);
+        
+		maxPflichtPoints = new TransformationModel<>(loadSelectedProfs, l -> (int)l.stream().mapToDouble(p -> p.calculatePflichtPointsToReach()).sum());
 		maxWahlPoints = new TransformationModel<>(maxPflichtPoints, point -> MODUL_POINTS_TO_REECH - point);
 			
-		ProgressBar wahlProgressBar = createProgressBar("wahlProgress", wahlPoints);
+		ProgressBar wahlProgressBar1 = createProgressBar("wahlProgress1", wahlPoints1);
+		ProgressBar wahlProgressBar2 = createProgressBar("wahlProgress2", wahlPoints2);
 		ProgressBar pflichtProgressBar = createProgressBar("pflichtProgress", pflichtPoints);
 		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", basicPoints);
 		ProgressBar supplementProgressBar = createProgressBar("supplementProgress", supplementPoints);
@@ -86,33 +97,36 @@ public class InfoPanel extends Panel{
 		allSelectedWahlModuls = createLoadableModel(allProfs, Prof::getSelectedCourses);
 		allSelectedBasicModuls = createLoadableModel(basicModul.getCourses());
 		allSelectedSupplementModuls = createLoadableModel(supplementModul.getCourses());
-		allCurrentSelectedModuls = createLoadableModel(profs, basicModul, supplementModul);
+		allCurrentSelectedModuls = createLoadableModel(loadSelectedProfs, basicModul, supplementModul);
 		
-        ListView<ICourse> modulPflichtListView = createListView("verticalPflichtButtonGroup","selectedPflichtModulButton",allSelectedPflichtModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
-		ListView<ICourse> modulWahlListView = createListView("verticalWahlButtonGroup","selectedWahlModulButton",allSelectedWahlModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
-		ListView<ICourse> modulSupplementListView = createListView("verticalSupplementButtonGroup","selectedSupplementModulButton",allSelectedSupplementModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
-		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, allCurrentSelectedModuls, profs, basicModul, supplementModul, allProfs);
+		ListView<ICourse> modulPflichtListView = createListView("verticalPflichtButtonGroup","selectedPflichtModulButton",allSelectedPflichtModuls, allCurrentSelectedModuls, loadSelectedProfs, basicModul, supplementModul, allProfs);
+		ListView<ICourse> modulWahlListView = createListView("verticalWahlButtonGroup","selectedWahlModulButton",allSelectedWahlModuls, allCurrentSelectedModuls, loadSelectedProfs, basicModul, supplementModul, allProfs);
+		ListView<ICourse> modulSupplementListView = createListView("verticalSupplementButtonGroup","selectedSupplementModulButton",allSelectedSupplementModuls, allCurrentSelectedModuls, loadSelectedProfs, basicModul, supplementModul, allProfs);
+		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, allCurrentSelectedModuls, loadSelectedProfs, basicModul, supplementModul, allProfs);
 		
 		loadPointInfoBasicForLabel = createLoadableModel(basicModul,  MAX_BASIC_POINTS);
-		loadPointInfoPflichtForLabel = createLoadableModel(profs, Prof::calculatePflichtPoints, maxPflichtPoints);
-		loadPointInfoWahlForLabel = createLoadableModel(profs, Prof::calculateWahlPoints, maxWahlPoints);
+		loadPointInfoPflichtForLabel = createLoadableModel(Prof::calculatePflichtPoints, maxPflichtPoints, prof1, prof2);
+		loadPointInfoWahlForLabel1 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPoints, prof1);
+		loadPointInfoWahlForLabel2 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPoints, prof2);
 		loadPointInfoSupplementForLabel = createLoadableModel(supplementModul, MAX_SUPPLEMENT_POINTS);
 		
 		
 		Label pointBasicInfo = new Label("pointBasicInfo", loadPointInfoBasicForLabel);
 		Label pointPflichtInfo = new Label("pointPflichtInfo", loadPointInfoPflichtForLabel);
-		Label pointWahlInfo = new Label("pointWahlInfo", loadPointInfoWahlForLabel);
+		Label pointWahlInfo1 = new Label("pointWahlInfo1", loadPointInfoWahlForLabel1);
+		Label pointWahlInfo2 = new Label("pointWahlInfo2", loadPointInfoWahlForLabel2);
+		
 		Label pointSupplementInfo = new Label("pointSupplementInfo", loadPointInfoSupplementForLabel);
 		
 		form = new Form<Object>("form");
 		form.add(modulPflichtListView, modulWahlListView, modulSupplementListView, modulBasicListView);
-        form.add(wahlProgressBar, pflichtProgressBar, aufbauProgressBar, supplementProgressBar);
-        form.add(pointBasicInfo, pointPflichtInfo, pointWahlInfo, pointSupplementInfo);
+        form.add(wahlProgressBar1, wahlProgressBar2, pflichtProgressBar, aufbauProgressBar, supplementProgressBar);
+        form.add(pointBasicInfo, pointPflichtInfo, pointWahlInfo1, pointWahlInfo2, pointSupplementInfo);
 		add(form);
 			
 	}
 
-	private IModel<String> createLoadableModel(IModul modul, int maxPoints) {
+	private static IModel<String> createLoadableModel(IModul modul, int maxPoints) {
 		return new LoadableDetachableModel<String>() {
 
 			@Override
@@ -122,12 +136,13 @@ public class InfoPanel extends Panel{
 		};
 	}
 
-	private static IModel<String> createLoadableModel(IModel<List<Prof>> profs, SerializableFunction<Prof, Double> calculate, IModel<Integer> maxPoints) {
+	@SafeVarargs
+	private static IModel<String> createLoadableModel(SerializableFunction<Prof, Double> calculate, IModel<Integer> maxPoints, IModel<Prof>...profs) {
 		return new LoadableDetachableModel<String>() {
 
 			@Override
 			protected String load() {
-				return profs.getObject().stream().mapToDouble(p -> calculate.apply(p)).sum() + " von " + maxPoints.getObject();
+				return Arrays.asList(profs).stream().mapToDouble(p -> calculate.apply(p.getObject())).sum() + " von " + maxPoints.getObject();
 			}
 		};
 	}
@@ -182,8 +197,9 @@ public class InfoPanel extends Panel{
 		};
 	}
 
-	private static int calculatePoints(IModel<List<Prof>> profs, Function<Prof, Double> calculate){
-		return (int)Math.round(profs.getObject().stream().mapToDouble(p -> calculate.apply(p)).sum());
+	@SafeVarargs
+	private static int calculatePoints(Function<Prof, Double> calculate, IModel<Prof>... profs){
+		return (int)Math.round(Arrays.asList(profs).stream().mapToDouble(p -> calculate.apply(p.getObject())).sum());
 	}
 	
 	private static int calculatePoints(double points){
@@ -195,31 +211,34 @@ public class InfoPanel extends Panel{
 	@Override
 	public void onEvent(IEvent<?> event) {
 		super.onEvent(event);
-		int summary = calculatePoints(profs, Prof::calculateWahlPoints);
-		int summaryPflicht = calculatePoints(profs, Prof::calculatePflichtPoints);
+		int summaryWahl1 = calculatePoints(prof1.getObject().calculateWahlPoints());
+		int summaryWahl2 = calculatePoints(prof2.getObject().calculateWahlPoints());
+		
+		int summaryPflicht = calculatePoints(Prof::calculatePflichtPoints, prof1, prof2);
 		int summarySupplement = calculatePoints(supplementModul.calculatePoints());
 		int summaryBasic = calculatePoints(basicModul.calculatePoints());
 		
 		
 		
 		if(event.getPayload() instanceof SelectedEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
+			setAllPoints(summaryWahl1, summaryWahl2, summaryPflicht, summarySupplement, summaryBasic);
 			((SelectedEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof AbstractEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
+			setAllPoints(summaryWahl1, summaryWahl2, summaryPflicht, summarySupplement, summaryBasic);
 			((AbstractEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof RemoveCourseEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
+			setAllPoints(summaryWahl1, summaryWahl2, summaryPflicht, summarySupplement, summaryBasic);
 			((RemoveCourseEvent) event.getPayload()).getTarget().add(form);
 		} else if(event.getPayload() instanceof PanelChangedEvent){
-			setAllPoints(summary, summaryPflicht, summarySupplement, summaryBasic);
+			setAllPoints(summaryWahl1, summaryWahl2, summaryPflicht, summarySupplement, summaryBasic);
 			((PanelChangedEvent) event.getPayload()).getTarget().add(form);
 		}
 		
 	}
 
-	private void setAllPoints(int summary, int summaryPflicht, int summarySupplement, int summaryBasic) {
-		setPoints(summary, wahlPoints, maxWahlPoints.getObject());
+	private void setAllPoints(int summaryWahl1, int summaryWahl2, int summaryPflicht, int summarySupplement, int summaryBasic) {
+		setPoints(summaryWahl1, wahlPoints1, maxWahlPoints.getObject());
+		setPoints(summaryWahl2, wahlPoints2, maxWahlPoints.getObject());
 		setPoints(summaryPflicht, pflichtPoints, maxPflichtPoints.getObject());
 		setPoints(summarySupplement, supplementPoints,MAX_SUPPLEMENT_POINTS);
 		setPoints(summaryBasic, basicPoints,MAX_BASIC_POINTS);
@@ -275,7 +294,8 @@ public class InfoPanel extends Panel{
 	@Override
 	protected void onDetach() {
 		super.onDetach();
-		profs.detach();
+		prof1.detach();
+		prof2.detach();
 		maxPflichtPoints.detach();
 		maxWahlPoints.detach();
 		allCurrentSelectedModuls.detach();
@@ -286,11 +306,13 @@ public class InfoPanel extends Panel{
 		
 		loadPointInfoBasicForLabel.detach();;
 		loadPointInfoPflichtForLabel.detach();
-		loadPointInfoWahlForLabel.detach();
+		loadPointInfoWahlForLabel1.detach();
+		loadPointInfoWahlForLabel2.detach();
 		loadPointInfoSupplementForLabel.detach();
 		
 		pflichtPoints.detach();
-		wahlPoints.detach();
+		wahlPoints1.detach();
+		wahlPoints2.detach();
 		basicPoints.detach();
 		supplementPoints.detach();
 		

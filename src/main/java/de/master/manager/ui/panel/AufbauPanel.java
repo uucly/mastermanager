@@ -18,7 +18,7 @@ public class AufbauPanel extends Panel{
 
 	public AufbauPanel(String id, ICourseLoader courseLoader, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2, BasicModul basicModul, SupplementModul supplementModul, List<Prof> allProfs) {
 		super(id);
-		InfoPanel infoPanel = new InfoPanel("infoPanel", new TransformationModel2<Prof, Prof, List<Prof>>(profOfPanel1, profOfPanel2, Arrays::asList), basicModul, supplementModul, allProfs);
+		InfoPanel infoPanel = new InfoPanel("infoPanel", profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs);
 		add(infoPanel);
 		
 	add(new AufbauButtonPanel("aufbauButtonPanel", courseLoader.loadCourses("Aufbau.txt"), basicModul));
