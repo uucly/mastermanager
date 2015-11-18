@@ -119,6 +119,8 @@ public class InfoPanel extends Panel{
 		Label pointSupplementInfo = new Label("pointSupplementInfo", loadPointInfoSupplementForLabel);
 		
 		form = new Form<Object>("form");
+		form.add(new Label("prof1", prof1));
+		form.add(new Label("prof2", prof2));
 		form.add(modulPflichtListView, modulWahlListView, modulSupplementListView, modulBasicListView);
         form.add(wahlProgressBar1, wahlProgressBar2, pflichtProgressBar, aufbauProgressBar, supplementProgressBar);
         form.add(pointBasicInfo, pointPflichtInfo, pointWahlInfo1, pointWahlInfo2, pointSupplementInfo);
