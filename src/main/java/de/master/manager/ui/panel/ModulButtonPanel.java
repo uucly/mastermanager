@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -46,8 +47,9 @@ public class ModulButtonPanel extends Panel {
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
 		
-		formPflicht.add(createPflichListView(new TransformationModel<Prof, List<ICourse>>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
+		formPflicht.add(createPflichListView(new TransformationModel<>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
 		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
+		formPflicht.add(new Label("choosenProf", new TransformationModel<>(profOfThisPanel, p -> p.getName())));
 		container.add(formPflicht);
 		container.add(formWahl);
 		
