@@ -1,5 +1,6 @@
 package de.master.manager.ui.panel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,6 +115,7 @@ public class ModulButtonPanel extends Panel {
 			@Override
 			protected List<ICourse> load() {
 				List<ICourse> coursesOfProf = courseLoader.loadCourses(prof.getObject().getPath());
+				coursesOfProf.sort((c1,c2) -> c1.getName().compareTo(c2.getName()));
 				if (text.getObject() != null) {
 					return coursesOfProf.stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
 				} else {

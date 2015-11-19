@@ -1,9 +1,10 @@
 package de.master.manager.profStuff;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalDouble;
 
-public abstract class AModul implements IModul{
+public abstract class AModul implements IModul, Comparator<String>{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -44,5 +45,10 @@ public abstract class AModul implements IModul{
 	@Override
 	public boolean contains(ICourse course) {
 		return courses.contains(course);
+	}
+	
+	@Override
+	public int compare(String o1, String o2) {
+		return o1.compareTo(o2);
 	}
 }
