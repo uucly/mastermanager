@@ -1,15 +1,9 @@
 package de.master.manager.ui;
 
-import java.util.ArrayList;
-
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.master.manager.profStuff.BasicCourses;
-import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourseLoader;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.SupplementCourses;
-import de.master.manager.profStuff.SupplementModul;
 import de.master.manager.ui.panel.NavsPanel;
 
 public class DragAndDropPage extends BasePage{

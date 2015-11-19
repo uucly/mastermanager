@@ -44,9 +44,7 @@ public class CourseLoader implements ICourseLoader {
 	 * @return input of file
 	 */
 	private String loadFileInput(String fileName) {
-		FileSystemResourceLoader loader = new FileSystemResourceLoader();
-		Resource resource = loader.getResource("/src/main/resources/" + fileName);
-		try (InputStream pflichtResource = resource.getInputStream();) {
+		try (InputStream pflichtResource = CourseLoader.class.getResourceAsStream("/"+ fileName);) {
 			return loadFileInputFromInputStream(pflichtResource);
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot load file" + fileName, e);
