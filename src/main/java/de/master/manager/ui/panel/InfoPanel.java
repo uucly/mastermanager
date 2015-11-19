@@ -41,9 +41,10 @@ import de.master.manager.ui.model.TransformationModel2;
  */
 public class InfoPanel extends Panel{
 
-	private static final int MODUL_POINTS_TO_REECH = 46;
+	private static final int MODUL_POINTS_TO_REECH = 23;
 	private static final long serialVersionUID = 1L;
-	private IModel<Integer> maxWahlPoints = Model.of(0);
+	private IModel<Integer> maxWahlPointsProf1 = Model.of(0);
+	private IModel<Integer> maxWahlPointsProf2 = Model.of(0);
 	private IModel<Integer> maxPflichtPoints = Model.of(0);
 	private static final int MAX_BASIC_POINTS = 32;
 	private static final int MAX_SUPPLEMENT_POINTS = 8;
@@ -85,7 +86,8 @@ public class InfoPanel extends Panel{
 		IModel<List<Prof>> loadSelectedProfs = new TransformationModel2<>(prof1, prof2, Arrays::asList);
         
 		maxPflichtPoints = new TransformationModel<>(loadSelectedProfs, l -> (int)l.stream().mapToDouble(p -> p.calculatePflichtPointsToReach()).sum());
-		maxWahlPoints = new TransformationModel<>(maxPflichtPoints, point -> MODUL_POINTS_TO_REECH - point);
+		maxWahlPointsProf1 = new TransformationModel<>(prof1, p -> (int)(MODUL_POINTS_TO_REECH - p.calculatePflichtPointsToReach()));
+		maxWahlPointsProf2 = new TransformationModel<>(prof2, p -> (int)(MODUL_POINTS_TO_REECH - p.calculatePflichtPointsToReach()));
 			
 		ProgressBar wahlProgressBar1 = createProgressBar("wahlProgress1", wahlPoints1);
 		ProgressBar wahlProgressBar2 = createProgressBar("wahlProgress2", wahlPoints2);
@@ -106,8 +108,8 @@ public class InfoPanel extends Panel{
 		
 		loadPointInfoBasicForLabel = createLoadableModel(basicModul,  MAX_BASIC_POINTS);
 		loadPointInfoPflichtForLabel = createLoadableModel(Prof::calculatePflichtPoints, maxPflichtPoints, prof1, prof2);
-		loadPointInfoWahlForLabel1 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPoints, prof1);
-		loadPointInfoWahlForLabel2 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPoints, prof2);
+		loadPointInfoWahlForLabel1 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPointsProf1, prof1);
+		loadPointInfoWahlForLabel2 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPointsProf2, prof2);
 		loadPointInfoSupplementForLabel = createLoadableModel(supplementModul, MAX_SUPPLEMENT_POINTS);
 		
 		
@@ -239,8 +241,8 @@ public class InfoPanel extends Panel{
 	}
 
 	private void setAllPoints(int summaryWahl1, int summaryWahl2, int summaryPflicht, int summarySupplement, int summaryBasic) {
-		setPoints(summaryWahl1, wahlPoints1, maxWahlPoints.getObject());
-		setPoints(summaryWahl2, wahlPoints2, maxWahlPoints.getObject());
+		setPoints(summaryWahl1, wahlPoints1, maxWahlPointsProf1.getObject());
+		setPoints(summaryWahl2, wahlPoints2, maxWahlPointsProf2.getObject());
 		setPoints(summaryPflicht, pflichtPoints, maxPflichtPoints.getObject());
 		setPoints(summarySupplement, supplementPoints,MAX_SUPPLEMENT_POINTS);
 		setPoints(summaryBasic, basicPoints,MAX_BASIC_POINTS);
@@ -299,7 +301,9 @@ public class InfoPanel extends Panel{
 		prof1.detach();
 		prof2.detach();
 		maxPflichtPoints.detach();
-		maxWahlPoints.detach();
+		maxWahlPointsProf1.detach();
+		maxWahlPointsProf2.detach();
+		
 		allCurrentSelectedModuls.detach();
 		allSelectedPflichtModuls.detach();
 		allSelectedWahlModuls.detach();
