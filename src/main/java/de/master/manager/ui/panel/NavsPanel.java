@@ -44,14 +44,15 @@ public class NavsPanel extends Panel{
 		
 		BasicModul basicModul = new BasicModul(new ArrayList<>());
 		SupplementModul supplementModul = new SupplementModul(new ArrayList<>());
-		currentPanel = new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs);
+		
+		currentPanel = new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);
 		
 		add(profDropDownContainer = createProfDropDownContainer(allProfs, profOfPanel1, profOfPanel2));
-		add(createLink("courses",  currentPanel));
+		add(createLink("aufbau", currentPanel));
 		add(createLink("noten",  new GradePanel("panel", profOfPanel1, profOfPanel2, basicModul, supplementModul)));
 		add(createLink("supplement", new SupplementPanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs)));
-		add(createLink("aufbau", new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs)));
+		add(createLink("courses", new CoursePanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs)));
 		add(currentPanel);
 	}
 
