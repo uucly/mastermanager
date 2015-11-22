@@ -97,8 +97,8 @@ public class InfoPanel extends Panel{
 		
 		allSelectedPflichtModuls = createLoadableModel(allProfs, Prof::getSelectedPflichtCourses);
 		allSelectedWahlModuls = createLoadableModel(allProfs, Prof::getSelectedCourses);
-		allSelectedBasicModuls = createLoadableModel(basicModul.getCourses());
-		allSelectedSupplementModuls = createLoadableModel(supplementModul.getCourses());
+		allSelectedBasicModuls = createLoadableModel(basicModul);
+		allSelectedSupplementModuls = createLoadableModel(supplementModul);
 		allCurrentSelectedModuls = createLoadableModel(loadSelectedProfs, basicModul, supplementModul);
 		
 		ListView<ICourse> modulPflichtListView = createListView("verticalPflichtButtonGroup","selectedPflichtModulButton",allSelectedPflichtModuls, allCurrentSelectedModuls, loadSelectedProfs, basicModul, supplementModul, allProfs);
@@ -163,8 +163,8 @@ public class InfoPanel extends Panel{
 				List<ICourse> list = Lists.newArrayList();
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedCourses()));
 				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtCourses()));
-				list.addAll(supplementModul.getCourses());
-				list.addAll(basicModul.getCourses());
+				list.addAll(supplementModul);
+				list.addAll(basicModul);
 				
 				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
 				return list;
@@ -285,8 +285,8 @@ public class InfoPanel extends Panel{
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
 						allProfs.stream().forEach(prof -> prof.getSelectedCourses().remove(course));
 						allProfs.stream().forEach(prof -> prof.getSelectedPflichtCourses().remove(course));
-						supplementModul.removeCourse(course);
-						basicModul.removeCourse(course);
+						supplementModul.remove(course);
+						basicModul.remove(course);
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
 					};
 				};

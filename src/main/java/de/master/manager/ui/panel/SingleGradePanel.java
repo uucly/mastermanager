@@ -52,7 +52,7 @@ public abstract class SingleGradePanel extends Panel{
 	
 	/* methods */
 	private ListView<ICourse> createBasicGradeListView(IModul modul) {
-		ListView<ICourse> basicCourses = new ListView<ICourse>("courses", modul.getCourses()) {
+		ListView<ICourse> basicCourses = new ListView<ICourse>("courses", modul) {
 			
 			private static final long serialVersionUID = 1L;
 
@@ -96,7 +96,7 @@ public abstract class SingleGradePanel extends Panel{
 	@Override
 	protected void onComponentTag(ComponentTag tag) {
 		super.onComponentTag(tag);
-		if(modul.getCourses().isEmpty()){
+		if(modul.isEmpty()){
 			tag.append("style", "display:none", " ");
 		}
 	}

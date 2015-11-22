@@ -12,11 +12,13 @@ public class Prof implements Serializable{
 	private final String name, wahlModulPath;
 	private final IModul wahlModul;
 	private final IModul pflichtModul;
-	private final List<ICourse> pflichtCourses;	
+	private final List<ICourse> pflichtCourses;
+	private final String pflichtModulPath;	
 	
 	public Prof(String name, List<ICourse> pflichtCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
+		this.pflichtModulPath = name + "Pflicht.txt";
 		this.wahlModul = new WahlModul(new ArrayList<>(10));
 		this.pflichtModul = new PflichtModul(new ArrayList<>(10));
 		this.pflichtCourses = pflichtCourses;
@@ -40,19 +42,19 @@ public class Prof implements Serializable{
 	}
 	
 	public List<ICourse> getSelectedCourses() {
-		return wahlModul.getCourses();
+		return wahlModul;
 	}
 	
 	public List<ICourse> getSelectedPflichtCourses() {
-		return pflichtModul.getCourses();
+		return pflichtModul;
 	}
 	
 	public void addSelectedModul(ICourse course){
-		wahlModul.addCourse(course);
+		wahlModul.add(course);
 	}
 	
 	public void addSelectedPflichtModul(ICourse course){
-		pflichtModul.addCourse(course);
+		pflichtModul.add(course);
 	}
 	
 	public double calculatePflichtPointsToReach(){
@@ -89,8 +91,8 @@ public class Prof implements Serializable{
 	}
 
 
-	public List<ICourse> getPflichtCourse() {
-		return pflichtCourses;
+	public String getPflichtModulPath() {
+		return pflichtModulPath;
 	}
-		
+	
 }

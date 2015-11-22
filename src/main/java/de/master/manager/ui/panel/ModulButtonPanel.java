@@ -28,6 +28,7 @@ import de.master.manager.ui.button.CoursePflichtButton;
 import de.master.manager.ui.events.ProfChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.model.TransformationModel;
+import de.master.manager.ui.model.TransformationModel2;
 
 
 public class ModulButtonPanel extends Panel {
@@ -48,7 +49,7 @@ public class ModulButtonPanel extends Panel {
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
 		
-		formPflicht.add(createPflichListView(new TransformationModel<>(profOfThisPanel, p -> p.getPflichtCourse()), profOfThisPanel, allProfs));
+		formPflicht.add(createPflichListView(new TransformationModel<>(profOfThisPanel, p -> courseLoader.loadCourses(p.getPflichtModulPath())), profOfThisPanel, allProfs));
 		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
 		formPflicht.add(new Label("choosenProf", new TransformationModel<>(profOfThisPanel, p -> p.getName())));
 		container.add(formPflicht);

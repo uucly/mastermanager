@@ -32,13 +32,13 @@ public abstract class AbstractCourseButton extends AjaxButton{
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 		super.onSubmit(target, form);
 		setSelected();
-		modul.addCourse(course);
+		modul.add(course);
 		target.add(this);
 		send(getPage(), Broadcast.DEPTH, new SelectedEvent(target, course));
 	}
 	
 	protected boolean isAlreadySelected(){
-		return modul.getCourses().contains(course);
+		return modul.contains(course);
 	}
 	
 	protected boolean isAlreadySelectedInOtherProf(Prof prof, List<Prof> allProfs, Function<Prof, IModul> loadModul){
