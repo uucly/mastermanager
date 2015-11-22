@@ -20,11 +20,9 @@ import org.apache.wicket.model.Model;
 import com.google.common.collect.Lists;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
-import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.SupplementModul;
 import de.master.manager.ui.events.AbstractEvent;
 import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
@@ -60,8 +58,8 @@ public class InfoPanel extends Panel{
 	
 	private final Form<Object> form;
 	
-	private final BasicModul basicModul;
-	private final SupplementModul supplementModul;
+	private final IModul basicModul;
+	private final IModul supplementModul;
 
 	private final IModel<List<ICourse>> allCurrentSelectedModuls;
 	private final IModel<List<ICourse>> allSelectedPflichtModuls;
@@ -75,7 +73,7 @@ public class InfoPanel extends Panel{
 	private final IModel<String> loadPointInfoSupplementForLabel;
 	
 	
-	public InfoPanel(String id, final IModel<Prof> prof1, final IModel<Prof> prof2, BasicModul basicModul, SupplementModul supplementModul, final List<Prof> allProfs) {
+	public InfoPanel(String id, final IModel<Prof> prof1, final IModel<Prof> prof2, IModul basicModul, IModul supplementModul, final List<Prof> allProfs) {
 		super(id);
 		setOutputMarkupId(true);
 		this.prof1 = prof1;
@@ -95,8 +93,8 @@ public class InfoPanel extends Panel{
 		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", basicPoints);
 		ProgressBar supplementProgressBar = createProgressBar("supplementProgress", supplementPoints);
 		
-		allSelectedPflichtModuls = createLoadableModel(allProfs, Prof::getSelectedPflichtCourses);
-		allSelectedWahlModuls = createLoadableModel(allProfs, Prof::getSelectedCourses);
+		allSelectedPflichtModuls = createLoadableModel(allProfs, Prof::getPflichtModulSelected);
+		allSelectedWahlModuls = createLoadableModel(allProfs, Prof::getWahlModulSelected);
 		allSelectedBasicModuls = createLoadableModel(basicModul);
 		allSelectedSupplementModuls = createLoadableModel(supplementModul);
 		allCurrentSelectedModuls = createLoadableModel(loadSelectedProfs, basicModul, supplementModul);
@@ -153,7 +151,7 @@ public class InfoPanel extends Panel{
 
 	/* methods */
 	private LoadableDetachableModel<List<ICourse>> createLoadableModel(final IModel<List<Prof>> profs,
-			BasicModul basicModul, SupplementModul supplementModul) {
+			IModul basicModul, IModul supplementModul) {
 		return new LoadableDetachableModel<List<ICourse>>() {
 			
 			private static final long serialVersionUID = 1L;
@@ -161,8 +159,8 @@ public class InfoPanel extends Panel{
 			@Override
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
-				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedCourses()));
-				profs.getObject().stream().forEach(m -> list.addAll(m.getSelectedPflichtCourses()));
+				profs.getObject().stream().forEach(m -> list.addAll(m.getWahlModulSelected()));
+				profs.getObject().stream().forEach(m -> list.addAll(m.getPflichtModulSelected()));
 				list.addAll(supplementModul);
 				list.addAll(basicModul);
 				
@@ -262,7 +260,7 @@ public class InfoPanel extends Panel{
 		return progressBar;
 	}
 	
-	private static ListView<ICourse> createListView(String ListViewID, String ButtonID, IModel<List<ICourse>> allSelectedCourses, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, BasicModul basicModul, SupplementModul supplementModul, final List<Prof> allProfs){
+	private static ListView<ICourse> createListView(String ListViewID, String ButtonID, IModel<List<ICourse>> allSelectedCourses, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, IModul basicModul, IModul supplementModul, final List<Prof> allProfs){
 		return new ListView<ICourse>(ListViewID, allSelectedCourses) {
 
 			private static final long serialVersionUID = 1L;
@@ -283,8 +281,8 @@ public class InfoPanel extends Panel{
 					private static final long serialVersionUID = 1L;
 
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
-						allProfs.stream().forEach(prof -> prof.getSelectedCourses().remove(course));
-						allProfs.stream().forEach(prof -> prof.getSelectedPflichtCourses().remove(course));
+						allProfs.stream().forEach(prof -> prof.getWahlModulSelected().remove(course));
+						allProfs.stream().forEach(prof -> prof.getPflichtModulSelected().remove(course));
 						supplementModul.remove(course);
 						basicModul.remove(course);
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));

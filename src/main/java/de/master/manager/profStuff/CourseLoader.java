@@ -13,7 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CourseLoader implements ICourseLoader {
+public class CourseLoader implements IModulLoader {
 
 	private static final long serialVersionUID = 1L;
 	private final List<ICourse> allCourses;
@@ -31,10 +31,10 @@ public class CourseLoader implements ICourseLoader {
 
 	/* methods */
 
-	public List<ICourse> loadCourses(String fileName) {
+	public IModul loadModul(String fileName) {
 		String fileInput = loadFileInput(fileName);
-		return Pattern.compile(",").splitAsStream(fileInput).map(s -> allCourses.get(Integer.parseInt(s) - 1))
-				.collect(Collectors.toList());
+		return new Modul(Pattern.compile(",").splitAsStream(fileInput).map(s -> allCourses.get(Integer.parseInt(s) - 1))
+				.collect(Collectors.toList()));
 	}
 
 	/**

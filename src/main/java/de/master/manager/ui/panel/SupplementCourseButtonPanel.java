@@ -8,12 +8,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import de.master.manager.profStuff.ICourse;
-import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.SupplementModul;
+import de.master.manager.profStuff.IModul;
 import de.master.manager.ui.button.SupplementButton;
 import de.master.manager.ui.events.RemoveCourseEvent;
 
@@ -22,7 +20,7 @@ public class SupplementCourseButtonPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	private final Form form;
 
-	public SupplementCourseButtonPanel(String id, SupplementModul modul, List<ICourse> list) {
+	public SupplementCourseButtonPanel(String id, IModul modul, List<ICourse> list) {
 		super(id);
 		
 		form = new Form("form");

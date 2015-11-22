@@ -40,8 +40,8 @@ public class GradeProfPanel extends Panel {
 		this.profOfPanel = profOfPanel;
 		add(new Label("averagePflicht", loadAverageGrade(profOfPanel, Prof::calculateFinalPflichtGrade)));
 		add(new Label("averageWahl", loadAverageGrade(profOfPanel, Prof::calculateFinalWahlGrade)));
-		add(createCourseListView("wahl", new TransformationModel<Prof, List<ICourse>>(profOfPanel, Prof::getSelectedCourses)));
-		add(createCourseListView("pflicht", new TransformationModel<Prof, List<ICourse>>(profOfPanel, Prof::getSelectedPflichtCourses)));
+		add(createCourseListView("wahl", new TransformationModel<Prof, List<ICourse>>(profOfPanel, Prof::getWahlModulSelected)));
+		add(createCourseListView("pflicht", new TransformationModel<Prof, List<ICourse>>(profOfPanel, Prof::getPflichtModulSelected)));
 	}
 
 	/* methods */
@@ -84,7 +84,7 @@ public class GradeProfPanel extends Panel {
 	protected void onComponentTag(ComponentTag tag) {
 		super.onComponentTag(tag);
 		Prof prof = profOfPanel.getObject();
-		if(prof.getSelectedCourses().isEmpty() && prof.getSelectedPflichtCourses().isEmpty()){
+		if(prof.getWahlModulSelected().isEmpty() && prof.getPflichtModulSelected().isEmpty()){
 			tag.append("style" , "display:none", " ");
 		}
 	}

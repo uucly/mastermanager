@@ -2,7 +2,7 @@ package de.master.manager.ui;
 
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
-import de.master.manager.profStuff.ICourseLoader;
+import de.master.manager.profStuff.IModulLoader;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.panel.NavsPanel;
 
@@ -11,7 +11,7 @@ public class DragAndDropPage extends BasePage{
 	private static final long serialVersionUID = 1L;
 	
 	@SpringBean(name="wahlPflicht")
-	private ICourseLoader courseLoader;
+	private IModulLoader courseLoader;
 	
 	public DragAndDropPage(){
 		
@@ -26,8 +26,8 @@ public class DragAndDropPage extends BasePage{
 	
 	/* methods */
 	
-	private Prof loadProf(String pflichtFileName, String profName, ICourseLoader courseLoader){
-		return new Prof(profName, courseLoader.loadCourses(pflichtFileName));
+	private Prof loadProf(String pflichtFileName, String profName, IModulLoader courseLoader){
+		return new Prof(profName, courseLoader.loadModul(pflichtFileName));
 	}
 	
 }

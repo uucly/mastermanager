@@ -18,14 +18,9 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-
-import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.IModul;
-import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
-import de.master.manager.ui.model.TransformationModel2;
 
 public abstract class SingleGradePanel extends Panel{
 

@@ -21,7 +21,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
 import de.master.manager.profStuff.ICourse;
-import de.master.manager.profStuff.ICourseLoader;
+import de.master.manager.profStuff.IModulLoader;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.button.CourseButton;
 import de.master.manager.ui.button.CoursePflichtButton;
@@ -38,7 +38,7 @@ public class ModulButtonPanel extends Panel {
 	private Form<Object> formWahl;
 	private Form<?> formPflicht;
 	
-	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final ICourseLoader courseLoader) {
+	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final IModulLoader courseLoader) {
 		super(id);
 		setOutputMarkupId(true);
 		IModel<String> text = Model.of("");
@@ -49,7 +49,7 @@ public class ModulButtonPanel extends Panel {
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
 		
-		formPflicht.add(createPflichListView(new TransformationModel<>(profOfThisPanel, p -> courseLoader.loadCourses(p.getPflichtModulPath())), profOfThisPanel, allProfs));
+		formPflicht.add(createPflichListView(new TransformationModel<>(profOfThisPanel, p -> p.getPflichtModul()), profOfThisPanel, allProfs));
 		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
 		formPflicht.add(new Label("choosenProf", new TransformationModel<>(profOfThisPanel, p -> p.getName())));
 		container.add(formPflicht);
@@ -88,7 +88,7 @@ public class ModulButtonPanel extends Panel {
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse=item.getModelObject();
-				item.add(new CoursePflichtButton("modulButton", currentCourse, prof.getObject().getPflichtModul(), prof, allProfs));
+				item.add(new CoursePflichtButton("modulButton", currentCourse, prof.getObject().getPflichtModulSelected(), prof, allProfs));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}
@@ -102,7 +102,7 @@ public class ModulButtonPanel extends Panel {
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
 				ICourse currentCourse=item.getModelObject();
-				item.add(new CourseButton("modulButton", currentCourse, profLeft.getObject().getWahlModul(), profLeft, profRight, allProfs));
+				item.add(new CourseButton("modulButton", currentCourse, profLeft.getObject().getWahlModulSelected(), profLeft, profRight, allProfs));
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}
@@ -110,12 +110,12 @@ public class ModulButtonPanel extends Panel {
 		};
 	}
 	
-	private static IModel<List<ICourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final ICourseLoader courseLoader) {
+	private static IModel<List<ICourse>> loadWahlCourses(final IModel<String> text, final IModel<Prof> prof, final IModulLoader courseLoader) {
 		return new LoadableDetachableModel<List<ICourse>>() {
 			private static final long serialVersionUID = 1L;
 			@Override
 			protected List<ICourse> load() {
-				List<ICourse> coursesOfProf = courseLoader.loadCourses(prof.getObject().getPath());
+				List<ICourse> coursesOfProf = courseLoader.loadModul(prof.getObject().getPath());
 				coursesOfProf.sort((c1,c2) -> c1.getName().compareTo(c2.getName()));
 				if (text.getObject() != null) {
 					return coursesOfProf.stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());

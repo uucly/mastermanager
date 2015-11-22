@@ -27,7 +27,7 @@ public class CoursePflichtButton extends AbstractCourseButton {
 		super.onBeforeRender();
 		if(isAlreadySelected()){
 			setSelected();
-		} else if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs, Prof::getPflichtModul)) {
+		} else if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs, Prof::getPflichtModulSelected)) {
 			setEnabled(false);
 		}
 	}
@@ -36,7 +36,7 @@ public class CoursePflichtButton extends AbstractCourseButton {
 	public void onEvent(IEvent<?> event) {
 		Object payload = event.getPayload();
 		if(payload instanceof SelectedEvent){
-			if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs, Prof::getPflichtModul)){
+			if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs, Prof::getPflichtModulSelected)){
 				setEnabled(false);
 				((SelectedEvent) payload).getTarget().add(this);
 			}

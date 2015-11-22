@@ -10,8 +10,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
-import de.master.manager.profStuff.BasicModul;
 import de.master.manager.profStuff.ICourse;
+import de.master.manager.profStuff.IModul;
 import de.master.manager.ui.button.AufbauButton;
 import de.master.manager.ui.events.RemoveCourseEvent;
 
@@ -20,7 +20,7 @@ public class AufbauButtonPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	private final Form form;
 
-	public AufbauButtonPanel(String id, List<ICourse> list, BasicModul modul) {
+	public AufbauButtonPanel(String id, List<ICourse> list, IModul modul) {
 		super(id);
 
 		form = new Form("form");

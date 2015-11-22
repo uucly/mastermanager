@@ -4,9 +4,8 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
-import de.master.manager.profStuff.BasicModul;
+import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.SupplementModul;
 import de.master.manager.ui.events.GradeChangedEvent;
 import de.master.manager.ui.events.ProfChangedEvent;
 
@@ -15,7 +14,7 @@ public class GradePanel extends Panel{
 	private static final long serialVersionUID = 1L;
 	private final GradeInfoPanel noteInfoPanel;
 
-	public GradePanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2, BasicModul basicModul, SupplementModul supplementModul) {
+	public GradePanel(String id, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2, IModul basicModul, IModul supplementModul) {
 		super(id);
 		GradeProfPanel noteProfPanel1 = new GradeProfPanel("noteProfPanel1", profOfPanel1);
 		GradeProfPanel noteProfPanel2 = new GradeProfPanel("noteProfPanel2", profOfPanel2);

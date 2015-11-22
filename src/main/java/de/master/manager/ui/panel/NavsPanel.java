@@ -15,15 +15,13 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import com.google.common.collect.Lists;
 
-import de.master.manager.profStuff.BasicModul;
-import de.master.manager.profStuff.ICourseLoader;
+import de.master.manager.profStuff.IModul;
+import de.master.manager.profStuff.IModulLoader;
+import de.master.manager.profStuff.Modul;
 import de.master.manager.profStuff.Prof;
-import de.master.manager.profStuff.SupplementCourses;
-import de.master.manager.profStuff.SupplementModul;
 import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.ProfChangedEvent;
 import de.master.manager.ui.model.TransformationModel;
@@ -36,14 +34,14 @@ public class NavsPanel extends Panel{
 	private MarkupContainer profDropDownContainer;
 	
 	/* constructor */
-	public NavsPanel(String id, ICourseLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes){
+	public NavsPanel(String id, IModulLoader courseLoader, Prof breunig, Prof hinz, Prof heck, Prof hennes){
 		super(id);
 		List<Prof> allProfs = Lists.newArrayList(breunig, hinz, heck, hennes);
 		IModel<Prof> profOfPanel1 = Model.of(breunig);
 		IModel<Prof> profOfPanel2 = Model.of(hinz);
 		
-		BasicModul basicModul = new BasicModul(new ArrayList<>());
-		SupplementModul supplementModul = new SupplementModul(new ArrayList<>());
+		IModul basicModul = new Modul(new ArrayList<>());
+		IModul supplementModul = new Modul(new ArrayList<>());
 		
 		currentPanel = new AufbauPanel("panel", courseLoader, profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs);
 		currentPanel.setOutputMarkupPlaceholderTag(true);

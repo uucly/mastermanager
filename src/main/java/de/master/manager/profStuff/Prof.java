@@ -10,18 +10,16 @@ public class Prof implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private final String name, wahlModulPath;
-	private final IModul wahlModul;
+	private final IModul wahlModulSelected;
+	private final IModul pflichtModulSelected;
 	private final IModul pflichtModul;
-	private final List<ICourse> pflichtCourses;
-	private final String pflichtModulPath;	
 	
 	public Prof(String name, List<ICourse> pflichtCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
-		this.pflichtModulPath = name + "Pflicht.txt";
-		this.wahlModul = new WahlModul(new ArrayList<>(10));
-		this.pflichtModul = new PflichtModul(new ArrayList<>(10));
-		this.pflichtCourses = pflichtCourses;
+		this.wahlModulSelected = new Modul(new ArrayList<>(10));
+		this.pflichtModulSelected = new Modul(new ArrayList<>(10));
+		this.pflichtModul = new Modul(pflichtCourses);
 	}
 
 
@@ -33,56 +31,47 @@ public class Prof implements Serializable{
 		return wahlModulPath;
 	}
 
-	public IModul getWahlModul(){
-		return wahlModul;
+	public IModul getWahlModulSelected(){
+		return wahlModulSelected;
 	}
 	
-	public IModul getPflichtModul(){
-		return pflichtModul;
-	}
-	
-	public List<ICourse> getSelectedCourses() {
-		return wahlModul;
-	}
-	
-	public List<ICourse> getSelectedPflichtCourses() {
-		return pflichtModul;
+	public IModul getPflichtModulSelected(){
+		return pflichtModulSelected;
 	}
 	
 	public void addSelectedModul(ICourse course){
-		wahlModul.add(course);
+		wahlModulSelected.add(course);
 	}
 	
 	public void addSelectedPflichtModul(ICourse course){
-		pflichtModul.add(course);
+		pflichtModulSelected.add(course);
 	}
 	
 	public double calculatePflichtPointsToReach(){
-		return pflichtCourses.stream().mapToDouble(ICourse::getPoints).sum();
-	}
-	
-	public double calculateWahlPoints(){
-		return wahlModul.calculatePoints();
-	}
-	
-	public double calculatePflichtPoints(){
 		return pflichtModul.calculatePoints();
 	}
 	
+	public double calculateWahlPoints(){
+		return wahlModulSelected.calculatePoints();
+	}
+	
+	public double calculatePflichtPoints(){
+		return pflichtModulSelected.calculatePoints();
+	}
+	
 	public OptionalDouble calculateFinalGrade(){
-		List<ICourse> jointCourseLists = new ArrayList<>(getSelectedCourses().size() + getSelectedPflichtCourses().size());
-		jointCourseLists.addAll(getSelectedPflichtCourses());
-		jointCourseLists.addAll(getSelectedCourses());
-
-		return jointCourseLists.stream().filter(m -> m.getGrade().isPresent()).mapToDouble(m -> m.getGrade().get()).average();
+		IModul jointModuls = new Modul(new ArrayList<>(wahlModulSelected.size() + pflichtModulSelected.size()));
+		jointModuls.addAll(pflichtModulSelected);
+		jointModuls.addAll(wahlModulSelected);
+		return jointModuls.calculateGrade();
 	}
 	
 	public OptionalDouble calculateFinalWahlGrade(){
-		return wahlModul.calculateGrade();
+		return wahlModulSelected.calculateGrade();
 	}
 	
 	public OptionalDouble calculateFinalPflichtGrade(){
-		return pflichtModul.calculateGrade();
+		return pflichtModulSelected.calculateGrade();
 	}
 		
 	@Override
@@ -90,9 +79,8 @@ public class Prof implements Serializable{
 		return name;
 	}
 
-
-	public String getPflichtModulPath() {
-		return pflichtModulPath;
+	public IModul getPflichtModul() {
+		return pflichtModul;
 	}
 	
 }
