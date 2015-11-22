@@ -1,9 +1,9 @@
 package de.master.manager.ui.panel;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -17,6 +17,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
+
 import com.google.common.collect.Lists;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.components.progress.ProgressBar;
@@ -150,25 +151,17 @@ public class InfoPanel extends Panel{
 	}
 
 	/* methods */
-	private LoadableDetachableModel<List<ICourse>> createLoadableModel(final IModel<List<Prof>> profs,
-			IModul basicModul, IModul supplementModul) {
-		return new LoadableDetachableModel<List<ICourse>>() {
+	private IModel<List<ICourse>> createLoadableModel(final IModel<List<Prof>> profs, IModul basicModul, IModul supplementModul) {
+		return new TransformationModel<>(profs, profList -> {
+			List<ICourse> list = Lists.newArrayList();
+			profList.stream().forEach(prof -> list.addAll(prof.getWahlModulSelected()));
+			profList.stream().forEach(prof -> list.addAll(prof.getPflichtModulSelected()));
+			list.addAll(supplementModul);
+			list.addAll(basicModul);
 			
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected List<ICourse> load() {
-				List<ICourse> list = Lists.newArrayList();
-				profs.getObject().stream().forEach(m -> list.addAll(m.getWahlModulSelected()));
-				profs.getObject().stream().forEach(m -> list.addAll(m.getPflichtModulSelected()));
-				list.addAll(supplementModul);
-				list.addAll(basicModul);
-				
-				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
-				return list;
-			}
-			
-		};
+			list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
+			return list;
+		});
 	}
 
 	private LoadableDetachableModel<List<ICourse>> createLoadableModel(List<ICourse> coursese) {

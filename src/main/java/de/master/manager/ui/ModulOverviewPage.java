@@ -6,14 +6,14 @@ import de.master.manager.profStuff.IModulLoader;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.panel.NavsPanel;
 
-public class DragAndDropPage extends BasePage{
+public class ModulOverviewPage extends BasePage{
 
 	private static final long serialVersionUID = 1L;
 	
 	@SpringBean(name="wahlPflicht")
 	private IModulLoader courseLoader;
 	
-	public DragAndDropPage(){
+	public ModulOverviewPage(){
 		
 		Prof breunig = loadProf("BreunigPflicht.txt", "Breunig", courseLoader), 
 				hinz = loadProf("HinzPflicht.txt", "Hinz", courseLoader),
