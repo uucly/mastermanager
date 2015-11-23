@@ -1,8 +1,9 @@
 package de.master.manager.ui.panel;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,7 +29,6 @@ import de.master.manager.ui.button.CoursePflichtButton;
 import de.master.manager.ui.events.ProfChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.model.TransformationModel;
-import de.master.manager.ui.model.TransformationModel2;
 
 
 public class ModulButtonPanel extends Panel {
@@ -49,9 +49,21 @@ public class ModulButtonPanel extends Panel {
 		MarkupContainer container = new WebMarkupContainer("container");
 		container.add(createTextField(text, formWahl));
 		
-		formPflicht.add(createPflichListView(new TransformationModel<>(profOfThisPanel, p -> p.getPflichtModul()), profOfThisPanel, allProfs));
+		formPflicht.add(createPflichListView(new LoadableDetachableModel<List<ICourse>>() {
+
+			@Override
+			protected List<ICourse> load() {
+				return profOfThisPanel.getObject().getPflichtModul();
+			}
+		}, profOfThisPanel, allProfs));
 		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
-		formPflicht.add(new Label("choosenProf", new TransformationModel<>(profOfThisPanel, p -> p.getName())));
+		formPflicht.add(new Label("choosenProf", new LoadableDetachableModel<String>() {
+
+			@Override
+			protected String load() {
+				return profOfThisPanel.getObject().getName();
+			}
+		}));
 		container.add(formPflicht);
 		container.add(formWahl);
 		
@@ -116,9 +128,22 @@ public class ModulButtonPanel extends Panel {
 			@Override
 			protected List<ICourse> load() {
 				List<ICourse> coursesOfProf = courseLoader.loadModul(prof.getObject().getPath());
-				coursesOfProf.sort((c1,c2) -> c1.getName().compareTo(c2.getName()));
+				Comparator<ICourse> sort = new Comparator<ICourse>() {
+
+					@Override
+					public int compare(ICourse o1, ICourse o2) {
+						return o1.getName().compareTo(o2.getName());
+					}
+				};
+				Collections.sort(coursesOfProf,sort);
+				List<ICourse> filteredList = new ArrayList<>(coursesOfProf.size());
 				if (text.getObject() != null) {
-					return coursesOfProf.stream().filter(m -> m.getName().toUpperCase().contains(text.getObject().toUpperCase())).collect(Collectors.toList());
+					for(ICourse c : coursesOfProf){
+						if(c.getName().toUpperCase().contains(text.getObject().toUpperCase())){
+							filteredList.add(c);
+						}
+					}
+					return filteredList;
 				} else {
 					return coursesOfProf;
 				}

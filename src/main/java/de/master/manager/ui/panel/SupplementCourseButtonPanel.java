@@ -20,7 +20,7 @@ public class SupplementCourseButtonPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	private final Form form;
 
-	public SupplementCourseButtonPanel(String id, IModul modul, List<ICourse> list) {
+	public SupplementCourseButtonPanel(String id, final IModul modul, List<ICourse> list) {
 		super(id);
 		
 		form = new Form("form");

@@ -1,7 +1,6 @@
 package de.master.manager.ui.button;
 
 import java.util.List;
-import java.util.function.Function;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -9,6 +8,8 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
+
+import com.google.common.base.Function;
 
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.IModul;
@@ -41,8 +42,14 @@ public abstract class AbstractCourseButton extends AjaxButton{
 		return modul.contains(course);
 	}
 	
-	protected boolean isAlreadySelectedInOtherProf(Prof prof, List<Prof> allProfs, Function<Prof, IModul> loadModul){
-		return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> loadModul.apply(p).contains(course));
+	protected boolean isAlreadySelectedInOtherProf(final Prof prof, List<Prof> allProfs, Function<Prof, IModul> loadModul){
+		for(Prof p : allProfs){
+			if(p != prof){
+				return loadModul.apply(p).contains(course);
+			}
+		}
+		return false;
+	//	return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> loadModul.apply(p).contains(course));
 	}
 	
 	protected void setSelected(){

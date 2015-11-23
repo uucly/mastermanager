@@ -1,8 +1,9 @@
 package de.master.manager.ui.panel;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,7 +31,6 @@ import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.events.SelectedEvent;
 import de.master.manager.ui.model.SerializableFunction;
 import de.master.manager.ui.model.TransformationModel;
-import de.master.manager.ui.model.TransformationModel2;
 
 
 /**
@@ -82,20 +82,61 @@ public class InfoPanel extends Panel{
 		this.basicModul = basicModul;
 		this.supplementModul = supplementModul;
 		
-		IModel<List<Prof>> loadSelectedProfs = new TransformationModel2<>(prof1, prof2, Arrays::asList);
+		final IModel<List<Prof>> loadSelectedProfs = new LoadableDetachableModel<List<Prof>>() {
+
+			@Override
+			protected List<Prof> load() {
+				return Lists.newArrayList(prof1.getObject(), prof2.getObject());
+			}
+		};
         
-		maxPflichtPoints = new TransformationModel<>(loadSelectedProfs, l -> (int)l.stream().mapToDouble(p -> p.calculatePflichtPointsToReach()).sum());
-		maxWahlPointsProf1 = new TransformationModel<>(prof1, p -> (int)(MODUL_POINTS_TO_REECH - p.calculatePflichtPointsToReach()));
-		maxWahlPointsProf2 = new TransformationModel<>(prof2, p -> (int)(MODUL_POINTS_TO_REECH - p.calculatePflichtPointsToReach()));
-			
+		maxPflichtPoints = new LoadableDetachableModel<Integer>() {
+
+			@Override
+			protected Integer load() {
+				int pflichtPointsToReach = 0;
+				for(Prof p : loadSelectedProfs.getObject()){
+					pflichtPointsToReach += p.calculatePflichtPointsToReach();
+				}
+				return pflichtPointsToReach;
+			}
+		};
+		maxWahlPointsProf1 = new LoadableDetachableModel<Integer>() {
+
+			@Override
+			protected Integer load() {
+				return (int)(MODUL_POINTS_TO_REECH - prof2.getObject().calculatePflichtPointsToReach());
+			}
+		};
+		maxWahlPointsProf2 = new LoadableDetachableModel<Integer>() {
+
+			@Override
+			protected Integer load() {
+				return (int)(MODUL_POINTS_TO_REECH - prof2.getObject().calculatePflichtPointsToReach());
+			}
+		};
 		ProgressBar wahlProgressBar1 = createProgressBar("wahlProgress1", wahlPoints1);
 		ProgressBar wahlProgressBar2 = createProgressBar("wahlProgress2", wahlPoints2);
 		ProgressBar pflichtProgressBar = createProgressBar("pflichtProgress", pflichtPoints);
 		ProgressBar aufbauProgressBar = createProgressBar("aufbauProgress", basicPoints);
 		ProgressBar supplementProgressBar = createProgressBar("supplementProgress", supplementPoints);
 		
-		allSelectedPflichtModuls = createLoadableModel(allProfs, Prof::getPflichtModulSelected);
-		allSelectedWahlModuls = createLoadableModel(allProfs, Prof::getWahlModulSelected);
+		allSelectedPflichtModuls = createLoadableModel(allProfs, new SerializableFunction<Prof, List<ICourse>>(){
+
+			@Override
+			public List<ICourse> apply(Prof prof) {
+				return prof.getPflichtModulSelected();
+			}
+			
+		});
+		allSelectedWahlModuls = createLoadableModel(allProfs, new SerializableFunction<Prof, List<ICourse>>(){
+
+			@Override
+			public List<ICourse> apply(Prof prof) {
+				return prof.getWahlModulSelected();
+			}
+			
+		});
 		allSelectedBasicModuls = createLoadableModel(basicModul);
 		allSelectedSupplementModuls = createLoadableModel(supplementModul);
 		allCurrentSelectedModuls = createLoadableModel(loadSelectedProfs, basicModul, supplementModul);
@@ -106,9 +147,27 @@ public class InfoPanel extends Panel{
 		ListView<ICourse> modulBasicListView = createListView("verticalBasicButtonGroup","selectedBasicModulButton",allSelectedBasicModuls, allCurrentSelectedModuls, loadSelectedProfs, basicModul, supplementModul, allProfs);
 		
 		loadPointInfoBasicForLabel = createLoadableModel(basicModul,  MAX_BASIC_POINTS);
-		loadPointInfoPflichtForLabel = createLoadableModel(Prof::calculatePflichtPoints, maxPflichtPoints, prof1, prof2);
-		loadPointInfoWahlForLabel1 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPointsProf1, prof1);
-		loadPointInfoWahlForLabel2 = createLoadableModel(Prof::calculateWahlPoints, maxWahlPointsProf2, prof2);
+		loadPointInfoPflichtForLabel = createLoadableModel(new SerializableFunction<Prof, Double>() {
+
+			@Override
+			public Double apply(Prof prof) {
+				return prof.calculatePflichtPoints();
+			}
+		}, maxPflichtPoints, prof1, prof2);
+		loadPointInfoWahlForLabel1 = createLoadableModel(new SerializableFunction<Prof, Double>() {
+
+			@Override
+			public Double apply(Prof prof) {
+				return prof.calculateWahlPoints();
+			}
+		}, maxWahlPointsProf1, prof1);
+		loadPointInfoWahlForLabel2 = createLoadableModel(new SerializableFunction<Prof, Double>() {
+
+			@Override
+			public Double apply(Prof prof) {
+				return prof.calculateWahlPoints();
+			}
+		}, maxWahlPointsProf2, prof2);
 		loadPointInfoSupplementForLabel = createLoadableModel(supplementModul, MAX_SUPPLEMENT_POINTS);
 		
 		
@@ -129,7 +188,7 @@ public class InfoPanel extends Panel{
 			
 	}
 
-	private static IModel<String> createLoadableModel(IModul modul, int maxPoints) {
+	private static IModel<String> createLoadableModel(final IModul modul, final int maxPoints) {
 		return new LoadableDetachableModel<String>() {
 
 			@Override
@@ -140,44 +199,52 @@ public class InfoPanel extends Panel{
 	}
 
 	@SafeVarargs
-	private static IModel<String> createLoadableModel(SerializableFunction<Prof, Double> calculate, IModel<Integer> maxPoints, IModel<Prof>...profs) {
+	private static IModel<String> createLoadableModel(final SerializableFunction<Prof, Double> calculate, final IModel<Integer> maxPoints, final IModel<Prof>...profs) {
 		return new LoadableDetachableModel<String>() {
 
 			@Override
 			protected String load() {
-				return Arrays.asList(profs).stream().mapToDouble(p -> calculate.apply(p.getObject())).sum() + " von " + maxPoints.getObject();
+				double sum = 0;
+				for(IModel<Prof> p : Arrays.asList(profs)){
+					sum = calculate.apply(p.getObject());
+				}
+				return sum + " von " + maxPoints.getObject();
 			}
 		};
 	}
 
 	/* methods */
-	private IModel<List<ICourse>> createLoadableModel(final IModel<List<Prof>> profs, IModul basicModul, IModul supplementModul) {
-		return new TransformationModel<>(profs, profList -> {
-			List<ICourse> list = Lists.newArrayList();
-			profList.stream().forEach(prof -> list.addAll(prof.getWahlModulSelected()));
-			profList.stream().forEach(prof -> list.addAll(prof.getPflichtModulSelected()));
-			list.addAll(supplementModul);
-			list.addAll(basicModul);
-			
-			list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
-			return list;
-		});
+	private IModel<List<ICourse>> createLoadableModel(final IModel<List<Prof>> profs, final IModul basicModul, final IModul supplementModul) {
+		return new LoadableDetachableModel<List<ICourse>>() {
+
+			@Override
+			protected List<ICourse> load() {
+				List<ICourse> list = Lists.newArrayList();
+				for(Prof p : profs.getObject()){
+					list.addAll(p.getWahlModulSelected());
+					list.addAll(p.getPflichtModulSelected());
+					list.addAll(supplementModul);
+					list.addAll(basicModul);
+				}
+				Collections.sort(list,createComparator());
+				return list;}
+		};
 	}
 
-	private LoadableDetachableModel<List<ICourse>> createLoadableModel(List<ICourse> coursese) {
+	private LoadableDetachableModel<List<ICourse>> createLoadableModel(final List<ICourse> coursese) {
 		return new LoadableDetachableModel<List<ICourse>>() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected List<ICourse> load() {
-				coursese.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
+				Collections.sort(coursese,createComparator());
 				return coursese;
 			}
 		};
 	}
 
-	private IModel<List<ICourse>> createLoadableModel(final List<Prof> allProfs, SerializableFunction<Prof, List<ICourse>> loadSelectedCourses) {
+	private IModel<List<ICourse>> createLoadableModel(final List<Prof> allProfs, final SerializableFunction<Prof, List<ICourse>> loadSelectedCourses) {
 		 return new LoadableDetachableModel<List<ICourse>>() {
 
 			private static final long serialVersionUID = 1L;
@@ -185,16 +252,23 @@ public class InfoPanel extends Panel{
 			@Override
 			protected List<ICourse> load() {
 				List<ICourse> list = Lists.newArrayList();
-				allProfs.stream().forEach(p->list.addAll(loadSelectedCourses.apply(p)));
-				list.sort((c1,c2)->c1.getName().compareTo(c2.getName()));
+				for(Prof p : allProfs){
+					list.addAll(loadSelectedCourses.apply(p));
+				}
+				Collections.sort(list,createComparator());
+				
 				return list;
 			}
 		};
 	}
 
 	@SafeVarargs
-	private static int calculatePoints(Function<Prof, Double> calculate, IModel<Prof>... profs){
-		return (int)Math.round(Arrays.asList(profs).stream().mapToDouble(p -> calculate.apply(p.getObject())).sum());
+	private static int calculatePoints(final SerializableFunction<Prof, Double> calculate, IModel<Prof>... profs){
+		double sum = 0;
+		for(IModel<Prof> m : Arrays.asList(profs)){
+			sum += calculate.apply(m.getObject());
+		}
+		return (int)Math.round(sum);
 	}
 	
 	private static int calculatePoints(double points){
@@ -209,7 +283,13 @@ public class InfoPanel extends Panel{
 		int summaryWahl1 = calculatePoints(prof1.getObject().calculateWahlPoints());
 		int summaryWahl2 = calculatePoints(prof2.getObject().calculateWahlPoints());
 		
-		int summaryPflicht = calculatePoints(Prof::calculatePflichtPoints, prof1, prof2);
+		int summaryPflicht = calculatePoints(new SerializableFunction<Prof, Double>() {
+
+			@Override
+			public Double apply(Prof prof) {
+				return prof.calculatePflichtPoints();
+			}
+		}, prof1, prof2);
 		int summarySupplement = calculatePoints(supplementModul.calculatePoints());
 		int summaryBasic = calculatePoints(basicModul.calculatePoints());
 		
@@ -253,7 +333,7 @@ public class InfoPanel extends Panel{
 		return progressBar;
 	}
 	
-	private static ListView<ICourse> createListView(String ListViewID, String ButtonID, IModel<List<ICourse>> allSelectedCourses, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, IModul basicModul, IModul supplementModul, final List<Prof> allProfs){
+	private static ListView<ICourse> createListView(String ListViewID, final String ButtonID, IModel<List<ICourse>> allSelectedCourses, final IModel<List<ICourse>> allCurrentSelectedModuls, IModel<List<Prof>> profs, final IModul basicModul, final IModul supplementModul, final List<Prof> allProfs){
 		return new ListView<ICourse>(ListViewID, allSelectedCourses) {
 
 			private static final long serialVersionUID = 1L;
@@ -269,13 +349,15 @@ public class InfoPanel extends Panel{
 			}
 			
 			/* local private method*/
-			private AjaxButton createButton(String buttonId, ICourse course){
+			private AjaxButton createButton(String buttonId, final ICourse course){
 				return new AjaxButton(buttonId) {
 					private static final long serialVersionUID = 1L;
 
 					public void onSubmit(AjaxRequestTarget target, Form<?> form) {
-						allProfs.stream().forEach(prof -> prof.getWahlModulSelected().remove(course));
-						allProfs.stream().forEach(prof -> prof.getPflichtModulSelected().remove(course));
+						for(Prof p : allProfs){
+							p.getWahlModulSelected().remove(course);
+							p.getPflichtModulSelected().remove(course);
+						}
 						supplementModul.remove(course);
 						basicModul.remove(course);
 						send(getPage(), Broadcast.DEPTH, new RemoveCourseEvent(target));
@@ -283,6 +365,17 @@ public class InfoPanel extends Panel{
 				};
 			}
 			
+		};
+	}
+	
+	private static Comparator<ICourse> createComparator(){
+		return new Comparator<ICourse>() {
+
+			@Override
+			public int compare(ICourse o1, ICourse o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+
 		};
 	}
 	

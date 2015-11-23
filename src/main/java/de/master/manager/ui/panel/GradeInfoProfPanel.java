@@ -1,12 +1,13 @@
 package de.master.manager.ui.panel;
 
-import java.util.OptionalDouble;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+
+import com.google.common.base.Optional;
 
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.Prof;
@@ -18,11 +19,11 @@ public class GradeInfoProfPanel extends Panel{
 	public GradeInfoProfPanel(String id, IModel<Prof> profOfPanel) {
 		super(id);
 		
-		OptionalDouble pflichtGrade = profOfPanel.getObject().calculateFinalPflichtGrade();
-		OptionalDouble wahlGrade = profOfPanel.getObject().calculateFinalWahlGrade();
+		Optional<Double> pflichtGrade = profOfPanel.getObject().calculateFinalPflichtGrade();
+		Optional<Double> wahlGrade = profOfPanel.getObject().calculateFinalWahlGrade();
 		
-		add(new Label("wahlAverage", wahlGrade.isPresent() ? String.valueOf(wahlGrade.getAsDouble()) : ""));
-		add(new Label("pflichtAverage", pflichtGrade.isPresent() ? String.valueOf(pflichtGrade.getAsDouble()) : ""));
+		add(new Label("wahlAverage", wahlGrade.isPresent() ? String.valueOf(wahlGrade.get()) : ""));
+		add(new Label("pflichtAverage", pflichtGrade.isPresent() ? String.valueOf(pflichtGrade.get()) : ""));
 		
 		add(createWahlListView(profOfPanel));
 		add(createPflichtListView(profOfPanel));

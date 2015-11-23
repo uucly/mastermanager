@@ -26,7 +26,7 @@ public class ModulCourse implements ICourse{
 	 * @param grade can be null
 	 */
 	public void setGrade(@Nullable Double grade) {
-		this.grade = grade == null ? Optional.absent() : Optional.of(grade);
+		this.grade = grade == null ? Optional.<Double>absent() : Optional.of(grade);
 	}
 
 	public double getPoints() {

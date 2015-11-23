@@ -1,7 +1,8 @@
 package de.master.manager.profStuff;
 
 import java.util.List;
-import java.util.OptionalDouble;
+
+import com.google.common.base.Optional;
 
 public class Modul extends AbstractList<ICourse> implements IModul{
 
@@ -12,16 +13,27 @@ public class Modul extends AbstractList<ICourse> implements IModul{
 	}
 	
 	@Override
-	public OptionalDouble calculateGrade() {
-		double sumWeightedGrades = l.stream().filter(course -> course.getGrade().isPresent()).mapToDouble(course -> course.getGrade().get()*course.getPoints()).sum();
-		double sumPoints = l.stream().filter(c -> c.getGrade().isPresent()).mapToDouble(c -> c.getPoints()).sum();
+	public Optional<Double> calculateGrade() {
+		double sumWeightedGrades = 0;
+		double sumPoints = 0;
+		for(ICourse c : l){
+			if(c.getGrade().isPresent()){
+				sumWeightedGrades += c.getGrade().get()*c.getPoints();
+				sumPoints += c.getPoints();
+			}
+		}
 		double grade = sumWeightedGrades/sumPoints;
-		return grade == 0 || Double.isNaN(grade)? OptionalDouble.empty() : OptionalDouble.of(grade);
+		return grade == 0 || Double.isNaN(grade)? Optional.<Double>absent() : Optional.of(grade);
 	}
 
 	@Override
 	public double calculatePoints() {
-		return l.stream().mapToDouble(ICourse::getPoints).sum();
+		double sumPoints = 0;
+		for(ICourse c : l){
+			sumPoints += c.getPoints();
+		}
+		//return l.stream().mapToDouble(ICourse::getPoints).sum();
+		return sumPoints;
 	}
 
 }

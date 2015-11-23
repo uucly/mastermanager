@@ -10,8 +10,7 @@ public class TransformationModel<M, T> extends LoadableDetachableModel<T> {
 	private IModel<? extends M> model;
 	private SerializableFunction<M, T> transform;
 
-	public TransformationModel(IModel<? extends M> model,
-			SerializableFunction<M, T> transform) {
+	public TransformationModel(IModel<? extends M> model, SerializableFunction<M, T> transform) {
 		this.model = model;
 		this.transform = transform;
 	}

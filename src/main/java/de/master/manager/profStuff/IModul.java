@@ -2,11 +2,12 @@ package de.master.manager.profStuff;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.OptionalDouble;
+
+import com.google.common.base.Optional;
 
 public interface IModul extends List<ICourse>, Serializable{
 
-	OptionalDouble calculateGrade();
+	Optional<Double> calculateGrade();
 	
 	double calculatePoints();
 	

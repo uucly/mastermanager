@@ -3,6 +3,9 @@ package de.master.manager.ui.button;
 import java.util.List;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
+
+import com.google.common.base.Function;
+
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.Prof;
@@ -26,12 +29,18 @@ public class CourseButton extends AbstractCourseButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
+		Function<Prof, IModul> loadModul = new Function<Prof, IModul>() {
+			@Override
+			public IModul apply(Prof p) {
+				return p.getWahlModulSelected();
+			}
+		};
 		if(profRight.getObject().getPflichtModul().contains(course)){
 			prof.getObject().getWahlModulSelected().remove(course);
 			setEnabled(false);
 		} else if(isAlreadySelected()){
 			setSelected();
-		} else if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs, Prof::getWahlModulSelected)) {
+		} else if(isAlreadySelectedInOtherProf(prof.getObject(), allProfs, loadModul)) {
 			setEnabled(false);
 		}
 	}

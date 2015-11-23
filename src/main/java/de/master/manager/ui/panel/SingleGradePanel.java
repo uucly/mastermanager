@@ -2,7 +2,6 @@ package de.master.manager.ui.panel;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalDouble;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
@@ -18,6 +17,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
 import com.google.common.base.Optional;
+
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.IModul;
 import de.master.manager.ui.events.GradeChangedEvent;
@@ -27,7 +27,7 @@ public abstract class SingleGradePanel extends Panel{
 	private static final List<Double> NOTEN_LIST = Arrays.asList(1.0, 1.3, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0);
 	private final IModul modul;
 
-	public SingleGradePanel(String id, String name, IModul modul) {
+	public SingleGradePanel(String id, String name, final IModul modul) {
 		super(id);
 		this.modul = modul;
 		setOutputMarkupId(true);
@@ -63,8 +63,8 @@ public abstract class SingleGradePanel extends Panel{
 	}
 	
 	
-	private static DropDownChoice<Double> createNotenDropDown(String id, ListItem<ICourse> item, Optional<Double> note) {
-		IModel<Double> noteModel = note.isPresent() ? Model.of(note.get()) : Model.of();
+	private static DropDownChoice<Double> createNotenDropDown(String id, final ListItem<ICourse> item, Optional<Double> note) {
+		final IModel<Double> noteModel = note.isPresent() ? Model.of(note.get()) : Model.<Double>of();
 		DropDownChoice<Double> dropDownNoten = new DropDownChoice<Double>(id, noteModel, NOTEN_LIST);
 		dropDownNoten.add(new OnChangeAjaxBehavior() {
 
@@ -80,8 +80,8 @@ public abstract class SingleGradePanel extends Panel{
 	}
 
 	private static final String calculateFinalGrade(IModul modul){
-		OptionalDouble grade = modul.calculateGrade();
-		return grade.isPresent() ? String.valueOf(round(grade.getAsDouble())) : "keine Note eingetragen";
+		Optional<Double> grade = modul.calculateGrade();
+		return grade.isPresent() ? String.valueOf(round(grade.get())) : "keine Note eingetragen";
 	}
 	
 	private static final double round(double number){

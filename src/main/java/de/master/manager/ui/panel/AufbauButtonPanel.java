@@ -20,7 +20,7 @@ public class AufbauButtonPanel extends Panel {
 	private static final long serialVersionUID = 1L;
 	private final Form form;
 
-	public AufbauButtonPanel(String id, List<ICourse> list, IModul modul) {
+	public AufbauButtonPanel(String id, List<ICourse> list, final IModul modul) {
 		super(id);
 
 		form = new Form("form");

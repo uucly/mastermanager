@@ -3,7 +3,8 @@ package de.master.manager.profStuff;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
+
+import com.google.common.base.Optional;
 
 public class Prof implements Serializable{
 
@@ -17,8 +18,8 @@ public class Prof implements Serializable{
 	public Prof(String name, List<ICourse> pflichtCourses) {
 		this.name = name;
 		this.wahlModulPath = name + "_Wahl.txt";
-		this.wahlModulSelected = new Modul(new ArrayList<>(10));
-		this.pflichtModulSelected = new Modul(new ArrayList<>(10));
+		this.wahlModulSelected = new Modul(new ArrayList<ICourse>(10));
+		this.pflichtModulSelected = new Modul(new ArrayList<ICourse>(10));
 		this.pflichtModul = new Modul(pflichtCourses);
 	}
 
@@ -59,18 +60,18 @@ public class Prof implements Serializable{
 		return pflichtModulSelected.calculatePoints();
 	}
 	
-	public OptionalDouble calculateFinalGrade(){
-		IModul jointModuls = new Modul(new ArrayList<>(wahlModulSelected.size() + pflichtModulSelected.size()));
+	public Optional<Double> calculateFinalGrade(){
+		IModul jointModuls = new Modul(new ArrayList<ICourse>(wahlModulSelected.size() + pflichtModulSelected.size()));
 		jointModuls.addAll(pflichtModulSelected);
 		jointModuls.addAll(wahlModulSelected);
 		return jointModuls.calculateGrade();
 	}
 	
-	public OptionalDouble calculateFinalWahlGrade(){
+	public Optional<Double> calculateFinalWahlGrade(){
 		return wahlModulSelected.calculateGrade();
 	}
 	
-	public OptionalDouble calculateFinalPflichtGrade(){
+	public Optional<Double> calculateFinalPflichtGrade(){
 		return pflichtModulSelected.calculateGrade();
 	}
 		
