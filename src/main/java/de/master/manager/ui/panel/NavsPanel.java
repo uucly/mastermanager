@@ -16,7 +16,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 import de.master.manager.profStuff.ICourse;
@@ -26,7 +25,6 @@ import de.master.manager.profStuff.Modul;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.ProfChangedEvent;
-import de.master.manager.ui.model.TransformationModel;
 
 public class NavsPanel extends Panel{
 

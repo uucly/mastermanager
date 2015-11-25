@@ -5,11 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
-
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.FileSystemResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import de.master.manager.ui.model.SerializableFunction;
@@ -18,30 +14,18 @@ import de.master.manager.ui.model.SerializableFunction;
 public class CourseLoader implements IModulLoader {
 
 	private static final long serialVersionUID = 1L;
-	private List<ICourse> allCourses;
+	private final String pathToAllCourse;
 
 	public CourseLoader(String pathToAllCourse) {
-
-		SerializableFunction<String, ICourse> parseToModul = new SerializableFunction<String, ICourse>() {
-
-			@Override
-			public ICourse apply(String line) {
-				String[] split = line.split(",");
-				return new ModulCourse(split[0], Double.parseDouble(split[1]));
-			}
-		};
-		StringTokenizer tokenizer = new StringTokenizer(loadFileInput(pathToAllCourse), "\n");
-		allCourses = new ArrayList<>();
-		while (tokenizer.hasMoreElements()) {
-			allCourses.add(parseToModul.apply(tokenizer.nextToken()));
-		}
-		//allCourses = Pattern.compile("\n").splitAsStream(loadFileInput(pathToAllCourse)).map(parseToModul)
-		//		.collect(Collectors.toList());
+		this.pathToAllCourse = pathToAllCourse;
 	}
+
 
 	/* methods */
 
 	public IModul loadModul(String fileName) {
+		List<ICourse> allCourses = loadAllCourses(pathToAllCourse);
+		
 		List<ICourse> courses = new ArrayList<>();
 		String fileInput = loadFileInput(fileName);
 		StringTokenizer token = new StringTokenizer(fileInput, ",");
@@ -53,13 +37,29 @@ public class CourseLoader implements IModulLoader {
 		return new Modul(courses);
 	}
 
+	private static List<ICourse> loadAllCourses(String pathToAllCourse) {
+		SerializableFunction<String, ICourse> parseToModul = new SerializableFunction<String, ICourse>() {
+			
+			@Override
+			public ICourse apply(String line) {
+				String[] split = line.split(",");
+				return new ModulCourse(split[0], Double.parseDouble(split[1]));
+			}
+		};
+		StringTokenizer tokenizer = new StringTokenizer(loadFileInput(pathToAllCourse), "\n");
+		List<ICourse> allCourses = new ArrayList<>();
+		while (tokenizer.hasMoreElements()) {
+			allCourses.add(parseToModul.apply(tokenizer.nextToken()));
+		}
+		return allCourses;
+	}
 	/**
 	 * 
 	 * @param fileName
 	 *            with file ending (e.g. fileName.txt)
 	 * @return input of file
 	 */
-	private String loadFileInput(String fileName) {
+	private static String loadFileInput(String fileName) {
 		try (InputStream pflichtResource = CourseLoader.class.getResourceAsStream("/"+ fileName);) {
 			return loadFileInputFromInputStream(pflichtResource);
 		} catch (IOException e) {
@@ -67,7 +67,7 @@ public class CourseLoader implements IModulLoader {
 		}
 	}
 
-	private String loadFileInputFromInputStream(InputStream pflichtResource) {
+	private static String loadFileInputFromInputStream(InputStream pflichtResource) {
 		try {
 			return IOUtils.toString(pflichtResource, "UTF-8");
 		} catch (IOException ioE) {

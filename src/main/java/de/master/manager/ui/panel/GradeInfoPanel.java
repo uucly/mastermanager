@@ -1,16 +1,13 @@
 package de.master.manager.ui.panel;
 
-import java.util.List;
-
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
-
 import de.master.manager.profStuff.IModul;
+import de.master.manager.profStuff.Modul;
 import de.master.manager.profStuff.Prof;
 
 public class GradeInfoPanel extends Panel{
@@ -28,17 +25,12 @@ public class GradeInfoPanel extends Panel{
 
 			@Override
 			protected String load() {
-				double grades = 0;
-				int numberOfGrades = 0;
-				List<Optional<Double>> allGrades = Lists.newArrayList(profOfPanel1.getObject().calculateFinalGrade(), profOfPanel2.getObject().calculateFinalGrade(), basicModul.calculateGrade(), supplementModul.calculateGrade());
-				for(Optional<Double> opt : allGrades){
-					if(opt.isPresent()){
-						grades = opt.get();
-						numberOfGrades++;
-					}
-				}
-				double finalGrade = grades/numberOfGrades;
-				return numberOfGrades == 0 ? String.valueOf(round(finalGrade)) : "keine Note eingetragen";
+				Prof prof1 = profOfPanel1.getObject();
+				Prof prof2 = profOfPanel2.getObject();
+				IModul modul = Modul.createInstance(prof1.getPflichtModulSelected(), prof1.getWahlModulSelected(), prof2.getPflichtModulSelected(), prof2.getWahlModulSelected(), supplementModul, basicModul);
+				Optional<Double> grade = modul.calculateGrade();
+				
+				return grade.isPresent() ? String.valueOf(round(grade.get())) : "keine Note eingetragen";
 				}
 		};
 	}

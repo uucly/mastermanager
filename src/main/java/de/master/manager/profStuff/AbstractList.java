@@ -1,11 +1,12 @@
 package de.master.manager.profStuff;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class AbstractList<E> implements List<E>{
+public class AbstractList<E> implements Serializable, List<E>{
 
 	protected final List<E> l;
 	public AbstractList(List<E> list) {

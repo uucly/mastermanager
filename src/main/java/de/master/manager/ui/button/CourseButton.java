@@ -1,15 +1,15 @@
 package de.master.manager.ui.button;
 
 import java.util.List;
+
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.IModel;
-
-import com.google.common.base.Function;
 
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.SelectedEvent;
+import de.master.manager.ui.model.SerializableFunction;
 
 public class CourseButton extends AbstractCourseButton {
 
@@ -29,7 +29,7 @@ public class CourseButton extends AbstractCourseButton {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-		Function<Prof, IModul> loadModul = new Function<Prof, IModul>() {
+		SerializableFunction<Prof, IModul> loadModul = new SerializableFunction<Prof, IModul>() {
 			@Override
 			public IModul apply(Prof p) {
 				return p.getWahlModulSelected();

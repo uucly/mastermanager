@@ -9,12 +9,11 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
 
-import com.google.common.base.Function;
-
 import de.master.manager.profStuff.ICourse;
 import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.SelectedEvent;
+import de.master.manager.ui.model.SerializableFunction;
 
 public abstract class AbstractCourseButton extends AjaxButton{
 
@@ -42,14 +41,13 @@ public abstract class AbstractCourseButton extends AjaxButton{
 		return modul.contains(course);
 	}
 	
-	protected boolean isAlreadySelectedInOtherProf(final Prof prof, List<Prof> allProfs, Function<Prof, IModul> loadModul){
+	protected boolean isAlreadySelectedInOtherProf(final Prof prof, List<Prof> allProfs, SerializableFunction<Prof, IModul> loadModul){
 		for(Prof p : allProfs){
 			if(p != prof){
 				return loadModul.apply(p).contains(course);
 			}
 		}
 		return false;
-	//	return allProfs.stream().filter(p -> p!=prof).anyMatch(p-> loadModul.apply(p).contains(course));
 	}
 	
 	protected void setSelected(){

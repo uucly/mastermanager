@@ -15,9 +15,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.util.ListModel;
-
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
 import de.master.manager.profStuff.ICourse;
@@ -25,7 +22,6 @@ import de.master.manager.profStuff.Prof;
 import de.master.manager.ui.events.GradeChangedEvent;
 import de.master.manager.ui.events.ProfChangedEvent;
 import de.master.manager.ui.model.SerializableFunction;
-import de.master.manager.ui.model.TransformationModel;
 
 public class GradeProfPanel extends Panel {
 
