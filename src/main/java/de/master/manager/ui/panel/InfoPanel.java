@@ -30,7 +30,6 @@ import de.master.manager.ui.events.PanelChangedEvent;
 import de.master.manager.ui.events.RemoveCourseEvent;
 import de.master.manager.ui.events.SelectedEvent;
 import de.master.manager.ui.model.SerializableFunction;
-import de.master.manager.ui.model.TransformationModel;
 
 
 /**
@@ -105,7 +104,7 @@ public class InfoPanel extends Panel{
 
 			@Override
 			protected Integer load() {
-				return (int)(MODUL_POINTS_TO_REECH - prof2.getObject().calculatePflichtPointsToReach());
+				return (int)(MODUL_POINTS_TO_REECH - prof1.getObject().calculatePflichtPointsToReach());
 			}
 		};
 		maxWahlPointsProf2 = new LoadableDetachableModel<Integer>() {
