@@ -205,7 +205,7 @@ public class InfoPanel extends Panel{
 			protected String load() {
 				double sum = 0;
 				for(IModel<Prof> p : Arrays.asList(profs)){
-					sum = calculate.apply(p.getObject());
+					sum += calculate.apply(p.getObject());
 				}
 				return sum + " von " + maxPoints.getObject();
 			}

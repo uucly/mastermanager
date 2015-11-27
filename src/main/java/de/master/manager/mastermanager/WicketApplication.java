@@ -1,5 +1,6 @@
 package de.master.manager.mastermanager;
 
+import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -11,7 +12,6 @@ import de.agilecoders.wicket.core.settings.ThemeProvider;
 import de.agilecoders.wicket.less.BootstrapLess;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchTheme;
 import de.agilecoders.wicket.themes.markup.html.bootswatch.BootswatchThemeProvider;
-import de.master.manager.ui.ModulOverviewPage;
 import de.master.manager.ui.HomePage;
 
 /**
@@ -54,9 +54,9 @@ public class WicketApplication extends WebApplication {
 		BootstrapLess.install(this);
 	}
 	
-	/*@Override
+	@Override
 	public RuntimeConfigurationType getConfigurationType() {
-		return RuntimeConfigurationType.DEVELOPMENT;
-	}*/
+		return RuntimeConfigurationType.DEPLOYMENT;
+	}
 
 }

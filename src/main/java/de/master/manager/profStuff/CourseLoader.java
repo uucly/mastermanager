@@ -30,7 +30,8 @@ public class CourseLoader implements IModulLoader {
 		String fileInput = loadFileInput(fileName);
 		StringTokenizer token = new StringTokenizer(fileInput, ",");
 		while (token.hasMoreElements()) {
-			ICourse course = allCourses.get(Integer.parseInt(token.nextToken()) -1 );
+			int index = Integer.parseInt(token.nextToken());
+			ICourse course = allCourses.get(index -1 );
 			courses.add(course);
 		}
 		
