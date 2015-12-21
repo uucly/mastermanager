@@ -71,6 +71,8 @@ public class InfoPanel extends Panel{
 	private final IModel<String> loadPointInfoWahlForLabel1;
 	private final IModel<String> loadPointInfoWahlForLabel2;
 	private final IModel<String> loadPointInfoSupplementForLabel;
+	private final IModel<List<Prof>> loadSelectedProfs;
+	
 	
 	
 	public InfoPanel(String id, final IModel<Prof> prof1, final IModel<Prof> prof2, IModul basicModul, IModul supplementModul, final List<Prof> allProfs) {
@@ -81,7 +83,7 @@ public class InfoPanel extends Panel{
 		this.basicModul = basicModul;
 		this.supplementModul = supplementModul;
 		
-		final IModel<List<Prof>> loadSelectedProfs = new LoadableDetachableModel<List<Prof>>() {
+		loadSelectedProfs = new LoadableDetachableModel<List<Prof>>() {
 
 			@Override
 			protected List<Prof> load() {
@@ -383,6 +385,7 @@ public class InfoPanel extends Panel{
 		super.onDetach();
 		prof1.detach();
 		prof2.detach();
+		loadSelectedProfs.detach();
 		maxPflichtPoints.detach();
 		maxWahlPointsProf1.detach();
 		maxWahlPointsProf2.detach();

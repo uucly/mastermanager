@@ -14,7 +14,7 @@ public class SupplementPanel extends Panel {
 	public SupplementPanel(String id, IModulLoader courseLoader, IModel<Prof> profOfPanel1, IModel<Prof> profOfPanel2, IModul basicModul, IModul supplementModul, List<Prof> allProfs) {
 		super(id);
 		
-		add(new SupplementCourseButtonPanel("supplementButtonPanel", supplementModul, courseLoader.loadModul("Supplement.txt")));
+		add(new SupplementCourseButtonPanel("supplementButtonPanel", supplementModul, courseLoader.loadModul("Supplement.txt"), allProfs));
 		add(new InfoPanel("infoPanel", profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs));
 	}
 

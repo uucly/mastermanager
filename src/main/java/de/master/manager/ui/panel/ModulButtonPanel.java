@@ -21,9 +21,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+
 import de.master.manager.profStuff.ICourse;
+import de.master.manager.profStuff.IModul;
 import de.master.manager.profStuff.IModulLoader;
 import de.master.manager.profStuff.Prof;
+import de.master.manager.profStuff.Profsiterable;
 import de.master.manager.ui.button.CourseButton;
 import de.master.manager.ui.button.CoursePflichtButton;
 import de.master.manager.ui.events.ProfChangedEvent;
@@ -38,7 +43,7 @@ public class ModulButtonPanel extends Panel {
 	private Form<Object> formWahl;
 	private Form<?> formPflicht;
 	
-	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, final IModulLoader courseLoader) {
+	public ModulButtonPanel(String id, final IModel<Prof> profOfThisPanel, IModel<Prof> profOfOtherPanel, List<Prof> allProfs, IModul supplementModul, final IModulLoader courseLoader) {
 		super(id);
 		setOutputMarkupId(true);
 		IModel<String> text = Model.of("");
@@ -56,7 +61,7 @@ public class ModulButtonPanel extends Panel {
 				return profOfThisPanel.getObject().getPflichtModul();
 			}
 		}, profOfThisPanel, allProfs));
-		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, allProfs));
+		formWahl.add(createWahlListView(loadWahlCourses(text, profOfThisPanel, courseLoader), profOfThisPanel, profOfOtherPanel, supplementModul, allProfs));
 		formPflicht.add(new Label("choosenProf", new LoadableDetachableModel<String>() {
 
 			@Override
@@ -108,13 +113,19 @@ public class ModulButtonPanel extends Panel {
 		};
 	}
 	
-	private static ListView<ICourse> createWahlListView(IModel<List<ICourse>> selectedModuls, final IModel<Prof> profLeft, final IModel<Prof> profRight, final List<Prof> allProfs){
+	private static ListView<ICourse> createWahlListView(IModel<List<ICourse>> selectedModuls, final IModel<Prof> profLeft, final IModel<Prof> profRight, final IModul supplementModul, final List<Prof> allProfs){
 		return new ListView<ICourse>("listView", selectedModuls){
 			private static final long serialVersionUID = 1L;
 			@Override
 			protected void populateItem(ListItem<ICourse> item) {
-				ICourse currentCourse=item.getModelObject();
-				item.add(new CourseButton("modulButton", currentCourse, profLeft.getObject().getWahlModulSelected(), profLeft, profRight, allProfs));
+				final ICourse currentCourse=item.getModelObject();
+				boolean isSelected = Profsiterable.from(allProfs).contains(currentCourse) || supplementModul.contains(currentCourse);
+				
+				CourseButton button = new CourseButton("modulButton", currentCourse, profLeft.getObject().getWahlModulSelected(), profLeft, profRight, allProfs);
+				if(isSelected){
+					button.setEnabled(false);
+				} 
+				item.add(button);
 				String points=String.valueOf(currentCourse.getPoints());
 				item.add(new Button("modulPoints", new Model<String>(points)));
 			}

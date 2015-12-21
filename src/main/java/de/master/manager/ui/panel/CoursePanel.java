@@ -17,8 +17,8 @@ public class CoursePanel extends Panel{
 		super(id);
 		
 		/* load the ui */
-		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", profOfPanel1, profOfPanel2,  allProfs, courseLoader);
-		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", profOfPanel2, profOfPanel1, allProfs, courseLoader);
+		ModulButtonPanel panel1 = new ModulButtonPanel("buttonPanel1", profOfPanel1, profOfPanel2,  allProfs, supplementModul, courseLoader);
+		ModulButtonPanel panel2 = new ModulButtonPanel("buttonPanel2", profOfPanel2, profOfPanel1, allProfs, supplementModul, courseLoader);
 		
 		InfoPanel infoPanel = new InfoPanel("infoPanel", profOfPanel1, profOfPanel2, basicModul, supplementModul, allProfs);
 		add(panel1, panel2, infoPanel);
